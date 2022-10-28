@@ -119,15 +119,21 @@ class AdminController{
 	}
 
 	addCategory(req,res){
-		var {name,title} = req.body;
+	
+		var {name,tab,detail,img,isActive} = req.body;
 		if(!name)
 			return res.json({status:false,message:'key name required for category',data:null});
+		
 		
 		try{
 			var category = new db.Category;
 			category.name = name;
-			if(title)
-				category.title = title;
+			category.tab = tab;
+			category.detail = detail;
+			category.img = img;
+
+			if(isActive)
+				category.isActive= isActive;
 
 			category.save(err=>{
 				if(!err)

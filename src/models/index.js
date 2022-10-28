@@ -49,3 +49,5 @@ fs.readdirSync(__dirname)
 
 
 module.exports = db;
+
+//mongodb-compass

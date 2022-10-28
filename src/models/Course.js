@@ -1,11 +1,10 @@
 const {Schema,model} = require('mongoose');
 const schema = new Schema({
     name: { type: String, required: true, index: { unique: true }},
-    tab: { type: String, default:''},
+    categoryID: { type: String, default:''},
     detail: { type: String, default:''},
     img:{type: String, default:''},
     isActive:{ type: Number,default:1}
 },{ timestamps: true });
 
-module.exports = model('category', schema);
-
+module.exports = model('course', schema);
