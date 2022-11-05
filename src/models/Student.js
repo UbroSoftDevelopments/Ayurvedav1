@@ -1,12 +1,17 @@
 const {Schema,model} = require('mongoose');
 
 const StudentSchema = new Schema({
-    firstName:{type: String, required: true },
-    lastName: {type: String, },
+    fullName:{type: String, required: true },
     mobile:{ type: Number, required: true, index:{unique: true}},
     email: { type: String,required: true,index:{unique: true}},
-    //username: { type: String,required:true,index:{unique: true}},
     password: { type: String,required:true},
+    presentStatus:{type : String, default:"" },
+    favSubject:{type : String, default:"" },
+    referralCode:{type : String, default:"" },
+    purposeOfAyurveda:{type : String, default:"" },
+
+
+
     profile: { type: String,default:''},
     address:{ type: String,default:''},
     dist:{ type: String,default:''},
@@ -20,3 +25,17 @@ const StudentSchema = new Schema({
      },{ timestamps: true });
 
 module.exports = model('student', StudentSchema);
+
+/*
+{
+    "fullname" : "Manish Pal",
+    "email":"manish@ubro.com",
+    "password": "",
+    "mobile":1234567890,
+    "presentStatus":"BAMS 1st year",
+    "favSubject":"One",
+    "referralCode":"",
+    "purposeOfAyurveda":"One"
+}
+
+*/

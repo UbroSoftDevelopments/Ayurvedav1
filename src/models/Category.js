@@ -9,3 +9,15 @@ const schema = new Schema({
 
 module.exports = model('category', schema);
 
+
+/*
+
+{
+    "name": "Cateogary2",
+    "title": "Lets Do it",
+    "detail": "",
+    "img": "./img/ok.png",
+    "isActive": 1
+}
+
+*/
