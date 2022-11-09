@@ -1,0 +1,137 @@
+const db = require("../models");
+const config = require("../config");
+class CategoryController {
+
+    // add Category
+    async addCategory(req, res) {
+
+        var { name, tab, detail, isActive } = req.body;
+        if (!name)
+            return res.json({
+                status: false,
+                message: "key name required for category",
+                data: null,
+            });
+
+        try {
+            var category = new db.Category();
+            category.name = name;
+            category.tab = tab;
+            category.detail = detail;
+            category.isActive = isActive;
+
+            if (req.file != undefined) {
+                category.img = `${config.uploadFolder}/${req.file.originalname}`;
+            } else {
+                category.img = ''
+            }
+
+            category.save((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "new category added",
+                        data: category,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
+
+    // get Category
+    async getCategory(req, res) {
+        try {
+            const category = await db.Category.find();
+            return res
+                .status(200)
+                .json({ status: true, message: `category list`, data: category });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
+
+    // update Category
+    async updateCategory(req, res) {
+        var { _id, name, tab, detail, isActive } = req.body;
+        if (!_id)
+            return res.json({
+                status: false,
+                message: "key _id required for category",
+                data: req.body,
+            });
+
+        try {
+            var category = await db.Category.findOne({ _id });
+            if (name) category.name = name;
+            if (tab) category.title = title;
+            if (detail) category.detail = detail;
+            if (isActive) category.isActive = isActive;
+
+            if (req.file != undefined) {
+                category.img = `${config.uploadFolder}/${req.file.originalname}`;
+            }
+
+            category.save((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "Category updated",
+                        data: category,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
+
+    // delete Category
+    async deleteCategory(req, res) {
+        var { _id, name, title } = req.body;
+        if (!_id)
+            return res.json({
+                status: false,
+                message: "key _id required for category",
+                data: req.body,
+            });
+
+        try {
+            var category = await db.Category.findOne({ _id });
+
+            category.remove((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "Category deleteed",
+                        data: category,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
+
+
+    async getActiveCategory(req, res) {
+        try {
+            const category = await db.Category.find({ isActive: 1 });
+            return res
+                .status(200)
+                .json({ status: true, message: `category list`, data: category });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
+
+
+}
+
+
+module.exports = CategoryController;

@@ -164,24 +164,20 @@ class StudentController {
     //});
   }
 
-  //Courses
-
-  async getCategoryCourseById(req, res) {
+  async getAllStudent(req, res) {
     try {
-      const course = await db.Course.find({ categoryID: req.params.id });
-      //get Catogery Name
+      const student = await db.Student.find();
 
       return res
         .status(200)
-        .json({ status: true, message: `course list`, data: course });
+        .json({ status: true, message: `Student list 🧑‍🎓`, data: student });
     } catch (err) {
-      return res.json({
-        status: false,
-        message: "somthing worng",
-        data: `${err}`,
-      });
+      return res
+        .status(403)
+        .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
     }
   }
+
 }
 
 module.exports = StudentController;

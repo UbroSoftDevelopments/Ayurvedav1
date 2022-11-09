@@ -1,11 +1,12 @@
-const {Schema,model} = require('mongoose');
+const { Schema, model } = require('mongoose');
 const schema = new Schema({
-    name: { type: String, required: true, index: { unique: true }},
-    categoryID: {type:'ObjectId',ref:'category'},
-    detail: { type: String, default:''},
-    img:{type: String, default:''},
-    isActive:{ type: Number,default:1}
-},{ timestamps: true });
+    name: { type: String, required: true, index: { unique: true } },
+    categoryID: { type: 'ObjectId', ref: 'category' },
+    detail: { type: String, default: '' },
+    img: { type: String, default: '' },
+    sequence: { type: Number },
+    isActive: { type: Number, default: 1 }
+}, { timestamps: true });
 
 module.exports = model('course', schema);
 

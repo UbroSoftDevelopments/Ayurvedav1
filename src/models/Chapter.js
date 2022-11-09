@@ -1,14 +1,15 @@
-const {Schema,model} = require('mongoose');
+const { Schema, model } = require('mongoose');
 const schema = new Schema({
-    name: { type: String, required: true},
-    subject: { type: String, required: true},
-    subSubject: { type: String, required: true},
-    desc: { type: String},
-    noteTitle: { type: String},
-    nodeDoc: { type: String},
-    img:{type: String, default:''}
+    name: { type: String, required: true },
+    subject: { type: String, required: true },
+    subSubject: { type: String, required: true },
+    desc: { type: String },
+    sequence: { type: Number },
+    noteTitle: { type: String },
+    nodeDoc: { type: String },
+    img: { type: String, default: '' }
 
-},{ timestamps: true });
+}, { timestamps: true });
 
 module.exports = model('chapter', schema);
 
