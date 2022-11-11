@@ -43,7 +43,6 @@ class CourseController {
 
     async getCourse(req, res) {
         try {
-            console.log('this.CourseController.name');
             const course = await db.Course.find().populate("categoryID", "name");
             //get Catogery Name
 

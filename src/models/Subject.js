@@ -8,7 +8,7 @@ const schema = new Schema({
     isActive: { type: Number, default: 1 },
     sequence: { type: Number },
     plan: [{
-        type: { type: String },
+        lable: { type: String },
         days: { type: Number },
         amount: { type: Number }
     }]

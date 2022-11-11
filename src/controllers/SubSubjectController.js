@@ -44,7 +44,17 @@ class SubjectController {
 
     async getSubSubject(req, res) {
         try {
-            const subSubject = await db.SubSubject.find();
+
+            const subSubject = await db.SubSubject.find().populate({
+                path: 'subjectID',
+                select: '_id name',
+                populate: {
+                    path: 'courseID',
+                    model: 'course',
+                    select: '_id name'
+                }
+            });
+            // const subSubject = await db.SubSubject.find().populate("subjectID", "name");
             return res
                 .status(200)
                 .json({ status: true, message: `subSubject list`, data: subSubject });

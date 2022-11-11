@@ -43,6 +43,7 @@ class ChapterController {
 
     async getChapter(req, res) {
         try {
+
             const chapter = await db.Chapter.find();
             return res
                 .status(200)

@@ -8,6 +8,7 @@ class SubjectController {
 
     async addSubject(req, res) {
         var { name, courseID, detail, plan, isActive } = req.body;
+
         if (!name)
             return res.json({
                 status: false,
@@ -18,10 +19,11 @@ class SubjectController {
         try {
             var subject = new db.Subject();
             subject.name = name;
-            subject.courseID = courseID;
+            console.log('1', courseID)
+            subject.courseID = JSON.parse(courseID);
             subject.detail = detail;
 
-            if (plan) subject.plan = plan;
+            if (plan) subject.plan = JSON.parse(plan);
 
             if (req.file != undefined) {
                 subject.img = `${config.uploadFolder}/${req.file.originalname}`;
@@ -31,11 +33,13 @@ class SubjectController {
 
             if (isActive) subject.isActive = isActive;
 
+
+
             subject.save((err) => {
                 if (!err)
                     return res.json({
                         status: true,
-                        message: "new subject added",
+                        message: "new subject added 👍",
                         data: subject,
                     });
                 else return res.json({ status: false, message: `${err}`, data: err });
@@ -73,10 +77,10 @@ class SubjectController {
             var subject = await db.Subject.findOne({ _id });
 
             if (name) subject.name = name;
-            if (courseID) subject.courseID = courseID;
+            if (courseID) subject.courseID = JSON.parse(courseID);
             if (detail) subject.detail = detail;
 
-            if (plan) subject.plan = plan;
+            if (plan) subject.plan = JSON.parse(plan);
             if (isActive) subject.isActive = isActive;
             if (req.file != undefined) {
                 subject.img = `${config.uploadFolder}/${req.file.originalname}`;
