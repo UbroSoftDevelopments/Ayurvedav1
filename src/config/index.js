@@ -9,7 +9,8 @@ const config = {
   saltRounds: process.env.SALT,
   uploadDIR: process.env.UPLOAD_DIR,
   uploadURL: process.env.UPLOAD_URL,
-  uploadFolder: 'upload'
+  uploadFolder: 'upload',
+  userApp: 'admin-user'
 };
 
 config.url = (endpoints) => {

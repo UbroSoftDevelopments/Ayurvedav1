@@ -17,7 +17,7 @@ class SubjectController {
         try {
             var subSubject = new db.SubSubject();
             subSubject.name = name;
-            subSubject.courseID = courseID;
+            //subSubject.courseID = courseID;
             subSubject.subjectID = subjectID;
             subSubject.detail = detail;
 
@@ -67,19 +67,19 @@ class SubjectController {
 
     async updateSubSubject(req, res) {
         var { _id, name, chapterId, subjectID, detail, isActive } = req.body;
-        if (!name)
-            if (!name || !_id)
-                return res.json({
-                    status: false,
-                    message: "key _id,name required for sub-subject",
-                    data: req.body,
-                });
+
+        if (!_id)
+            return res.json({
+                status: false,
+                message: "key _id required for sub-subject",
+                data: req.body,
+            });
 
         try {
             var subsubject = await db.SubSubject.findOne({ _id });
 
             if (name) subsubject.name = name;
-            if (chapterId) subsubject.chapterId = chapterId;
+            if (chapterId) subsubject.chapterID = chapterId;
             if (detail) subsubject.detail = detail;
 
             if (subjectID) subsubject.subjectID = subjectID;
