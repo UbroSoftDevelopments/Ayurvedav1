@@ -236,7 +236,7 @@ class SubjectController {
         }
     }
 
-    async getSubSubjectWithActiveChapterBySubId() {
+    async getSubSubjectWithActiveChapterBySubId(req, res) {
         try {
             const subsubject = await db.SubSubject.find({ isActive: 1, subjectID: req.params.id }).populate("chapterID");
 
