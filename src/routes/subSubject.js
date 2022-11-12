@@ -15,6 +15,8 @@ router.get("/active/:id", SubSubjectController.getActiveSubSubjectBySubjectId);
 router.post("/chapter", SubSubjectController.addChapterID);
 router.delete("/chapter", SubSubjectController.removeChapterID);
 router.get("/chapter", SubSubjectController.getSubSubjectWithChapter);
+router.get("/chapter/active/:id", SubSubjectController.getSubSubjectWithActiveChapterBySubId);
+
 
 
 

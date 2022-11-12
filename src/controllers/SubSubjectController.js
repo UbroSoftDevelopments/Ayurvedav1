@@ -236,6 +236,22 @@ class SubjectController {
         }
     }
 
+    async getSubSubjectWithActiveChapterBySubId() {
+        try {
+            const subsubject = await db.SubSubject.find({ isActive: 1, subjectID: req.params.id }).populate("chapterID");
+
+            return res
+                .status(200)
+                .json({ status: true, message: `subject list`, data: subsubject });
+        } catch (err) {
+            return res.json({
+                status: false,
+                message: "something went wrong 🤚",
+                data: `${err}`,
+            });
+        }
+    }
+
 }
 
 module.exports = SubjectController;
