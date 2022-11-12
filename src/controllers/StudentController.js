@@ -6,20 +6,30 @@ class StudentController {
   }
 
   async studentRegister(req, res) {
-    let { firstName, mobile, email } = req.body;
-    console.log("========> ", req.body);
-    if (!firstName || !email || !mobile)
+
+
+
+
+    let { fullName, mobile, email, password, presentStatus, favSubject, purposeOfAyurveda, referralCode } = req.body;
+
+    if (!fullName || !email || !mobile)
       return res.json({
         status: false,
-        message: "Must provide firstName ,  email , mobile",
+        message: "Must provide Fullname ,  email , mobile",
         data: null,
       });
-    var password = Math.floor(Math.random() * 1000000 + 1);
+
     var user = new db.Student();
-    user.firstName = firstName;
+    user.fullName = fullName;
     user.email = email;
-    user.password = await app.setPassword(password);
     user.mobile = mobile;
+
+    if (password) user.password = password;
+    if (presentStatus) user.presentStatus = presentStatus;
+    if (favSubject) user.favSubject = favSubject;
+    if (purposeOfAyurveda) user.purposeOfAyurveda = purposeOfAyurveda;
+    if (referralCode) user.referralCode = referralCode;
+
 
     user.save((err) => {
       if (!err) {
