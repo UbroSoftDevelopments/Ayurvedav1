@@ -10,7 +10,8 @@ const config = {
   uploadDIR: process.env.UPLOAD_DIR,
   uploadURL: process.env.UPLOAD_URL,
   uploadFolder: 'upload',
-  userApp: 'admin-user'
+  userApp: 'admin-user',
+  webApp: 'cms-app'
 };
 
 config.url = (endpoints) => {
