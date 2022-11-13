@@ -14,8 +14,6 @@ const config = require("./config");
 app.use('/upload', express.static(config.uploadFolder));
 app.use(express.static(config.webApp));
 
-
-
 app.use('/api', routes);
 
 app.listen(port, function () {
