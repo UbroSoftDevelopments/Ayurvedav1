@@ -91,13 +91,7 @@ class CategoryController {
 
     // delete Category
     async deleteCategory(req, res) {
-        var { _id, name, title } = req.body;
-        if (!_id)
-            return res.json({
-                status: false,
-                message: "key _id required for category",
-                data: req.body,
-            });
+        var _id = req.params.id;
 
         try {
             var category = await db.Category.findOne({ _id });

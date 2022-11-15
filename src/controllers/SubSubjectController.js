@@ -103,13 +103,7 @@ class SubjectController {
     }
 
     async deleteSubSubject(req, res) {
-        var { _id } = req.body;
-        if (!_id)
-            return res.json({
-                status: false,
-                message: "key _id required for sub-subject",
-                data: req.body,
-            });
+        var _id = req.params.id;
 
         try {
             var subSubject = await db.SubSubject.findOne({ _id });

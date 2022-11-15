@@ -188,6 +188,76 @@ class StudentController {
     }
   }
 
+  async getStudentPlan(req, res) {
+    try {
+      const subPlan = await db.studentPlan.find({ studentID: req.params.id }).populate('courseID').populate('subjectID');
+
+      return res
+        .status(200)
+        .json({ status: true, message: `Product list`, data: subPlan });
+    } catch (err) {
+      return res.json({
+        status: false,
+        message: "something went wrong 🤚",
+        data: `${err}`,
+      });
+    }
+  }
+
+
+  async addStudentPlan(req, res) {
+    let { studentID, courseID, subjectID, plan } = req.body;
+    if (!studentID || !courseID || !subjectID || !plan) {
+      return res.json({
+        status: false,
+        message: "Must provide all input 🙄",
+        data: null,
+      });
+    }
+
+
+
+    try {
+      const stdPlan = await db.studentPlan();
+      stdPlan.studentID = studentID;
+      stdPlan.courseID = courseID;
+      stdPlan.subjectID = subjectID;
+      stdPlan.plan = plan;
+
+      stdPlan.save((err) => {
+        if (!err)
+          return res.json({
+            status: true,
+            message: "New plan added 💸",
+            data: stdPlan,
+          });
+        else return res.json({ status: false, message: `${err}`, data: err });
+      });
+    } catch (err) {
+      return res.json({ status: false, message: `${err}`, data: err });
+    }
+  }
+
+  // delete Category
+  async deleteStudentPlan(req, res) {
+    var _id = req.params.id;
+
+    try {
+      var stdPlan = await db.studentPlan.findOne({ _id });
+
+      stdPlan.remove((err) => {
+        if (!err)
+          return res.json({
+            status: true,
+            message: "Product Deleted 😮‍💨",
+            data: stdPlan,
+          });
+        else return res.json({ status: false, message: `${err}`, data: err });
+      });
+    } catch (err) {
+      return res.json({ status: false, message: `${err}`, data: err });
+    }
+  }
 }
 
 module.exports = StudentController;

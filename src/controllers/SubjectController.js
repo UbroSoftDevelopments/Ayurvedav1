@@ -7,7 +7,7 @@ class SubjectController {
     /*  			Subject			   */
 
     async addSubject(req, res) {
-        var { name, courseID, detail, plan, isActive } = req.body;
+        var { name, courseID, detail, plan, isActive, isDemo } = req.body;
 
         if (!name)
             return res.json({
@@ -19,9 +19,9 @@ class SubjectController {
         try {
             var subject = new db.Subject();
             subject.name = name;
-            console.log('1', courseID)
             subject.courseID = JSON.parse(courseID);
             subject.detail = detail;
+            subject.isDemo = isDemo;
 
             if (plan) subject.plan = JSON.parse(plan);
 
@@ -103,14 +103,7 @@ class SubjectController {
 
     // delete subject
     async deleteSubject(req, res) {
-        var { _id } = req.body;
-        if (!_id)
-            return res.json({
-                status: false,
-                message: "key _id required for subject",
-                data: req.body,
-            });
-
+        var _id = req.params.id;
         try {
             var subject = await db.Subject.findOne({ _id });
 
@@ -161,6 +154,8 @@ class SubjectController {
             });
         }
     }
+
+
 }
 
 

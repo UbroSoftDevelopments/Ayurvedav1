@@ -5,7 +5,8 @@ const schema = new Schema({
     courseID: [{ type: 'ObjectId', ref: 'course' }],
     detail: { type: String, default: '' },
     img: { type: String, default: '' },
-    isActive: { type: Number, default: 1 },
+    isActive: { type: Number, default: 0 },
+    isDemo: { type: Number, default: 0 },
     sequence: { type: Number },
     plan: [{
         lable: { type: String },

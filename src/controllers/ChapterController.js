@@ -92,13 +92,9 @@ class ChapterController {
     }
 
     async deleteChapter(req, res) {
-        var { _id } = req.body;
-        if (!_id)
-            return res.json({
-                status: false,
-                message: "key _id required for chapter",
-                data: req.body,
-            });
+        var _id = req.params.id;
+
+
 
         try {
             var chapter = await db.Chapter.findOne({ _id });

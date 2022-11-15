@@ -7,7 +7,7 @@ var pics = uploader.single('photo');
 router.post("/", pics, ChapterController.addChapter);
 router.get("/", ChapterController.getChapter);
 router.put("/", pics, ChapterController.updateChapter);
-router.delete("/", ChapterController.deleteChapter);
+router.delete("/:id", ChapterController.deleteChapter);
 
 router.get("/sub-subject/:id", ChapterController.getChapterBySubSubjectId);
 

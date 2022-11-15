@@ -96,16 +96,10 @@ class CourseController {
 
     // delete course
     async deleteCourse(req, res) {
-        var { _id, name, title } = req.body;
-        if (!_id)
-            return res.json({
-                status: false,
-                message: "key _id required for course",
-                data: req.body,
-            });
+
 
         try {
-            var course = await db.Course.findOne({ _id });
+            var course = await db.Course.findOne({ _id: req.params.id });
 
             course.remove((err) => {
                 if (!err)
