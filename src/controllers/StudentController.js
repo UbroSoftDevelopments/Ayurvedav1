@@ -1,14 +1,11 @@
 const db = require("../models");
-
+const roles_list = require('../config/roles_list');
 class StudentController {
   constructor() {
     //
   }
 
   async studentRegister(req, res) {
-
-
-
 
     let { fullName, mobile, email, password, presentStatus, favSubject, purposeOfAyurveda, referralCode } = req.body;
 
@@ -34,8 +31,8 @@ class StudentController {
     user.save((err) => {
       if (!err) {
         var data = user.toObject();
-        data.token = app.token({ email: user.email, _id: user._id });
-        data.imageBaseUrl = app.uploadURL;
+        data.token = app.token({ email: user.email, _id: user._id, role: roles_list.Student });
+        // data.imageBaseUrl = app.uploadURL;
         return res.json({
           status: true,
           message: "Register successs",
@@ -73,10 +70,10 @@ class StudentController {
         var st = password === doc.password;
         //await app.checkPassword(password,doc.password);
         if (st) {
-          doc.token = app.token({ email: doc.email, _id: doc._id });
-          doc.imageBaseUrl = app.uploadURL;
-          if (doc.profile != "")
-            doc.profile = app.setImageURL(`user/${doc.profile}`);
+          doc.token = app.token({ email: doc.email, _id: doc._id, role: roles_list.Student });
+          // doc.imageBaseUrl = app.uploadURL;
+          // if (doc.profile != "")
+          //   doc.profile = app.setImageURL(`user/${doc.profile}`);
 
           return res.json({
             status: true,
@@ -97,6 +94,21 @@ class StudentController {
           data: err,
         });
       });
+  }
+
+  async checkStudent(req, res) {
+    try {
+      const student = await db.Student.findOne({ _id: req.userId });
+
+      return res
+        .status(200)
+        .json({ status: true, message: `'Authorized Student 🧑‍🎓'`, data: student });
+    } catch (err) {
+      return res
+        .status(403)
+        .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+    }
+
   }
 
   userSendOtp(req, res) {

@@ -1,5 +1,6 @@
 const express = require("express");
 const { ChapterController } = require("../controllers");
+const { checkAdminAuth } = require("../middleware");
 const router = express.Router();
 const uploader = require('../middleware/uploader');
 var pics = uploader.single('photo');

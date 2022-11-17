@@ -1,4 +1,5 @@
 const db = require("../models");
+const roles_list = require('../config/roles_list');
 
 class AdminController {
 
@@ -27,7 +28,7 @@ class AdminController {
 
         var st = await app.checkPassword(password, doc.password);
         if (st) {
-          doc.token = app.token({ username: doc.username, _id: doc._id });
+          doc.token = app.token({ username: doc.username, _id: doc._id, role: roles_list.Admin });
           return res.json({
             status: true,
             message: "login successs",
@@ -56,6 +57,7 @@ class AdminController {
       });
 
     var pass = await db.config.setPassword(password);
+
 
     var admin = new db.Admin();
     admin.name = name;
@@ -154,6 +156,9 @@ class AdminController {
     }
   }
 
+  async checkAdmin(req, res) {
+    return res.json({ status: true, message: 'Authorized Admin 😎', data: [] });
+  }
 }
 
 module.exports = AdminController;
