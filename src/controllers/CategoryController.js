@@ -67,7 +67,7 @@ class CategoryController {
         try {
             var category = await db.Category.findOne({ _id });
             if (name) category.name = name;
-            if (tab) category.title = title;
+            if (tab) category.tab = tab;
             if (detail) category.detail = detail;
             if (isActive) category.isActive = isActive;
 

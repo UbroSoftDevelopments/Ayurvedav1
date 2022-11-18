@@ -88,13 +88,8 @@ class VideoController {
     }
 
     async deleteVideo(req, res) {
-        var { _id } = req.body;
-        if (!_id)
-            return res.json({
-                status: false,
-                message: "key _id required for video",
-                data: req.body,
-            });
+        var _id = req.params.id;
+
 
         try {
             var video = await db.Video.findOne({ _id });
