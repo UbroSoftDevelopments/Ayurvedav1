@@ -49,15 +49,21 @@ class StudentController {
   }
 
   async studentLogin(req, res) {
-    var { password, email } = req.body;
-    if (!email || !password)
+    var { password, user } = req.body;
+    if (!user || !password)
       return res.json({
         status: false,
-        message: "Must provide email and password",
+        message: "Must provide email/phone and password",
         data: null,
       });
+    var _mobile = parseInt(user);
 
-    db.Student.findOne({ email })
+
+    if (isNaN(_mobile)) { _mobile = null }
+
+
+
+    db.Student.findOne({ $or: [{ email: user }, { mobile: _mobile }] })
       .lean()
       .then(async (doc) => {
         if (!doc)
