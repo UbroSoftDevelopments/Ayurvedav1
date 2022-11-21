@@ -6,7 +6,7 @@ class SubjectController {
 
 
     async addSubSubject(req, res) {
-        var { name, courseID, subjectID, detail, isActive } = req.body;
+        var { name, courseID, subjectID, detail, isActive, isDemo } = req.body;
         if (!name)
             return res.json({
                 status: false,
@@ -20,7 +20,7 @@ class SubjectController {
             //subSubject.courseID = courseID;
             subSubject.subjectID = subjectID;
             subSubject.detail = detail;
-
+            subSubject.isDemo = isDemo;
             if (isActive) subSubject.isActive = isActive;
             if (req.file != undefined) {
                 subSubject.img = `${config.uploadFolder}/${req.file.originalname}`;
@@ -64,9 +64,23 @@ class SubjectController {
                 .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
         }
     }
+    async getSubSubjectById(req, res) {
+        try {
+
+            const subSubject = await db.SubSubject.findOne({ _id: req.params.id }).populate("subjectID", "_id courseID");;
+            // const subSubject = await db.SubSubject.find().populate("subjectID", "name");
+            return res
+                .status(200)
+                .json({ status: true, message: `subSubject `, data: subSubject });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
 
     async updateSubSubject(req, res) {
-        var { _id, name, chapterId, subjectID, detail, isActive } = req.body;
+        var { _id, name, chapterId, subjectID, detail, isActive, isDemo } = req.body;
 
         if (!_id)
             return res.json({
@@ -81,7 +95,7 @@ class SubjectController {
             if (name) subsubject.name = name;
             if (chapterId) subsubject.chapterID = chapterId;
             if (detail) subsubject.detail = detail;
-
+            if (isDemo) subsubject.isDemo = isDemo;
             if (subjectID) subsubject.subjectID = subjectID;
             if (isActive) subsubject.isActive = isActive;
             if (req.file != undefined) {

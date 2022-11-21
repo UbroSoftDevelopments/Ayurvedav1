@@ -7,6 +7,7 @@ var pics = uploader.single('photo');
 
 router.post("/", pics, CourseController.addCourse);
 router.get("/", CourseController.getCourse);
+router.get("/:id", CourseController.getCourseById);
 router.put("/", pics, CourseController.updateCourse);
 router.delete("/:id", CourseController.deleteCourse);
 

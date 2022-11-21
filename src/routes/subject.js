@@ -7,6 +7,7 @@ var pics = uploader.single('photo');
 
 router.post("/", pics, SubjectController.addSubject);
 router.get("/", SubjectController.getSubject);
+router.get("/:id", SubjectController.getSubjectById);
 router.put("/", pics, SubjectController.updateSubject);
 router.delete("/:id", SubjectController.deleteSubject);
 router.get("/course/:id", SubjectController.getSubjectByCourseId);

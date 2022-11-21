@@ -5,6 +5,7 @@ const schema = new Schema({
     detail: { type: String, default: '' },
     img: { type: String, default: '' },
     sequence: { type: Number },
+    isDemo: { type: Number, default: 0 },
     chapterID: [{ type: 'ObjectId', ref: 'chapter' }],
     isActive: { type: Number, default: 1 }
 }, { timestamps: true });

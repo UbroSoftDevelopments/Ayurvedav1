@@ -82,11 +82,16 @@ class ProductController {
     async getMyCourse(req, res) {
 
         try {
-            const mycourse = await db.studentPlan.find({ studentID: req.userId }, { "courseID": 1, _id: 0 }).populate('courseID');
-
-            return res
-                .status(200)
-                .json({ status: true, message: `My Course list`, data: mycourse });
+            //  const mycourse = await db.studentPlan.find({ studentID: req.userId }, { "courseID": 1, _id: 0 }).populate('courseID');
+            const mycourse = await db.studentPlan
+                .find({ studentID: req.userId })
+                .distinct('courseID', function (error, ids) {
+                    db.Course.find({ '_id': { $in: ids } }, function (err, result) {
+                        return res
+                            .status(200)
+                            .json({ status: true, message: `My Course list`, data: result });
+                    });
+                });
         } catch (err) {
             return res.json({
                 status: false,

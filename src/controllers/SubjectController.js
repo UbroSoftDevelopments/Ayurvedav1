@@ -7,7 +7,7 @@ class SubjectController {
     /*  			Subject			   */
 
     async addSubject(req, res) {
-        var { name, courseID, detail, plan, isActive, isDemo } = req.body;
+        var { name, courseID, detail, plan, isActive } = req.body;
 
         if (!name)
             return res.json({
@@ -21,7 +21,7 @@ class SubjectController {
             subject.name = name;
             subject.courseID = JSON.parse(courseID);
             subject.detail = detail;
-            subject.isDemo = isDemo;
+
 
             if (plan) subject.plan = JSON.parse(plan);
 
@@ -63,15 +63,28 @@ class SubjectController {
         }
     }
 
+    async getSubjectById(req, res) {
+        try {
+            const subject = await db.Subject.findOne({ _id: req.params.id });
+
+            return res
+                .status(200)
+                .json({ status: true, message: `subject `, data: subject });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
+
     async updateSubject(req, res) {
         var { _id, name, courseID, detail, plan, isActive } = req.body;
-        if (!name)
-            if (!name || !_id)
-                return res.json({
-                    status: false,
-                    message: "key _id,name required for course",
-                    data: req.body,
-                });
+        if (!name || !_id)
+            return res.json({
+                status: false,
+                message: "key _id,name required for subject",
+                data: req.body,
+            });
 
         try {
             var subject = await db.Subject.findOne({ _id });
@@ -79,7 +92,6 @@ class SubjectController {
             if (name) subject.name = name;
             if (courseID) subject.courseID = JSON.parse(courseID);
             if (detail) subject.detail = detail;
-
             if (plan) subject.plan = JSON.parse(plan);
             if (isActive) subject.isActive = isActive;
             if (req.file != undefined) {

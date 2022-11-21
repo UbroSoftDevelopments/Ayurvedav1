@@ -58,19 +58,37 @@ class CourseController {
         }
     }
 
+    async getCourseById(req, res) {
+        try {
+            const course = await db.Course.findOne({ _id: req.params.id })
+            //get Catogery Name
+
+            return res
+                .status(200)
+                .json({ status: true, message: `course list`, data: course });
+        } catch (err) {
+            return res.json({
+                status: false,
+                message: "something went wrong 🤚",
+                data: `${err}`,
+            });
+        }
+    }
+
+
     // update course
     async updateCourse(req, res) {
         var { _id, name, categoryID, detail, isActive } = req.body;
+
         if (!name || !_id)
             return res.json({
                 status: false,
                 message: "key _id,name required for course",
                 data: req.body,
             });
-
         try {
             var course = await db.Course.findOne({ _id });
-            i
+
             if (categoryID) course.categoryID = categoryID;
             if (detail) course.detail = detail;
             if (name) course.name = name;
@@ -96,11 +114,8 @@ class CourseController {
 
     // delete course
     async deleteCourse(req, res) {
-
-
         try {
             var course = await db.Course.findOne({ _id: req.params.id });
-
             course.remove((err) => {
                 if (!err)
                     return res.json({
@@ -132,6 +147,7 @@ class CourseController {
             });
         }
     }
+
     async getActiveCourseByCategoryId(req, res) {
         try {
             const course = await db.Course.find({ isActive: 1, categoryID: req.params.id });
