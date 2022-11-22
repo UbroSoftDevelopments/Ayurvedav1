@@ -6,7 +6,7 @@ const schema = new Schema({
     desc: { type: String },
     sequence: { type: Number },
     noteTitle: { type: String },
-    nodeDoc: { type: String },
+    noteDoc: { type: String },
     img: { type: String, default: '' }
 
 }, { timestamps: true });

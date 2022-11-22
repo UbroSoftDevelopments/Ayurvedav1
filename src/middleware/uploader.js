@@ -4,7 +4,7 @@ const config = require("../config");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // return  cb(null, 'html/web/uploads/');
+
     return cb(null, config.uploadFolder);
   },
   filename: function (req, file, cb) {
