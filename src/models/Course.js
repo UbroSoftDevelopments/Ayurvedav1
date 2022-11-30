@@ -5,7 +5,7 @@ const schema = new Schema({
     detail: { type: String, default: '' },
     img: { type: String, default: '' },
     sequence: { type: Number },
-    isActive: { type: Number, default: 1 }
+    isActive: { type: Number, default: 0 }
 }, { timestamps: true });
 
 module.exports = model('course', schema);

@@ -4,7 +4,6 @@ const schema = new Schema({
     sequence: { type: Number },
     title: { type: String, required: true },
     duration: { type: String, required: true },
-    faculty: { type: String },
     chapterID: { type: 'ObjectId', ref: 'chapter' },
 }, { timestamps: true });
 

@@ -86,7 +86,7 @@ class ProductController {
             const mycourse = await db.studentPlan
                 .find({ studentID: req.userId })
                 .distinct('courseID', function (error, ids) {
-                    db.Course.find({ '_id': { $in: ids } }, function (err, result) {
+                    db.Course.find({ '_id': { $in: ids }, 'isActive': 1 }, function (err, result) {
                         return res
                             .status(200)
                             .json({ status: true, message: `My Course list`, data: result });
@@ -105,10 +105,16 @@ class ProductController {
     async getMySubjectByCourse(req, res) {
         try {
             const mysubject = await db.studentPlan.find({ studentID: req.userId, courseID: req.params.id }, { "subjectID": 1, _id: 0 }).populate('subjectID');
+            let result = []
+            if (mysubject) {
+                mysubject.map((val, ind) => {
+                    result.push(val.subjectID)
+                })
+            }
 
             return res
                 .status(200)
-                .json({ status: true, message: `My Subject list`, data: mysubject });
+                .json({ status: true, message: `My Subject list`, data: result });
         } catch (err) {
             return res.json({
                 status: false,

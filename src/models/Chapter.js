@@ -7,6 +7,8 @@ const schema = new Schema({
     sequence: { type: Number },
     noteTitle: { type: String },
     noteDoc: { type: String },
+    faculty: { type: String },
+    isActive: { type: Number, default: 0 },
     img: { type: String, default: '' }
 
 }, { timestamps: true });

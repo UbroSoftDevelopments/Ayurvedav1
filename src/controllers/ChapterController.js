@@ -6,7 +6,7 @@ class ChapterController {
 
     async addChapter(req, res) {
 
-        var { name, subject, subSubject, desc } = req.body;
+        var { name, subject, subSubject, faculty, desc, isActive } = req.body;
         if (!name)
             return res.json({
                 status: false,
@@ -20,6 +20,8 @@ class ChapterController {
             chapter.subject = subject;
             chapter.subSubject = subSubject;
             chapter.desc = desc;
+            chapter.faculty = faculty;
+            chapter.isActive = isActive;
 
             if (req.file != undefined) {
                 chapter.img = `${config.uploadFolder}/${req.file.originalname}`;
@@ -71,7 +73,7 @@ class ChapterController {
 
 
     async updateChapter(req, res) {
-        var { _id, name, subject, subSubject, desc } = req.body;
+        var { _id, name, subject, subSubject, desc, faculty, isActive } = req.body;
         if (!name)
             if (!name || !_id)
                 return res.json({
@@ -85,8 +87,10 @@ class ChapterController {
 
             if (name) chapter.name = name;
             if (desc) chapter.desc = desc;
+            if (faculty) chapter.faculty = faculty;
             if (subject) chapter.subject = subject;
             if (subSubject) chapter.subSubject = subSubject;
+            if (isActive) chapter.isActive = isActive;
 
             if (req.file != undefined) {
                 chapter.img = `${config.uploadFolder}/${req.file.originalname}`;

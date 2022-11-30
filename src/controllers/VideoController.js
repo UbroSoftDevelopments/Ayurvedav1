@@ -7,7 +7,7 @@ class VideoController {
 
     async addVideo(req, res) {
 
-        var { vimoID, title, duration, faculty, chapterID } = req.body;
+        var { vimoID, title, duration, chapterID } = req.body;
         if (!vimoID)
             return res.json({
                 status: false,
@@ -20,7 +20,6 @@ class VideoController {
             video.vimoID = vimoID;
             video.title = title;
             video.duration = duration;
-            video.faculty = faculty;
             video.chapterID = chapterID;
 
 
@@ -54,7 +53,7 @@ class VideoController {
 
 
     async updateVideo(req, res) {
-        var { _id, vimoID, title, duration, faculty, chapterID } = req.body;
+        var { _id, vimoID, title, duration, chapterID } = req.body;
         if (!vimoID)
             if (!vimoID || !_id)
                 return res.json({
@@ -69,7 +68,6 @@ class VideoController {
             if (vimoID) video.vimoID = vimoID;
             if (title) video.title = title;
             if (duration) video.duration = duration;
-            if (faculty) video.faculty = faculty;
             if (chapterID) video.chapterID = chapterID;
 
 

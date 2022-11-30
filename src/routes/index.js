@@ -15,6 +15,7 @@ router.use('/chapter', require("./chapter"));
 router.use('/course', require("./course"));
 router.use('/sub-subject', require("./subSubject"));
 router.use('/subject', require("./subject"));
+router.use('/question', require("./question"));
 router.use('/video', multer().none(), require("./video"));
 // Export the router
 module.exports = router;
