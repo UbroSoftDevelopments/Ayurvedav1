@@ -86,7 +86,7 @@ class ProductController {
             const mycourse = await db.studentPlan
                 .find({ studentID: req.userId })
                 .distinct('courseID', function (error, ids) {
-                    db.Course.find({ '_id': { $in: ids }, 'isActive': 1 }, function (err, result) {
+                    db.Course.find({ 'isActive': 1, '_id': { $in: ids } }, function (err, result) {
                         return res
                             .status(200)
                             .json({ status: true, message: `My Course list`, data: result });
@@ -136,7 +136,10 @@ class ProductController {
                 });
             }
             //call get chapter detail
-            const subsubject = await db.SubSubject.find({ isActive: 1, subjectID: req.params.id }).populate("chapterID");
+            const subsubject = await db.SubSubject.find({ subjectID: req.params.id, isActive: 1 }).populate({
+                path: 'chapterID',
+                match: { isActive: 1 }
+            });
 
             return res.json({
                 status: true,

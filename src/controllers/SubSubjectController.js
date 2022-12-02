@@ -246,11 +246,15 @@ class SubjectController {
 
     async getSubSubjectWithActiveChapterBySubId(req, res) {
         try {
-            const subsubject = await db.SubSubject.find({ isActive: 1, subjectID: req.params.id }).populate("chapterID");
+            // todo isActive is not working
+            const subsubject = await db.SubSubject.find({ subjectID: req.params.id, isActive: 1 }).populate({
+                path: 'chapterID',
+                match: { isActive: 1 }
+            });
 
             return res
                 .status(200)
-                .json({ status: true, message: `subject list`, data: subsubject });
+                .json({ status: true, message: `sub-subject chapter list`, data: subsubject });
         } catch (err) {
             return res.json({
                 status: false,

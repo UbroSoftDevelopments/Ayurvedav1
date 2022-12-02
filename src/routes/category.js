@@ -8,12 +8,12 @@ var pics = uploader.single('photo');
 
 router
     .route("/")
-    .post(pics, CategoryController.addCategory)
-    .get(CategoryController.getCategory)
-    .put(pics, CategoryController.updateCategory);
+    .post(pics, checkAdminAuth, CategoryController.addCategory)
+    .get(checkAdminAuth, CategoryController.getCategory)
+    .put(pics, checkAdminAuth, CategoryController.updateCategory);
 
 
-router.delete("/:id", CategoryController.deleteCategory);
+router.delete("/:id", checkAdminAuth, CategoryController.deleteCategory);
 router.get("/active", CategoryController.getActiveCategory);
 
 

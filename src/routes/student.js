@@ -1,5 +1,5 @@
 const express = require("express");
-const { checkStudentAuth } = require("../middleware");
+const { checkStudentAuth, checkAdminAuth } = require("../middleware");
 const { StudentController, ProductController } = require("../controllers");
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.get("/checkStudent", checkStudentAuth, StudentController.checkStudent);
 router.get("/", StudentController.getAllStudent);
 
 router.get("/plan/:id", ProductController.getStudentPlan);
-router.delete("/plan/:id", checkStudentAuth, ProductController.deleteStudentPlan);
+router.delete("/plan/:id", checkAdminAuth, ProductController.deleteStudentPlan);
 router.post("/plan", ProductController.addStudentPlan);
 
 //Get data from its Plan

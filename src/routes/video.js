@@ -1,12 +1,13 @@
 const express = require("express");
 const { VideoController } = require("../controllers");
 const router = express.Router();
+const { checkAdminAuth } = require("../middleware");
 
 
-router.post("/", VideoController.addVideo);
+router.post("/", checkAdminAuth, VideoController.addVideo);
 router.get("/", VideoController.getVideo);
-router.put("/", VideoController.updateVideo);
-router.delete("/:id", VideoController.deleteVideo);
+router.put("/", checkAdminAuth, VideoController.updateVideo);
+router.delete("/:id", checkAdminAuth, VideoController.deleteVideo);
 
 
 router.get("/chapter/:id", VideoController.getVideoByChapterId);

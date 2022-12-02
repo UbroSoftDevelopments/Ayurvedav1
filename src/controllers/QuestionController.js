@@ -2,9 +2,6 @@ const db = require("../models");
 
 class QuestionController {
 
-
-
-
     async addQuestion(req, res) {
 
         var { chapterID, question, opt1, opt2, opt3, opt4, tags, solution, code, courseID, subjectID, subSubjectID } = req.body;
@@ -17,7 +14,6 @@ class QuestionController {
 
         try {
             var questiondb = new db.Question();
-
             questiondb.chapterID = chapterID;
             questiondb.question = question;
             questiondb.opt1 = opt1;
@@ -30,7 +26,6 @@ class QuestionController {
             questiondb.courseID = courseID;
             questiondb.subjectID = subjectID;
             questiondb.subSubjectID = subSubjectID;
-
 
             questiondb.save((err) => {
                 if (!err)
@@ -58,8 +53,6 @@ class QuestionController {
                 .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
         }
     }
-
-
 
     async updateQuestion(req, res) {
         var { _id, chapterID, question, opt1, opt2, opt3, opt4, tags, solution, code, courseID, subjectID, subSubjectID } = req.body;
@@ -121,16 +114,30 @@ class QuestionController {
         }
     }
 
-
-
     async getQuestionByChapterId(req, res) {
 
         const id = req.params.id;
         try {
-            const videos = await db.Video.find({ 'chapterID': id });
+            const questiontbl = await db.Question.find({ 'chapterID': id });
             return res
                 .status(200)
-                .json({ status: true, message: `Videos list`, data: videos });
+                .json({ status: true, message: `Question list`, data: questiontbl });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+
+    }
+
+    async getQuestionById(req, res) {
+
+        const id = req.params.id;
+        try {
+            const questiontbl = await db.Question.find({ '_id': id });
+            return res
+                .status(200)
+                .json({ status: true, message: `Question `, data: questiontbl });
         } catch (err) {
             return res
                 .status(403)
