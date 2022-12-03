@@ -4,11 +4,11 @@ class QuestionController {
 
     async addQuestion(req, res) {
 
-        var { chapterID, question, opt1, opt2, opt3, opt4, tags, solution, code, courseID, subjectID, subSubjectID } = req.body;
-        if (!chapterID || !question || !opt1 || !opt2 || !opt3 || !opt4)
+        var { chapterID, question, opt1, opt2, opt3, opt4, tags, solution, code, courseID, subjectID, subSubjectID, level, qType, correctOpt } = req.body;
+        if (!question || !opt1 || !opt2 || !opt3 || !opt4 || !qType)
             return res.json({
                 status: false,
-                message: "chapterID and Option required for question",
+                message: "Feilds are required for question",
                 data: null,
             });
 
@@ -20,12 +20,15 @@ class QuestionController {
             questiondb.opt2 = opt2;
             questiondb.opt3 = opt3;
             questiondb.opt4 = opt4;
+            questiondb.correctOpt = correctOpt;
             questiondb.tags = tags;
+            questiondb.level = level;
             questiondb.solution = solution;
             questiondb.code = code;
             questiondb.courseID = courseID;
             questiondb.subjectID = subjectID;
             questiondb.subSubjectID = subSubjectID;
+            questiondb.qType = qType;
 
             questiondb.save((err) => {
                 if (!err)
@@ -55,11 +58,11 @@ class QuestionController {
     }
 
     async updateQuestion(req, res) {
-        var { _id, chapterID, question, opt1, opt2, opt3, opt4, tags, solution, code, courseID, subjectID, subSubjectID } = req.body;
-        if (!_id || !chapterID || !question || !opt1 || !opt2 || !opt3 || !opt4)
+        var { _id, chapterID, question, opt1, opt2, opt3, opt4, tags, solution, code, courseID, subjectID, subSubjectID, level, qType, correctOpt } = req.body;
+        if (!_id || !question || !opt1 || !opt2 || !opt3 || !opt4 || !qType)
             return res.json({
                 status: false,
-                message: "chapterID and Option required for question",
+                message: "Feilds are required for question",
                 data: null,
             });
         try {
@@ -71,7 +74,10 @@ class QuestionController {
             if (opt2) questiondb.opt2 = opt2;
             if (opt3) questiondb.opt3 = opt3;
             if (opt4) questiondb.opt4 = opt4;
+            if (correctOpt) questiondb.correctOpt = correctOpt;
             if (tags) questiondb.tags = tags;
+            if (level) questiondb.level = level;
+            if (qType) questiondb.qType = qType;
             if (solution) questiondb.solution = solution;
             if (code) questiondb.code = code;
             if (courseID) questiondb.courseID = courseID;
@@ -134,7 +140,7 @@ class QuestionController {
 
         const id = req.params.id;
         try {
-            const questiontbl = await db.Question.find({ '_id': id });
+            const questiontbl = await db.Question.findOne({ '_id': id });
             return res
                 .status(200)
                 .json({ status: true, message: `Question `, data: questiontbl });

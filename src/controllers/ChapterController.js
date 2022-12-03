@@ -171,7 +171,7 @@ class ChapterController {
 
             return res
                 .status(200)
-                .json({ status: true, message: `subject list`, data: subsubjectCourse });
+                .json({ status: true, message: `chapter list`, data: subsubjectCourse });
         } catch (err) {
             return res.json({
                 status: false,

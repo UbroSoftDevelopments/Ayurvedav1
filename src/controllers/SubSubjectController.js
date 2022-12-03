@@ -142,7 +142,7 @@ class SubjectController {
 
             return res
                 .status(200)
-                .json({ status: true, message: `subject list`, data: subsubject });
+                .json({ status: true, message: `sub-subject list`, data: subsubject });
         } catch (err) {
             return res.json({
                 status: false,
