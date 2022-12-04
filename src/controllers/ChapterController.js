@@ -24,7 +24,7 @@ class ChapterController {
             chapter.isActive = isActive;
 
             if (req.file != undefined) {
-                chapter.img = `${config.uploadFolder}/${req.file.originalname}`;
+                chapter.img = `${config.uploadFolder}/${req.fileName}`;
             } else {
                 chapter.img = ''
             }
@@ -93,7 +93,7 @@ class ChapterController {
             if (isActive) chapter.isActive = isActive;
 
             if (req.file != undefined) {
-                chapter.img = `${config.uploadFolder}/${req.file.originalname}`;
+                chapter.img = `${config.uploadFolder}/${req.fileName}`;
             }
             chapter.save((err) => {
                 if (!err)
@@ -126,7 +126,7 @@ class ChapterController {
             if (noteTitle) chapter.noteTitle = noteTitle;
 
             if (req.file != undefined) {
-                chapter.noteDoc = `${config.uploadFolder}/${req.file.originalname}`;
+                chapter.noteDoc = `${config.uploadFolder}/${req.fileName}`;
             }
             chapter.save((err) => {
                 if (!err)

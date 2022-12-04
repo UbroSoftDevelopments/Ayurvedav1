@@ -23,7 +23,7 @@ class SubjectController {
             subSubject.isDemo = isDemo;
             if (isActive) subSubject.isActive = isActive;
             if (req.file != undefined) {
-                subSubject.img = `${config.uploadFolder}/${req.file.originalname}`;
+                subSubject.img = `${config.uploadFolder}/${req.fileName}`;
             } else {
                 subSubject.img = ''
             }
@@ -99,7 +99,7 @@ class SubjectController {
             if (subjectID) subsubject.subjectID = subjectID;
             if (isActive) subsubject.isActive = isActive;
             if (req.file != undefined) {
-                subsubject.img = `${config.uploadFolder}/${req.file.originalname}`;
+                subsubject.img = `${config.uploadFolder}/${req.fileName}`;
             }
 
             subsubject.save((err) => {

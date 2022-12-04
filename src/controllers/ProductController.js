@@ -128,18 +128,36 @@ class ProductController {
     async getMyChapterBySubject(req, res) {
         try {
             const mysubject = await db.studentPlan.findOne({ studentID: req.userId, subjectID: req.params.id });
-            if (!mysubject) {
-                return res.json({
-                    status: false,
-                    message: "Chapter not found in your product. 🧺",
-                    data: null,
-                });
-            }
+            // if (!mysubject) {
+            //     return res.json({
+            //         status: false,
+            //         message: "Chapter not found in your product. 🧺",
+            //         data: null,
+            //     });
+            // }
             //call get chapter detail
             const subsubject = await db.SubSubject.find({ subjectID: req.params.id, isActive: 1 }).populate({
                 path: 'chapterID',
                 match: { isActive: 1 }
-            });
+            }).lean();
+
+
+            subsubject.map((val, ind) => {
+                if (!mysubject) {
+                    val.isPurchase = false;
+                    if (val.isDemo == 0) {
+                        val.chapterID.map((_v, _i) => {
+                            _v._id = "";
+                        })
+                    }
+                    else if (val.isDemo == 1) {
+                        val.isPurchase = true;
+                    }
+                }
+                else {
+                    val.isPurchase = true;
+                }
+            })
 
             return res.json({
                 status: true,
@@ -161,7 +179,8 @@ class ProductController {
     async getMyVideoByChapter(req, res) {
 
         try {
-            const sub_subject = await db.SubSubject.findOne({ chapterID: req.params.id });
+            const sub_subject = await db.SubSubject.findOne({ _id: req.params.subId });
+
             if (!sub_subject) {
                 return res.json({
                     status: false,
@@ -169,14 +188,17 @@ class ProductController {
                     data: null,
                 });
             }
-            const student = await db.studentPlan.findOne({ studentID: req.userId, subjectID: sub_subject.subjectID });
-            if (!student) {
-                return res.json({
-                    status: false,
-                    message: "Video not found in your product. 🧺",
-                    data: null,
-                });
+            if (sub_subject.isDemo != 1) {
+                const student = await db.studentPlan.findOne({ studentID: req.userId, subjectID: sub_subject.subjectID });
+                if (!student) {
+                    return res.json({
+                        status: false,
+                        message: "Video not found in your product. 🧺",
+                        data: null,
+                    });
+                }
             }
+
             //check chapter id before
             const videos = await db.Video.find({ 'chapterID': req.params.id });
             return res

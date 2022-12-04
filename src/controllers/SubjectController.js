@@ -26,7 +26,7 @@ class SubjectController {
             if (plan) subject.plan = JSON.parse(plan);
 
             if (req.file != undefined) {
-                subject.img = `${config.uploadFolder}/${req.file.originalname}`;
+                subject.img = `${config.uploadFolder}/${req.fileName}`;
             } else {
                 subject.img = ''
             }
@@ -95,7 +95,7 @@ class SubjectController {
             if (plan) subject.plan = JSON.parse(plan);
             if (isActive) subject.isActive = isActive;
             if (req.file != undefined) {
-                subject.img = `${config.uploadFolder}/${req.file.originalname}`;
+                subject.img = `${config.uploadFolder}/${req.fileName}`;
             }
 
 

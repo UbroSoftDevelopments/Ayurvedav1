@@ -23,7 +23,7 @@ class CourseController {
             if (isActive) course.isActive = isActive;
 
             if (req.file != undefined) {
-                course.img = `${config.uploadFolder}/${req.file.originalname}`;
+                course.img = `${config.uploadFolder}/${req.fileName}`;
             } else {
                 course.img = ''
             }
@@ -95,7 +95,7 @@ class CourseController {
             if (isActive) course.isActive = isActive;
 
             if (req.file != undefined) {
-                course.img = `${config.uploadFolder}/${req.file.originalname}`;
+                course.img = `${config.uploadFolder}/${req.fileName}`;
             }
 
             course.save((err) => {

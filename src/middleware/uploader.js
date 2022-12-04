@@ -8,7 +8,13 @@ const storage = multer.diskStorage({
     return cb(null, config.uploadFolder);
   },
   filename: function (req, file, cb) {
-    return cb(null, file.originalname);
+
+    let fileName = Date.now() + '_' + file.originalname;
+
+    req.fileName = fileName;
+    return cb(null, fileName);
+
+    // return cb(null, file.originalname);
   }
 });
 

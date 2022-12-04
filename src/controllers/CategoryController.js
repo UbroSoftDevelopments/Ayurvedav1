@@ -21,7 +21,7 @@ class CategoryController {
             category.isActive = isActive;
 
             if (req.file != undefined) {
-                category.img = `${config.uploadFolder}/${req.file.originalname}`;
+                category.img = `${config.uploadFolder}/${req.fileName}`;
             } else {
                 category.img = ''
             }
@@ -72,7 +72,7 @@ class CategoryController {
             if (isActive) category.isActive = isActive;
 
             if (req.file != undefined) {
-                category.img = `${config.uploadFolder}/${req.file.originalname}`;
+                category.img = `${config.uploadFolder}/${req.fileName}`;
             }
 
             category.save((err) => {
