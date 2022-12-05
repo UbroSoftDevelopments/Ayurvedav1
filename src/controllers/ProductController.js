@@ -147,7 +147,7 @@ class ProductController {
                     val.isPurchase = false;
                     if (val.isDemo == 0) {
                         val.chapterID.map((_v, _i) => {
-                            _v._id = "";
+                            //   _v._id = "";
                         })
                     }
                     else if (val.isDemo == 1) {
