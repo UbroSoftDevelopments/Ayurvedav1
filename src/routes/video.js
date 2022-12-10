@@ -9,7 +9,7 @@ router.get("/", VideoController.getVideo);
 router.put("/", checkAdminAuth, VideoController.updateVideo);
 router.delete("/:id", checkAdminAuth, VideoController.deleteVideo);
 
-
+//only demo is allowed is pending todo
 router.get("/chapter/:id", VideoController.getVideoByChapterId);
 
 module.exports = router;

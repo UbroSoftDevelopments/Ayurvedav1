@@ -1,0 +1,157 @@
+const db = require("../models");
+
+class TestPaperController {
+
+    async addTestPaper(req, res) {
+
+        var { courseID, subjectID, subSubjectID, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate } = req.body;
+        if (!chapterID || !totalQuestions || !title)
+            return res.json({
+                status: false,
+                message: "Feilds are required for test paper",
+                data: null,
+            });
+
+        try {
+            var testPaper = new db.TestPaper();
+            testPaper.courseID = courseID;
+            testPaper.subjectID = subjectID;
+            testPaper.subSubjectID = subSubjectID;
+            testPaper.chapterID = chapterID;
+            testPaper.title = title;
+            testPaper.img = img;
+            testPaper.desc = desc;
+            testPaper.totalQuestions = totalQuestions;
+            testPaper.totalMarks = totalMarks;
+            testPaper.perQMarks = perQMarks;
+            testPaper.perQNegMarks = perQNegMarks;
+            testPaper.cutoff = cutoff;
+            testPaper.duration = duration;
+            testPaper.startDate = startDate;
+            testPaper.endDate = endDate;
+
+            testPaper.save((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "new Test Paper Added added",
+                        data: testPaper,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
+
+    async getTestPaper(req, res) {
+        try {
+            const testPaper = await db.TestPaper.find();
+            return res
+                .status(200)
+                .json({ status: true, message: `testPaper list`, data: testPaper });
+        } catch (err) {
+            return res
+                .status(200)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
+
+    async updateTestPaper(req, res) {
+        var { _id, courseID, subjectID, subSubjectID, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate } = req.body;
+        if (!_id || !chapterID || !totalQuestions || !title)
+            return res.json({
+                status: false,
+                message: "Feilds are required for Test",
+                data: null,
+            });
+        try {
+            var testPaper = await db.TestPaper.findOne({ _id });
+
+            if (courseID) testPaper.courseID = courseID;
+            if (subjectID) testPaper.subjectID = subjectID;
+            if (subSubjectID) testPaper.subSubjectID = subSubjectID;
+            if (chapterID) testPaper.chapterID = chapterID;
+            if (title) testPaper.title = title;
+            if (img) testPaper.img = img;
+            if (desc) testPaper.desc = desc;
+            if (totalQuestions) testPaper.totalQuestions = totalQuestions;
+            if (totalMarks) testPaper.totalMarks = totalMarks;
+            if (perQMarks) testPaper.perQMarks = perQMarks;
+            if (perQNegMarks) testPaper.perQNegMarks = perQNegMarks;
+            if (cutoff) testPaper.cutoff = cutoff;
+            if (duration) testPaper.duration = duration;
+            if (startDate) testPaper.startDate = startDate;
+            if (endDate) testPaper.endDate = endDate;
+
+
+            testPaper.save((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "testPaper updated 👍",
+                        data: testPaper,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
+
+    async deleteTestPaper(req, res) {
+        var _id = req.params.id;
+
+
+        try {
+            var testPaper = await db.TestPaper.findOne({ _id });
+
+            testPaper.remove((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "testPaper deleted",
+                        data: testPaper,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
+
+    async getTestPaperByChapterId(req, res) {
+
+        const id = req.params.id;
+        try {
+            const testPaper = await db.TestPaper.find({ 'chapterID': id });
+            return res
+                .status(200)
+                .json({ status: true, message: `testPaper list`, data: testPaper });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+
+    }
+
+    async getTestPaperById(req, res) {
+
+        const id = req.params.id;
+        try {
+            const testPaper = await db.TestPaper.findOne({ '_id': id });
+            return res
+                .status(200)
+                .json({ status: true, message: `Test Paper `, data: testPaper });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+
+    }
+
+}
+
+module.exports = TestPaperController;

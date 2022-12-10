@@ -147,7 +147,7 @@ class ProductController {
                     val.isPurchase = false;
                     if (val.isDemo == 0) {
                         val.chapterID.map((_v, _i) => {
-                            //   _v._id = "";
+                            //   _v._id = "";  //todo need to check
                         })
                     }
                     else if (val.isDemo == 1) {
@@ -204,6 +204,44 @@ class ProductController {
             return res
                 .status(200)
                 .json({ status: true, message: `Videos list`, data: videos });
+        } catch (err) {
+            return res.json({
+                status: false,
+                message: "something went wrong 🤚",
+                data: `${err}`,
+            });
+        }
+
+    }
+
+    async getMyNotesByChapter(req, res) {
+
+        try {
+            const sub_subject = await db.SubSubject.findOne({ _id: req.params.subId });
+
+            if (!sub_subject) {
+                return res.json({
+                    status: false,
+                    message: "Notes not found. 🧺",
+                    data: null,
+                });
+            }
+            if (sub_subject.isDemo != 1) {
+                const student = await db.studentPlan.findOne({ studentID: req.userId, subjectID: sub_subject.subjectID });
+                if (!student) {
+                    return res.json({
+                        status: false,
+                        message: "Notes not found in your product. 🧺",
+                        data: null,
+                    });
+                }
+            }
+
+            //check chapter id before
+            const notes = await db.Notes.find({ 'chapterID': req.params.id });
+            return res
+                .status(200)
+                .json({ status: true, message: `notes list`, data: notes });
         } catch (err) {
             return res.json({
                 status: false,

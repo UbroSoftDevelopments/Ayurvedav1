@@ -21,4 +21,5 @@ router.get("/myCourses", checkStudentAuth, ProductController.getMyCourse)
 router.get("/mySubjects/course/:id", checkStudentAuth, ProductController.getMySubjectByCourse)
 router.get("/myChapters/subject/:id", checkStudentAuth, ProductController.getMyChapterBySubject)
 router.get("/myVideos/chapter/:subId/:id", checkStudentAuth, ProductController.getMyVideoByChapter)
+router.get("/myNotes/chapter/:subId/:id", checkStudentAuth, ProductController.getMyNotesByChapter)
 module.exports = router;

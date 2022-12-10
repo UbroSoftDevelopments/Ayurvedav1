@@ -3,14 +3,13 @@ const path = require('path')
 const config = require("../config");
 
 const storage = multer.diskStorage({
+
   destination: function (req, file, cb) {
 
     return cb(null, config.uploadFolder);
   },
   filename: function (req, file, cb) {
-
     let fileName = Date.now() + '_' + file.originalname;
-
     req.fileName = fileName;
     return cb(null, fileName);
 
