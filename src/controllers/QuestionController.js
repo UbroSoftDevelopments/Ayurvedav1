@@ -4,7 +4,7 @@ class QuestionController {
 
     async addQuestion(req, res) {
 
-        var { chapterID, question, opt1, opt2, opt3, opt4, tags, solution, code, courseID, subjectID, subSubjectID, level, qType, correctOpt } = req.body;
+        var { chapterID, question, opt1, opt2, opt3, opt4, tags, samhitaTag, subjectTag, patternTag, solution, code, courseID, subjectID, subSubjectID, level, qType, correctOpt } = req.body;
         if (!question || !opt1 || !opt2 || !opt3 || !opt4 || !qType)
             return res.json({
                 status: false,
@@ -22,6 +22,9 @@ class QuestionController {
             questiondb.opt4 = opt4;
             questiondb.correctOpt = correctOpt;
             questiondb.tags = tags;
+            questiondb.samhitaTag = samhitaTag;
+            questiondb.patternTag = patternTag;
+            questiondb.subjectTag = subjectTag;
             questiondb.level = level;
             questiondb.solution = solution;
             questiondb.code = code;
@@ -58,7 +61,7 @@ class QuestionController {
     }
 
     async updateQuestion(req, res) {
-        var { _id, chapterID, question, opt1, opt2, opt3, opt4, tags, solution, code, courseID, subjectID, subSubjectID, level, qType, correctOpt } = req.body;
+        var { _id, chapterID, question, opt1, opt2, opt3, opt4, tags, samhitaTag, subjectTag, patternTag, solution, code, courseID, subjectID, subSubjectID, level, qType, correctOpt } = req.body;
         if (!_id || !question || !opt1 || !opt2 || !opt3 || !opt4 || !qType)
             return res.json({
                 status: false,
@@ -77,6 +80,9 @@ class QuestionController {
             if (correctOpt) questiondb.correctOpt = correctOpt;
             if (tags) questiondb.tags = tags;
             if (level) questiondb.level = level;
+            if (samhitaTag) questiondb.samhitaTag = samhitaTag;
+            if (patternTag) questiondb.patternTag = patternTag;
+            if (subjectTag) questiondb.subjectTag = subjectTag;
             if (qType) questiondb.qType = qType;
             if (solution) questiondb.solution = solution;
             if (code) questiondb.code = code;
