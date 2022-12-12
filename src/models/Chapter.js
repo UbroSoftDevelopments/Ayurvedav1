@@ -9,7 +9,7 @@ const schema = new Schema({
     noteDoc: { type: String },
     faculty: { type: String },
     isActive: { type: Number, default: 0 },
-    img: { type: String, default: '' }
+    img: { type: String }
 
 }, { timestamps: true });
 
