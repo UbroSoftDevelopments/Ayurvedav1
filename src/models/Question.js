@@ -3,7 +3,7 @@ const { Schema, model } = require('mongoose');
 const userSchema = new Schema({
 
     chapterID: { type: 'ObjectId', ref: 'chapter' },
-    question: { hindi: { type: String, required: true }, eng: { type: String, required: true }, type: { type: String, default: 'html' } },
+    question: { hindi: { type: String }, eng: { type: String }, type: { type: String, default: 'html' } },
     opt1: { hindi: { type: String }, eng: { type: String }, type: { type: String, default: 'text' } },
     opt2: { hindi: { type: String }, eng: { type: String }, type: { type: String, default: 'text' } },
     opt3: { hindi: { type: String }, eng: { type: String }, type: { type: String, default: 'text' } },
@@ -19,7 +19,7 @@ const userSchema = new Schema({
     courseID: { type: 'ObjectId', ref: 'course' },
     subjectID: { type: 'ObjectId', ref: 'subject' },
     subSubjectID: { type: 'ObjectId', ref: 'subsubject' },
-    qType: { type: String }
+    qType: { type: String, required: true }
 }, { timestamps: true });
 
 module.exports = model('question', userSchema);
