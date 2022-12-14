@@ -16,6 +16,7 @@ const userSchema = new Schema({
     duration: { type: Number },
     startDate: { type: Date },
     endDate: { type: Date },
+    questionList: [{ type: 'ObjectId', ref: 'question' }]
 }, { timestamps: true });
 
 module.exports = model('testPaper', userSchema);

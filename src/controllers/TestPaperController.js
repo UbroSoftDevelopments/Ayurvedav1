@@ -1,16 +1,21 @@
 const db = require("../models");
+const config = require("../config");
 
 class TestPaperController {
 
     async addTestPaper(req, res) {
 
-        var { courseID, subjectID, subSubjectID, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate } = req.body;
-        if (!chapterID || !totalQuestions || !title)
+        var { courseID, subjectID, subSubjectID, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate, questionList } = req.body;
+
+
+        if (!chapterID || !title) {
             return res.json({
                 status: false,
                 message: "Feilds are required for test paper",
                 data: null,
             });
+        }
+
 
         try {
             var testPaper = new db.TestPaper();
@@ -29,6 +34,12 @@ class TestPaperController {
             testPaper.duration = duration;
             testPaper.startDate = startDate;
             testPaper.endDate = endDate;
+            testPaper.questionList = JSON.parse(questionList);
+            if (req.file != undefined) {
+                testPaper.img = `${config.uploadFolder}/${req.fileName}`;
+            } else {
+                testPaper.img = ''
+            }
 
             testPaper.save((err) => {
                 if (!err)
@@ -46,7 +57,7 @@ class TestPaperController {
 
     async getTestPaper(req, res) {
         try {
-            const testPaper = await db.TestPaper.find();
+            const testPaper = await db.TestPaper.find().populate("chapterID");;
             return res
                 .status(200)
                 .json({ status: true, message: `testPaper list`, data: testPaper });
@@ -58,7 +69,7 @@ class TestPaperController {
     }
 
     async updateTestPaper(req, res) {
-        var { _id, courseID, subjectID, subSubjectID, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate } = req.body;
+        var { _id, questionList, courseID, subjectID, subSubjectID, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate } = req.body;
         if (!_id || !chapterID || !totalQuestions || !title)
             return res.json({
                 status: false,
@@ -83,8 +94,13 @@ class TestPaperController {
             if (duration) testPaper.duration = duration;
             if (startDate) testPaper.startDate = startDate;
             if (endDate) testPaper.endDate = endDate;
+            if (questionList) testPaper.questionList = JSON.parse(questionList);
 
-
+            if (req.file != undefined) {
+                testPaper.img = `${config.uploadFolder}/${req.fileName}`;
+            } else {
+                testPaper.img = ''
+            }
             testPaper.save((err) => {
                 if (!err)
                     return res.json({
