@@ -11,7 +11,7 @@ router.get("/", TestSeriesController.getTestSeries);
 // router.get("/:id", SubjectController.getSubjectById);
 router.put("/", pics, checkAdminAuth, TestSeriesController.updateTestSeries);
 router.post("/paper", pics, checkAdminAuth, TestSeriesController.addPaperToTest);
-// router.delete("/:id", checkAdminAuth, SubjectController.deleteSubject);
+router.delete("/:id", checkAdminAuth, TestSeriesController.deleteTestSeries);
 // router.get("/course/:id", SubjectController.getSubjectByCourseId);
 // router.get("/active/:id", SubjectController.getActiveSubjectByCourseId);
 

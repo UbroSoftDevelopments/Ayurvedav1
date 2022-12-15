@@ -142,17 +142,17 @@ class TestSeriesController {
     }
 
     // delete subject
-    async deleteSubject(req, res) {
+    async deleteTestSeries(req, res) {
         var _id = req.params.id;
         try {
-            var subject = await db.Subject.findOne({ _id });
+            var testSeries = await db.TestSeries.findOne({ _id });
 
-            subject.remove((err) => {
+            testSeries.remove((err) => {
                 if (!err)
                     return res.json({
                         status: true,
-                        message: "subject deleted",
-                        data: subject,
+                        message: "testSeries deleted",
+                        data: testSeries,
                     });
                 else return res.json({ status: false, message: `${err}`, data: err });
             });
