@@ -5,10 +5,10 @@ class TestPaperController {
 
     async addTestPaper(req, res) {
 
-        var { courseID, subjectID, subSubjectID, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate, questionList } = req.body;
+        var { rankStartDate, rankEndDate, qType, isActive, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate, questionList } = req.body;
 
 
-        if (!chapterID || !title) {
+        if (!qType || !title) {
             return res.json({
                 status: false,
                 message: "Feilds are required for test paper",
@@ -19,9 +19,10 @@ class TestPaperController {
 
         try {
             var testPaper = new db.TestPaper();
-            testPaper.courseID = courseID;
-            testPaper.subjectID = subjectID;
-            testPaper.subSubjectID = subSubjectID;
+            testPaper.rankStartDate = rankStartDate;
+            testPaper.rankEndDate = rankEndDate;
+            testPaper.qType = qType;
+            testPaper.isActive = isActive;
             testPaper.chapterID = chapterID;
             testPaper.title = title;
             testPaper.img = img;
@@ -69,8 +70,8 @@ class TestPaperController {
     }
 
     async updateTestPaper(req, res) {
-        var { _id, questionList, courseID, subjectID, subSubjectID, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate } = req.body;
-        if (!_id || !chapterID || !totalQuestions || !title)
+        var { _id, questionList, rankStartDate, rankEndDate, qType, isActive, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate } = req.body;
+        if (!_id || !qType || !totalQuestions || !title)
             return res.json({
                 status: false,
                 message: "Feilds are required for Test",
@@ -79,9 +80,10 @@ class TestPaperController {
         try {
             var testPaper = await db.TestPaper.findOne({ _id });
 
-            if (courseID) testPaper.courseID = courseID;
-            if (subjectID) testPaper.subjectID = subjectID;
-            if (subSubjectID) testPaper.subSubjectID = subSubjectID;
+            if (rankStartDate) testPaper.rankStartDate = rankStartDate;
+            if (rankEndDate) testPaper.rankEndDate = rankEndDate;
+            if (qType) testPaper.qType = qType;
+            if (isActive) testPaper.isActive = isActive;
             if (chapterID) testPaper.chapterID = chapterID;
             if (title) testPaper.title = title;
             if (img) testPaper.img = img;

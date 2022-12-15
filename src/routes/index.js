@@ -19,5 +19,6 @@ router.use('/question', require("./question"));
 router.use('/video', multer().none(), require("./video"));
 router.use('/notes', require("./notes"));
 router.use('/test-paper', require("./testpaper"));
+router.use('/test-series', require("./testseries"));
 // Export the router
 module.exports = router;
