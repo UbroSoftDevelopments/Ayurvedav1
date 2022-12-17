@@ -3,6 +3,7 @@ const { Schema, model } = require('mongoose');
 const schema = new Schema({
     name: { type: String, required: true },
     paperID: [{ type: 'ObjectId', ref: 'testPaper' }],
+    courseID: [{ type: 'ObjectId', ref: 'course' }],
     desc: { type: String, default: '' },
     img: { type: String, default: '' },
     isActive: { type: Number, default: 0 },

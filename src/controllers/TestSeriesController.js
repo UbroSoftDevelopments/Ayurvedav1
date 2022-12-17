@@ -6,7 +6,7 @@ class TestSeriesController {
 
 
     async addTestSeries(req, res) {
-        var { name, desc, plan, isActive, activeDate, deactiveDate } = req.body;
+        var { name, desc, plan, isActive, activeDate, deactiveDate, courseID } = req.body;
 
         if (!name)
             return res.json({
@@ -21,6 +21,7 @@ class TestSeriesController {
             testSeries.desc = desc;
             testSeries.activeDate = activeDate;
             testSeries.deactiveDate = deactiveDate;
+            testSeries.courseID = courseID;
 
 
             if (plan) testSeries.plan = JSON.parse(plan);

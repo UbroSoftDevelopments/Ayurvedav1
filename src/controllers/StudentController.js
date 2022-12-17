@@ -224,29 +224,42 @@ class StudentController {
 
 
   async addStudentPlan(req, res) {
-    let { studentID, courseID, subjectID, plan } = req.body;
-    if (!studentID || !courseID || !subjectID || !plan) {
+    let { studentID, courseID, subjectID, testSeriesID, plan } = req.body;
+    if (!studentID || !courseID || !plan) {
       return res.json({
         status: false,
         message: "Must provide all input 🙄",
         data: null,
       });
     }
-
-
-
     try {
+      let findValue = { studentID: studentID };
+      if (subjectID) findValue.subjectID = subjectID;
+      if (testSeriesID) findValue.testSeriesID = testSeriesID;
+
+      const studentData = await db.studentPlan.findOne(findValue);
+      if (studentData) {
+        findValue.plan = plan;
+        findValue.studentData = studentData;
+        return res.json({
+          status: true,
+          message: " Plan is already assign to student.💸 ",
+          data: findValue,
+        });
+      }
+      console.log(findValue);
       const stdPlan = await db.studentPlan();
       stdPlan.studentID = studentID;
       stdPlan.courseID = courseID;
-      stdPlan.subjectID = subjectID;
+      if (subjectID) stdPlan.subjectID = subjectID;
+      if (testSeriesID) stdPlan.testSeriesID = testSeriesID;
       stdPlan.plan = plan;
 
       stdPlan.save((err) => {
         if (!err)
           return res.json({
             status: true,
-            message: "New plan added 💸",
+            message: "New plan added. 💸",
             data: stdPlan,
           });
         else return res.json({ status: false, message: `${err}`, data: err });
