@@ -152,7 +152,6 @@ class CourseController {
         try {
             const course = await db.Course.find({ isActive: 1, categoryID: req.params.id }).lean();
             //get Catogery Name
-            console.log(course);
             for (let elem of course) {
                 const subjectcount = await db.Subject.countDocuments({ courseID: elem._id });
                 elem.subcount = subjectcount;
