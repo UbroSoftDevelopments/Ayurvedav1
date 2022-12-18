@@ -8,6 +8,7 @@ var pics = uploader.single('photo');
 
 router.post("/", pics, checkAdminAuth, TestSeriesController.addTestSeries);
 router.get("/", TestSeriesController.getTestSeries);
+router.get("/course/:id", TestSeriesController.getTestSeriesByCourse);
 // router.get("/:id", SubjectController.getSubjectById);
 router.put("/", pics, checkAdminAuth, TestSeriesController.updateTestSeries);
 router.post("/paper", pics, checkAdminAuth, TestSeriesController.addPaperToTest);

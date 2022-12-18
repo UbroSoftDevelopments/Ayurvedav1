@@ -6,7 +6,7 @@ class TestSeriesController {
 
 
     async addTestSeries(req, res) {
-        var { name, desc, plan, isActive, activeDate, deactiveDate } = req.body;
+        var { name, desc, plan, isActive, activeDate, deactiveDate, courseID } = req.body;
 
         if (!name)
             return res.json({
@@ -21,6 +21,7 @@ class TestSeriesController {
             testSeries.desc = desc;
             testSeries.activeDate = activeDate;
             testSeries.deactiveDate = deactiveDate;
+            testSeries.courseID = JSON.parse(courseID);
 
 
             if (plan) testSeries.plan = JSON.parse(plan);
@@ -52,6 +53,19 @@ class TestSeriesController {
     async getTestSeries(req, res) {
         try {
             var testSeries = await db.TestSeries.find().populate("paperID");
+            return res
+                .status(200)
+                .json({ status: true, message: `testSeries list`, data: testSeries });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
+
+    async getTestSeriesByCourse(req, res) {
+        try {
+            var testSeries = await db.TestSeries.find({ courseID: req.params.id });
             return res
                 .status(200)
                 .json({ status: true, message: `testSeries list`, data: testSeries });
@@ -104,7 +118,7 @@ class TestSeriesController {
     }
 
     async updateTestSeries(req, res) {
-        var { _id, name, desc, plan, isActive, activeDate, deactiveDate, paperID } = req.body;
+        var { _id, name, desc, plan, isActive, activeDate, deactiveDate, paperID, courseID } = req.body;
         if (!_id)
             return res.json({
                 status: false,
@@ -121,6 +135,7 @@ class TestSeriesController {
             if (deactiveDate) testSeries.deactiveDate = deactiveDate;
             if (plan) testSeries.plan = JSON.parse(plan);
             if (paperID) testSeries.paperID = JSON.parse(paperID);
+            if (courseID) testSeries.courseID = JSON.parse(courseID);
             if (isActive) testSeries.isActive = isActive;
             if (req.file != undefined) {
                 testSeries.img = `${config.uploadFolder}/${req.fileName}`;

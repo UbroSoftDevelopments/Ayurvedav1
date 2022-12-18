@@ -8,7 +8,7 @@ class TestPaperController {
         var { rankStartDate, rankEndDate, qType, isActive, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate, questionList } = req.body;
 
 
-        if (!qType || !title) {
+        if (!qType || !title || !totalQuestions) {
             return res.json({
                 status: false,
                 message: "Feilds are required for test paper",
@@ -170,6 +170,22 @@ class TestPaperController {
 
     }
 
+
+    async getStudentTestPaperById(req, res) {
+
+        const id = req.params.id;
+        try {
+            const testPaper = await db.TestPaper.findOne({ '_id': id }).populate("questionList");
+            return res
+                .status(200)
+                .json({ status: true, message: `Test Paper `, data: testPaper });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+
+    }
 }
 
 module.exports = TestPaperController;

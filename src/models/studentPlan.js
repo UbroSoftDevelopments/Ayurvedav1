@@ -3,6 +3,7 @@ const schema = new Schema({
     studentID: { type: 'ObjectId', ref: 'student' },
     courseID: { type: 'ObjectId', ref: 'course' },
     subjectID: { type: 'ObjectId', ref: 'subject' },
+    testSeriesID: { type: 'ObjectId', ref: 'testSeries' },
     plan: {
         type: {
             lable: { type: String },

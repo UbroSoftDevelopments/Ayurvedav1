@@ -8,7 +8,7 @@ class ProductController {
 
     async getStudentPlan(req, res) {
         try {
-            const subPlan = await db.studentPlan.find({ studentID: req.params.id }).populate('courseID').populate('subjectID');
+            const subPlan = await db.studentPlan.find({ studentID: req.params.id }).populate('courseID').populate('subjectID').populate('testSeriesID');
 
             return res
                 .status(200)
@@ -24,8 +24,8 @@ class ProductController {
 
 
     async addStudentPlan(req, res) {
-        let { studentID, courseID, subjectID, plan } = req.body;
-        if (!studentID || !courseID || !subjectID || !plan) {
+        let { studentID, courseID, subjectID, testSeriesID, plan } = req.body;
+        if (!studentID || !courseID || !plan) {
             return res.json({
                 status: false,
                 message: "Must provide all input 🙄",
@@ -34,12 +34,37 @@ class ProductController {
         }
 
 
-
         try {
+
+            let findValue = { studentID: studentID };
+            if (subjectID) findValue.subjectID = subjectID;
+            if (testSeriesID) findValue.testSeriesID = testSeriesID;
+
+            const studentData = await db.studentPlan.find(findValue);
+
+            if (studentData) {
+                var already = false;
+                studentData.map((_v, _ind) => {
+                    if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
+                        already = true;
+                    }
+                })
+
+                if (already) {
+                    return res.json({
+                        status: true,
+                        message: " Plan is already assign to student.💸 ",
+                        data: findValue,
+                    });
+                }
+
+            }
+
             const stdPlan = await db.studentPlan();
             stdPlan.studentID = studentID;
             stdPlan.courseID = courseID;
-            stdPlan.subjectID = subjectID;
+            if (subjectID) stdPlan.subjectID = subjectID;
+            if (testSeriesID) stdPlan.testSeriesID = testSeriesID;
             stdPlan.plan = plan;
 
             stdPlan.save((err) => {
