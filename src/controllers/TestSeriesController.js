@@ -105,7 +105,7 @@ class TestSeriesController {
     }
 
     async updateTestSeries(req, res) {
-        var { _id, name, desc, plan, isActive, activeDate, deactiveDate, paperID } = req.body;
+        var { _id, name, desc, plan, isActive, activeDate, deactiveDate, paperID, courseID } = req.body;
         if (!_id)
             return res.json({
                 status: false,
@@ -122,6 +122,7 @@ class TestSeriesController {
             if (deactiveDate) testSeries.deactiveDate = deactiveDate;
             if (plan) testSeries.plan = JSON.parse(plan);
             if (paperID) testSeries.paperID = JSON.parse(paperID);
+            if (courseID) testSeries.courseID = JSON.parse(courseID);
             if (isActive) testSeries.isActive = isActive;
             if (req.file != undefined) {
                 testSeries.img = `${config.uploadFolder}/${req.fileName}`;
