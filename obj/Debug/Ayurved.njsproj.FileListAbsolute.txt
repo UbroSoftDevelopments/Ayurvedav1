@@ -1,0 +1,3 @@
+C:\Users\Manish.Manish-PC\source\repos\Ayurvedav1\obj\Debug\Ayurved.njsproj.AssemblyReference.cache
+C:\Users\Manish.Manish-PC\source\repos\Ayurvedav1\obj\Debug\Ayurved.njsproj.CoreCompileInputs.cache
+C:\Users\Manish.Manish-PC\source\repos\Ayurvedav1\bin\Microsoft.NodejsTools.WebRole.dll

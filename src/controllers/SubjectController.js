@@ -153,8 +153,17 @@ class SubjectController {
 
     async getActiveSubjectByCourseId(req, res) {
         try {
-            const subject = await db.Subject.find({ isActive: 1, courseID: req.params.id });
-
+            const subject = await db.Subject.find({ isActive: 1, courseID: req.params.id }).lean();
+            for (let elem of subject) {
+                let chapCount = 0;
+                const subSubject = await db.SubSubject.find({ subjectID: elem._id }).lean();
+                for (let _el of subSubject) {
+                    chapCount += _el.chapterID.length;
+                    
+                }
+                elem.chapCount = chapCount;
+               
+            }
             return res
                 .status(200)
                 .json({ status: true, message: `subject list`, data: subject });
