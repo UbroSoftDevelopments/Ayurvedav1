@@ -21,7 +21,7 @@ class TestSeriesController {
             testSeries.desc = desc;
             testSeries.activeDate = activeDate;
             testSeries.deactiveDate = deactiveDate;
-            testSeries.courseID = courseID;
+            testSeries.courseID = JSON.parse(courseID);
 
 
             if (plan) testSeries.plan = JSON.parse(plan);
@@ -53,6 +53,19 @@ class TestSeriesController {
     async getTestSeries(req, res) {
         try {
             var testSeries = await db.TestSeries.find().populate("paperID");
+            return res
+                .status(200)
+                .json({ status: true, message: `testSeries list`, data: testSeries });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
+
+    async getTestSeriesByCourse(req, res) {
+        try {
+            var testSeries = await db.TestSeries.find({ courseID: req.params.id });
             return res
                 .status(200)
                 .json({ status: true, message: `testSeries list`, data: testSeries });

@@ -1,6 +1,6 @@
 const express = require("express");
 const { TestPaperController } = require("../controllers");
-const { checkAdminAuth } = require("../middleware");
+const { checkAdminAuth, checkStudentAuth } = require("../middleware");
 const router = express.Router();
 const uploader = require('../middleware/uploader');
 var pics = uploader.single('photo');
@@ -11,7 +11,8 @@ router.get("/", TestPaperController.getTestPaper);
 router.put("/", pics, checkAdminAuth, TestPaperController.updateTestPaper);
 router.delete("/:id", checkAdminAuth, TestPaperController.deleteTestPaper);
 router.get("/chapter", TestPaperController.getTestPaperByChapterId);
-router.get("/:id", TestPaperController.getTestPaperById);
+router.get("/:id", checkAdminAuth, TestPaperController.getTestPaperById);
+router.get("/student/:id", checkStudentAuth, TestPaperController.getTestPaperById);
 
 
 

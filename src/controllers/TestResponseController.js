@@ -6,9 +6,9 @@ class TestResponseController {
 
     async getQuestionByStudent(req, res) {
 
-        var { studentID } = req.body;
+        var { studentID, paperID } = req.body;
         try {
-            const testResponse = await db.TestResponse.find({ studentID: studentID });
+            const testResponse = await db.TestResponse.find({ studentID: studentID, paperID: paperID });
             return res
                 .status(200)
                 .json({ status: true, message: `Response list`, data: testResponse });
