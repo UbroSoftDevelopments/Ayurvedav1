@@ -19,10 +19,33 @@ class TestResponseController {
         }
     }
 
+    async getResponseOfStudent(req, res) {
+        var testSeriesID = req.params.testSeriesID;
+        var paperID = req.params.paperID;
+        if (!testSeriesID || !req.userId || !paperID) {
+            return res.json({
+                status: false,
+                message: "Feilds are required for test paper",
+                data: null,
+            });
+        }
+        try {
+            const testResponse = await db.TestResponse.find({ studentID: req.userId, paperID: paperID, testSeriesID: testSeriesID });
+            return res
+                .status(200)
+                .json({ status: true, message: `Student Response list`, data: testResponse });
+        } catch (err) {
+            return res
+                .status(200)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+
+    }
+
     async setStudentResponse(req, res) {
 
-        var { courseID, testSeriesID, paperID, studentID, response } = req.body;
-        if (!paperID || !studentID || !response) {
+        var { testSeriesID, paperID, response } = req.body;
+        if (!paperID || !req.userId || !response) {
             return res.json({
                 status: false,
                 message: "Feilds are required for test paper",
@@ -33,9 +56,8 @@ class TestResponseController {
         try {
             let findObj = {
                 paperID: paperID,
-                studentID: studentID,
-                testSeriesID: testSeriesID,
-                courseID: courseID
+                studentID: req.userId,
+                testSeriesID: testSeriesID
             }
             var testResponse = await db.TestResponse.findOne(findObj);
             //check ans
@@ -69,10 +91,9 @@ class TestResponseController {
 
             } else {
                 var testResponseAdd = new db.TestResponse();
-                testResponseAdd.courseID = courseID;
                 testResponseAdd.testSeriesID = testSeriesID;
                 testResponseAdd.paperID = paperID;
-                testResponseAdd.studentID = studentID;
+                testResponseAdd.studentID = req.userId;
                 testResponseAdd.questionList.push(response);
 
                 testResponseAdd.save((err) => {
@@ -93,11 +114,11 @@ class TestResponseController {
     }
 
     async setTestStartEndTime(req, res) {
-        var { courseID, testSeriesID, paperID, studentID, examStartTime, examEndTime } = req.body;
-        if (!paperID || !studentID) {
+        var { testSeriesID, paperID, examStartTime, examEndTime } = req.body;
+        if (!paperID || !req.userId) {
             return res.json({
                 status: false,
-                message: "Feilds are required for test paper",
+                message: "Feilds are required for test paper ",
                 data: null,
             });
         }
@@ -105,25 +126,26 @@ class TestResponseController {
         try {
 
             var testPaper = await db.TestPaper.findOne({ _id: paperID });
+
             // testPaper.duration; added to starttime and save in endtime
-            examEndTime = new Date(examEndTime);
+
             let findObj = {
                 paperID: paperID,
-                studentID: studentID,
-                testSeriesID: testSeriesID,
-                courseID: courseID
+                studentID: req.userId,
+                testSeriesID: testSeriesID
             }
             var testResponse = await db.TestResponse.findOne(findObj);
             //check ans
             if (testResponse) {
                 //update in questionList
-                testResponse.examEndTime = examEndTime;
-
+                if (examEndTime) {
+                    testResponse.examEndTime = new Date();
+                }
                 testResponse.save((err) => {
                     if (!err) {
                         return res.json({
                             status: true,
-                            message: "Test-Response Added 👍",
+                            message: "Exam End 👍",
                             data: testResponse,
                         });
                     }
@@ -132,18 +154,29 @@ class TestResponseController {
 
 
             } else {
+                if (examEndTime) {
+                    return res.json({
+                        status: true,
+                        message: "Start Test Before ending Text 👍",
+                        data: null,
+                    });
+                }
                 var testResponseAdd = new db.TestResponse();
-                testResponseAdd.courseID = courseID;
+
                 testResponseAdd.testSeriesID = testSeriesID;
                 testResponseAdd.paperID = paperID;
-                testResponseAdd.studentID = studentID;
-                testResponseAdd.examStartTime = examStartTime;
-                testResponseAdd.examEndTime = date.addMinutes(examStartTime, testPaper.duration);
+                testResponseAdd.studentID = req.userId;
+                if (examStartTime) {
+                    testResponseAdd.examStartTime = new Date();
+                    testResponseAdd.examEndTime = date.addMinutes(new Date(), testPaper.duration);
+                }
+
+
                 testResponseAdd.save((err) => {
                     if (!err) {
                         return res.json({
                             status: true,
-                            message: "Test-Response Added 👍",
+                            message: "Exam Started 👍",
                             data: testResponseAdd,
                         });
                     }
