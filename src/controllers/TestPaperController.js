@@ -158,7 +158,7 @@ class TestPaperController {
 
         const id = req.params.id;
         try {
-            const testPaper = await db.TestPaper.findOne({ '_id': id });
+            const testPaper = await db.TestPaper.findOne({ '_id': id }).populate('questionList');
             return res
                 .status(200)
                 .json({ status: true, message: `Test Paper `, data: testPaper });
