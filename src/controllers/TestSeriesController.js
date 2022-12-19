@@ -62,6 +62,18 @@ class TestSeriesController {
                 .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
         }
     }
+    async getTestSeriesWithPaper(req, res) {
+        try {
+            var testSeries = await db.TestSeries.findOne({ _id: req.params.id }).populate("paperID");
+            return res
+                .status(200)
+                .json({ status: true, message: `testSeries `, data: testSeries });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
 
     async getTestSeriesByCourse(req, res) {
         try {
