@@ -75,9 +75,25 @@ class TestSeriesController {
         }
     }
 
+
+
+
     async getTestSeriesByCourse(req, res) {
         try {
             var testSeries = await db.TestSeries.find({ courseID: req.params.id });
+            return res
+                .status(200)
+                .json({ status: true, message: `testSeries list`, data: testSeries });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
+
+    async getAssignTestSeries(req, res) {
+        try {
+            const testSeries = await db.studentPlan.find({ studentID: req.userId }).populate("testSeriesID")
             return res
                 .status(200)
                 .json({ status: true, message: `testSeries list`, data: testSeries });

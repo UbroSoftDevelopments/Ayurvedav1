@@ -38,7 +38,7 @@ class ProductController {
 
             let findValue = { studentID: studentID };
             if (subjectID) findValue.subjectID = subjectID;
-            if (testSeriesID) findValue.testSeriesID = testSeriesID;
+            // if (testSeriesID) findValue.testSeriesID = testSeriesID;
 
             const studentData = await db.studentPlan.find(findValue);
 
@@ -64,7 +64,7 @@ class ProductController {
             stdPlan.studentID = studentID;
             stdPlan.courseID = courseID;
             if (subjectID) stdPlan.subjectID = subjectID;
-            if (testSeriesID) stdPlan.testSeriesID = testSeriesID;
+            // if (testSeriesID) stdPlan.testSeriesID = testSeriesID;
             stdPlan.plan = plan;
 
             stdPlan.save((err) => {
@@ -81,6 +81,62 @@ class ProductController {
         }
     }
 
+    async addStudentTestSeries(req, res) {
+        let { studentID, paperList, testSeriesID, plan } = req.body;
+        if (!studentID || !testSeriesID || !plan) {
+            return res.json({
+                status: false,
+                message: "Must provide all input 🙄",
+                data: null,
+            });
+        }
+
+        try {
+
+            const studentData = await db.studentPlan.find({ studentID: studentID, testSeriesID: testSeriesID });
+
+            if (studentData) {
+                var already = false;
+                studentData.map((_v, _ind) => {
+                    if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
+                        already = true;
+                    }
+                })
+
+                if (already) {
+                    return res.json({
+                        status: true,
+                        message: " Plan is already assign to student.💸 ",
+                        data: null,
+                    });
+                }
+
+            }
+
+            const stdPlan = await db.studentPlan();
+            stdPlan.studentID = studentID;
+            stdPlan.paperList = paperList;
+            stdPlan.testSeriesID = testSeriesID;
+            stdPlan.plan = plan;
+
+            stdPlan.save((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "New plan added 💸",
+                        data: stdPlan,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+
+    }
+
+    async editPlan(req, res) {
+
+    }
     // delete Category
     async deleteStudentPlan(req, res) {
         var _id = req.params.id;
@@ -275,6 +331,57 @@ class ProductController {
             });
         }
 
+    }
+
+    async getMyTestSeries(req, res) {
+        try {
+            const mytest = await db.studentPlan.find({ studentID: req.userId }, { "testSeriesID": 1, _id: 0 }).populate('testSeriesID');
+            let result = []
+            if (mytest) {
+                mytest.map((val, ind) => {
+                    if (val.testSeriesID) result.push(val.testSeriesID)
+                })
+            }
+
+            return res
+                .status(200)
+                .json({ status: true, message: `My Test series List`, data: result });
+        } catch (err) {
+            return res.json({
+                status: false,
+                message: "something went wrong 🤚",
+                data: `${err}`,
+            });
+        }
+    }
+
+    async getMyPaperBySeries(req, res) {
+        try {
+            const mytest = await db.studentPlan.find({ studentID: req.userId }, { "testSeriesID": 1, _id: 0 }).populate('testSeriesID').populate('paperList');
+            let result = [];
+            if (mytest) {
+                mytest.map((val, ind) => {
+                    if (val.testSeriesID) {
+
+                        if (val.paperList.length == 0) {
+                            //get all paper
+                        } else {
+                            result.push(val.paperList)
+                        }
+                    }
+                })
+            }
+
+            return res
+                .status(200)
+                .json({ status: true, message: `My Test series List`, data: result });
+        } catch (err) {
+            return res.json({
+                status: false,
+                message: "something went wrong 🤚",
+                data: `${err}`,
+            });
+        }
     }
 }
 

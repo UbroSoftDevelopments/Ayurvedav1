@@ -1,5 +1,5 @@
 const express = require("express");
-const { checkAdminAuth } = require("../middleware");
+const { checkAdminAuth, checkStudentAuth } = require("../middleware");
 const { TestSeriesController } = require("../controllers");
 
 const router = express.Router();
@@ -7,6 +7,7 @@ const uploader = require('../middleware/uploader');
 var pics = uploader.single('photo');
 
 router.post("/", pics, checkAdminAuth, TestSeriesController.addTestSeries);
+router.get("/student", checkStudentAuth, TestSeriesController.getAssignTestSeries);
 router.get("/", TestSeriesController.getTestSeries);
 router.get("/course/:id", TestSeriesController.getTestSeriesByCourse);
 router.get("/:id", TestSeriesController.getTestSeriesWithPaper);
