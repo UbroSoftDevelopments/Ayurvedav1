@@ -357,24 +357,25 @@ class ProductController {
 
     async getMyPaperBySeries(req, res) {
         try {
-            const mytest = await db.studentPlan.find({ studentID: req.userId }, { "testSeriesID": 1, _id: 0 }).populate('testSeriesID').populate('paperList');
+            const mytest = await db.studentPlan.findOne({ studentID: req.userId, testSeriesID: req.params.id }).populate('testSeriesID').populate('paperList');
+
             let result = [];
             if (mytest) {
-                mytest.map((val, ind) => {
-                    if (val.testSeriesID) {
+                if (mytest.paperList.length == 0) {
+                    //get all paper
+                    var testSeries = await db.TestSeries.findOne({ _id: req.params.id }).populate("paperID");
+                    result = (testSeries.paperID);
 
-                        if (val.paperList.length == 0) {
-                            //get all paper
-                        } else {
-                            result.push(val.paperList)
-                        }
-                    }
-                })
+                } else {
+                    result = (mytest.paperList)
+
+                }
+
             }
-
             return res
                 .status(200)
-                .json({ status: true, message: `My Test series List`, data: result });
+                .json({ status: true, message: `My Test Paper List`, data: result });
+
         } catch (err) {
             return res.json({
                 status: false,
