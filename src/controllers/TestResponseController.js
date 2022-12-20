@@ -30,7 +30,11 @@ class TestResponseController {
             });
         }
         try {
-            const testResponse = await db.TestResponse.find({ studentID: req.userId, paperID: paperID, testSeriesID: testSeriesID });
+            //remove isCorrect from response
+            const testResponse = await db.TestResponse.findOne({ studentID: req.userId, paperID: paperID, testSeriesID: testSeriesID }).lean();
+            await testResponse.questionList.map((val, ind) => {
+                val.isCorrect = 0;
+            })
             return res
                 .status(200)
                 .json({ status: true, message: `Student Response list`, data: testResponse });
@@ -52,7 +56,14 @@ class TestResponseController {
                 data: null,
             });
         }
-
+        //setcorrect Ans
+        const questiontbl = await db.Question.findOne({ '_id': response.qID });
+        if (questiontbl.correctOpt == response.response) {
+            response.isCorrect = 1;
+        } else {
+            response.isCorrect = 0;
+        }
+        //correct Ans
         try {
             let findObj = {
                 paperID: paperID,
@@ -82,7 +93,7 @@ class TestResponseController {
                         return res.json({
                             status: true,
                             message: "Test-Response Added 👍",
-                            data: testResponse,
+                            data: null,
                         });
                     }
                     else { return res.json({ status: false, message: `${err}`, data: err }) };
@@ -146,7 +157,7 @@ class TestResponseController {
                         return res.json({
                             status: true,
                             message: "Exam End 👍",
-                            data: testResponse,
+                            data: null,
                         });
                     }
                     else { return res.json({ status: false, message: `${err}`, data: err }) };
@@ -157,7 +168,7 @@ class TestResponseController {
                 if (examEndTime) {
                     return res.json({
                         status: true,
-                        message: "Start Test Before ending Text 👍",
+                        message: "Start Test Before ending Test 👍",
                         data: null,
                     });
                 }
@@ -166,10 +177,8 @@ class TestResponseController {
                 testResponseAdd.testSeriesID = testSeriesID;
                 testResponseAdd.paperID = paperID;
                 testResponseAdd.studentID = req.userId;
-                if (examStartTime) {
-                    testResponseAdd.examStartTime = new Date();
-                    testResponseAdd.examEndTime = date.addMinutes(new Date(), testPaper.duration);
-                }
+                testResponseAdd.examEndTime = date.addMinutes(new Date(), testPaper.duration);
+
 
 
                 testResponseAdd.save((err) => {
@@ -187,6 +196,58 @@ class TestResponseController {
         } catch (err) {
             return res.json({ status: false, message: `${err}`, data: err });
         }
+    }
+
+    async getResultOfStudent(req, res) {
+        var testSeriesID = req.params.testSeriesID;
+        var paperID = req.params.paperID;
+        if (!testSeriesID || !paperID) {
+            return res.json({
+                status: false,
+                message: "Feilds are required for test paper",
+                data: null,
+            });
+        }
+        try {
+            // calculate rank.
+            let output = []
+            const testResponse = await db.TestResponse.find({ paperID: paperID, testSeriesID: testSeriesID }).populate("studentID").populate("paperID");
+            if (testResponse) {
+                testResponse.map((val, ind) => {
+                    let paper = val.paperID;
+                    let responseList = val.questionList;
+                    let _innerOut = {}
+                    _innerOut.studentID = val.studentID;
+                    _innerOut.correct = responseList.filter(value => value.isCorrect == '1').length;
+                    let marks = ((_innerOut.correct) * paper.perQMarks) - ((responseList.filter(value => value.isCorrect != '1').length) * paper.perQNegMarks);
+                    _innerOut.attemptQ = responseList.length;
+                    _innerOut.unAttempt = paper.questionList.length - responseList.length;
+                    _innerOut.marks = marks;
+                    _innerOut.tltQ = paper.questionList.length;
+                    let startTime = new Date(val.examStartTime);
+                    let endTime = new Date(val.examEndTime);
+
+                    let timeTaken = date.subtract(endTime, startTime);
+                    //need to be done
+                    _innerOut.timeTaken = (timeTaken.toMinutes()).toFixed(2) + " mins";
+                    _innerOut.aggregate = "";
+                    _innerOut.rank = "";
+                    output.push(_innerOut)
+                })
+
+
+            }
+
+
+            return res
+                .status(200)
+                .json({ status: true, message: `Student Rank list`, data: output });
+        } catch (err) {
+            return res
+                .status(200)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+
     }
 }
 
