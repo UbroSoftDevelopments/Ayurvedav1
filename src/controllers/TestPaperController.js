@@ -35,7 +35,7 @@ class TestPaperController {
             testPaper.duration = duration;
             testPaper.startDate = startDate;
             testPaper.endDate = endDate;
-            testPaper.questionList = JSON.parse(questionList);
+            testPaper.questionList = [...new Set(JSON.parse(questionList))];
             if (req.file != undefined) {
                 testPaper.img = `${config.uploadFolder}/${req.fileName}`;
             } else {
@@ -96,7 +96,7 @@ class TestPaperController {
             if (duration) testPaper.duration = duration;
             if (startDate) testPaper.startDate = startDate;
             if (endDate) testPaper.endDate = endDate;
-            if (questionList) testPaper.questionList = JSON.parse(questionList);
+            if (questionList) testPaper.questionList = [...new Set(JSON.parse(questionList))];
 
             if (req.file != undefined) {
                 testPaper.img = `${config.uploadFolder}/${req.fileName}`;
