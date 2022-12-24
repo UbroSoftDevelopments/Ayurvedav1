@@ -100,11 +100,13 @@ class ProductController {
 
                 //remove student Response:
                 var testResponse = await db.TestResponse.findOne({ 'studentID': studentID, 'testSeriesID': testSeriesID, 'paperID': { '$in': paperList } });
+                if (testResponse) {
+                    testResponse.remove((err) => {
+                        if (err) return res.json({ status: false, message: `${err}`, data: err });
 
-                testResponse.remove((err) => {
-                    if (err) return res.json({ status: false, message: `${err}`, data: err });
+                    });
+                }
 
-                });
 
 
                 studentData.map((_v, _ind) => {
@@ -414,7 +416,7 @@ class ProductController {
                         // }
                         if ((currentTime.getTime() <= fromD.getTime())) {
                             val.examDone = true;
-                            val.examDateStart = { "currentTime ": currentTime.getTime(), "fromD": fromD.getTime() };
+                            val.examDateStart = { "currentTime": currentTime, "fromD": fromD, "toD": toD };
                         }
 
 
