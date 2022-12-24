@@ -97,10 +97,28 @@ class ProductController {
 
             if (studentData) {
                 var already = false;
+
+                //remove student Response:
+                var testResponse = await db.TestResponse.findOne({ 'studentID': studentID, 'testSeriesID': testSeriesID, 'paperID': { '$in': paperList } });
+
+                testResponse.remove((err) => {
+                    if (err) return res.json({ status: false, message: `${err}`, data: err });
+
+                });
+
+
                 studentData.map((_v, _ind) => {
                     if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
                         already = true;
-                        _v.paperList = [...new Set(paperList)];
+                        paperList.push(..._v.paperList);
+                        let newPaper = []
+                        paperList.map((val, ind) => {
+                            newPaper.push(val + '')
+                        })
+
+
+                        // console.log(...new Set(newPaper));
+                        _v.paperList = [...new Set(newPaper)];
                         _v.save();
                     }
                 })
@@ -394,7 +412,7 @@ class ProductController {
                         // if (!(currentTime.getTime() <= toD.getTime() && currentTime.getTime() >= fromD.getTime())) {
                         //     val.examDone = true;
                         // }
-                        if (!(currentTime.getTime() <= fromD.getTime())) {
+                        if ((currentTime.getTime() <= fromD.getTime())) {
                             val.examDone = true;
                             val.examDateStart = true;
                         }
