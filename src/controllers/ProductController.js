@@ -100,13 +100,24 @@ class ProductController {
                 studentData.map((_v, _ind) => {
                     if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
                         already = true;
+                        _v.paperList = [...new Set(paperList)];
+                        _v.save();
                     }
                 })
 
                 if (already) {
+                    // studentData.save((err) => {
+                    //     if (!err)
+                    //         return res.json({
+                    //             status: true,
+                    //             message: "plan Updated 💸",
+                    //             data: studentData,
+                    //         });
+                    //     else return res.json({ status: false, message: `${err}`, data: err });
+                    // });
                     return res.json({
                         status: true,
-                        message: " Plan is already assign to student.💸 ",
+                        message: " Plan is updated to student.💸 ",
                         data: null,
                     });
                 }
@@ -115,7 +126,7 @@ class ProductController {
 
             const stdPlan = await db.studentPlan();
             stdPlan.studentID = studentID;
-            stdPlan.paperList = paperList;
+            stdPlan.paperList = [...new Set(paperList)];;
             stdPlan.testSeriesID = testSeriesID;
             stdPlan.plan = plan;
 
@@ -357,19 +368,47 @@ class ProductController {
 
     async getMyPaperBySeries(req, res) {
         try {
-            const mytest = await db.studentPlan.findOne({ studentID: req.userId, testSeriesID: req.params.id }).populate('testSeriesID').populate('paperList');
+            const mytest = await db.studentPlan.findOne({ studentID: req.userId, testSeriesID: req.params.id }).populate('testSeriesID').populate('paperList').lean();
 
             let result = [];
             if (mytest) {
                 if (mytest.paperList.length == 0) {
                     //get all paper
-                    var testSeries = await db.TestSeries.findOne({ _id: req.params.id }).populate("paperID");
+                    var testSeries = await db.TestSeries.findOne({ _id: req.params.id }).populate("paperID").lean();
                     result = (testSeries.paperID);
 
                 } else {
                     result = (mytest.paperList)
 
                 }
+                const testResponse = await db.TestResponse.find({ "studentID": req.userId, "testSeriesID": req.params.id });
+
+
+
+                if (testResponse) {
+
+                    result.map((val, ind) => {
+                        var currentTime = new Date();
+                        var toD = new Date(val.endDate);
+                        var fromD = new Date(val.startDate);
+
+                        if (!(currentTime.getTime() <= toD.getTime() && currentTime.getTime() >= fromD.getTime())) {
+                            val.examDone = true;
+                        }
+
+
+
+                        testResponse.forEach(el => {
+
+                            if (el.paperID + '' == val._id + '') {
+                                val.examDone = true;
+                                // console.log(val)
+                            }
+                        });
+                    })
+                }
+
+
 
             }
             return res

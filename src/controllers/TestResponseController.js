@@ -32,9 +32,11 @@ class TestResponseController {
         try {
             //remove isCorrect from response
             const testResponse = await db.TestResponse.findOne({ studentID: req.userId, paperID: paperID, testSeriesID: testSeriesID }).lean();
-            await testResponse.questionList.map((val, ind) => {
-                val.isCorrect = 0;
-            })
+
+            //todo do it later
+            // await testResponse.questionList.map((val, ind) => {
+            //     val.isCorrect = 0;
+            // })
             return res
                 .status(200)
                 .json({ status: true, message: `Student Response list`, data: testResponse });
