@@ -391,9 +391,12 @@ class ProductController {
                         var currentTime = new Date();
                         var toD = new Date(val.endDate);
                         var fromD = new Date(val.startDate);
-
-                        if (!(currentTime.getTime() <= toD.getTime() && currentTime.getTime() >= fromD.getTime())) {
+                        // if (!(currentTime.getTime() <= toD.getTime() && currentTime.getTime() >= fromD.getTime())) {
+                        //     val.examDone = true;
+                        // }
+                        if (!(currentTime.getTime() <= fromD.getTime())) {
                             val.examDone = true;
+                            val.examDateStart = true;
                         }
 
 
