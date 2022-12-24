@@ -1,3 +1,4 @@
+const date = require('date-and-time')
 const db = require("../models");
 
 class ProductController {
@@ -408,12 +409,13 @@ class ProductController {
                 if (testResponse) {
 
                     result.map((val, ind) => {
-                        var currentTime = new Date();
+                        var currentTime = date.addMinutes(new Date(), 330);
                         var toD = new Date(val.endDate);
                         var fromD = new Date(val.startDate);
                         // if (!(currentTime.getTime() <= toD.getTime() && currentTime.getTime() >= fromD.getTime())) {
                         //     val.examDone = true;
                         // }
+
                         if ((currentTime.getTime() <= fromD.getTime())) {
                             val.examDone = true;
                             val.examDateStart = { "currentTime": currentTime, "fromD": fromD, "toD": toD };
