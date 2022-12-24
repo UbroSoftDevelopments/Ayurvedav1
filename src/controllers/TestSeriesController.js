@@ -80,7 +80,7 @@ class TestSeriesController {
 
     async getTestSeriesByCourse(req, res) {
         try {
-            var testSeries = await db.TestSeries.find({ courseID: req.params.id });
+            var testSeries = await db.TestSeries.find({ courseID: req.params.id, isActive: '1' });
             return res
                 .status(200)
                 .json({ status: true, message: `testSeries list`, data: testSeries });

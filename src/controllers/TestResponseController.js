@@ -152,7 +152,7 @@ class TestResponseController {
             if (testResponse) {
                 //update in questionList
                 if (examEndTime) {
-                    testResponse.examEndTime = new Date();
+                    testResponse.examEndTime = date.addMinutes(new Date(), 330);
                 }
                 testResponse.save((err) => {
                     if (!err) {
@@ -179,7 +179,7 @@ class TestResponseController {
                 testResponseAdd.testSeriesID = testSeriesID;
                 testResponseAdd.paperID = paperID;
                 testResponseAdd.studentID = req.userId;
-                testResponseAdd.examEndTime = date.addMinutes(new Date(), testPaper.duration);
+                testResponseAdd.examEndTime = date.addMinutes(date.addMinutes(new Date(), 330), testPaper.duration);
 
 
 

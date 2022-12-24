@@ -158,7 +158,18 @@ class TestPaperController {
 
         const id = req.params.id;
         try {
-            const testPaper = await db.TestPaper.findOne({ '_id': id }).populate('questionList');
+
+            const testPaper = await db.TestPaper.findOne({ '_id': id }).populate('questionList').lean();
+            //todo need to add testSeries.
+            const testResponse = await db.TestResponse.findOne({ studentID: req.userId, paperID: id }).lean();
+            if (testResponse) {
+                if (testResponse.examStartTime) {
+
+                    var ok = (new Date().getTime() - new Date(testResponse.examStartTime).getTime()) / 1000;
+                    ok /= 60;
+                    testPaper.remaningTime2 = Math.abs(Math.round(ok));
+                }
+            }
             return res
                 .status(200)
                 .json({ status: true, message: `Test Paper `, data: testPaper });

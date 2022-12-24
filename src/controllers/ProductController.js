@@ -418,7 +418,7 @@ class ProductController {
 
                         if ((currentTime.getTime() <= fromD.getTime())) {
                             val.examDone = true;
-                            val.examDateStart = { "currentTime": currentTime, "fromD": fromD, "toD": toD };
+                            val.examDateLeft = true;
                         }
 
 
