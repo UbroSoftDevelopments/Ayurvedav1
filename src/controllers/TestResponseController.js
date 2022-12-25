@@ -232,7 +232,9 @@ class TestResponseController {
 
                     let timeTaken = date.subtract(endTime, startTime);
                     //need to be done
-                    _innerOut.timeTaken = (timeTaken.toMinutes()).toFixed(2) + " mins";
+                    timeTaken = timeTaken.toMinutes().toFixed(2);
+                    if (timeTaken > paper.duration) timeTaken = paper.duration;
+                    _innerOut.timeTaken = timeTaken + " mins";
                     _innerOut.aggregate = "";
                     _innerOut.rank = "";
                     output.push(_innerOut)
