@@ -1,6 +1,6 @@
 const db = require("../models");
 const config = require("../config");
-
+const date = require('date-and-time')
 class TestPaperController {
 
     async addTestPaper(req, res) {
@@ -165,9 +165,9 @@ class TestPaperController {
             if (testResponse) {
                 if (testResponse.examStartTime) {
 
-                    var ok = (new Date().getTime() - new Date(testResponse.examStartTime).getTime()) / 1000;
+                    var ok = (new Date(testResponse.examStartTime).getTime() - date.addMinutes(new Date().getTime(), 330)) / 1000;
                     ok /= 60;
-                    testPaper.remaningTime2 = Math.abs(Math.round(ok));
+                    testPaper.remaningTime2 = Math.round(ok);
                 }
             }
             return res
