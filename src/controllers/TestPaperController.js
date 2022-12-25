@@ -165,15 +165,15 @@ class TestPaperController {
             if (testResponse) {
                 if (testResponse.examStartTime) {
 
-                    var ok = (new Date(testResponse.examStartTime).getTime() - date.addMinutes(new Date().getTime(), 330)) / 1000;
-                    ok /= 60;
-                    if (ok < 0) { ok = 0 }
-                    testPaper.remaningTime2 = Math.round(ok);
-                    testPaper.debbug = {
-                        "examStartTime": new Date(testResponse.examStartTime).getTime(),
-                        "current-Time": date.addMinutes(new Date().getTime(), 330),
-                        "serverTime": new Date().getTime()
-                    }
+                    // var ok = (new Date(testResponse.examStartTime).getTime() - date.addMinutes(new Date().getTime(), 330)) / 1000;
+                    // ok /= 60;
+                    // if (ok < 0) { ok = 0 }
+                    // testPaper.remaningTime2 = Math.round(ok);
+                    // testPaper.debbug = {
+                    //     "examStartTime": new Date(testResponse.examStartTime).getTime(),
+                    //     "current-Time": date.addMinutes(new Date().getTime(), 330),
+                    //     "serverTime": new Date().getTime()
+                    // }
                 }
             }
             return res
