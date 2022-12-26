@@ -25,7 +25,6 @@ class TestPaperController {
             testPaper.isActive = isActive;
             testPaper.chapterID = chapterID;
             testPaper.title = title;
-            testPaper.img = img;
             testPaper.desc = desc;
             testPaper.totalQuestions = totalQuestions;
             testPaper.totalMarks = totalMarks;
@@ -38,8 +37,6 @@ class TestPaperController {
             testPaper.questionList = [...new Set(JSON.parse(questionList))];
             if (req.file != undefined) {
                 testPaper.img = `${config.uploadFolder}/${req.fileName}`;
-            } else {
-                testPaper.img = ''
             }
 
             testPaper.save((err) => {

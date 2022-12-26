@@ -6,7 +6,7 @@ const userSchema = new Schema({
     // subSubjectID: { type: 'ObjectId', ref: 'subsubject' },
     chapterID: { type: 'ObjectId', ref: 'chapter' },
     title: { type: String, required: true },
-    img: { type: String },
+    img: { type: String, default: '' },
     desc: { type: String },
     totalQuestions: { type: Number },
     totalMarks: { type: Number },
