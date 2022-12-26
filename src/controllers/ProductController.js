@@ -418,7 +418,7 @@ class ProductController {
 
                         if ((currentTime.getTime() <= fromD.getTime())) {
                             val.examDone = true;
-                            val.examDateLeft = true;
+                            val.examDateLeft = false;
                         }
 
 
