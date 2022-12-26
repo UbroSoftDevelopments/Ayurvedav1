@@ -415,14 +415,12 @@ class ProductController {
                         // if (!(currentTime.getTime() <= toD.getTime() && currentTime.getTime() >= fromD.getTime())) {
                         //     val.examDone = true;
                         // }
+                        val.examDateLeft = false;
+                        val.examDone = false;
 
                         if ((currentTime.getTime() <= fromD.getTime())) {
-                            val.examDone = true;
-                            val.examDateLeft = false;
+                            val.examDateLeft = true;
                         }
-
-
-
                         testResponse.forEach(el => {
 
                             if (el.paperID + '' == val._id + '') {
