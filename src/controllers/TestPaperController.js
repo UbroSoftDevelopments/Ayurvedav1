@@ -86,7 +86,6 @@ class TestPaperController {
             if (isActive) testPaper.isActive = isActive;
             if (chapterID) testPaper.chapterID = chapterID;
             if (title) testPaper.title = title;
-            if (img) testPaper.img = img;
             if (desc) testPaper.desc = desc;
             if (totalQuestions) testPaper.totalQuestions = totalQuestions;
             if (totalMarks) testPaper.totalMarks = totalMarks;
