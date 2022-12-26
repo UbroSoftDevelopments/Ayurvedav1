@@ -155,6 +155,7 @@ class TestPaperController {
 
             const testPaper = await db.TestPaper.findOne({ '_id': id }).populate('questionList').lean();
             //todo need to add testSeries.
+            testPaper.remaningTime = testPaper.duration;
             const testResponse = await db.TestResponse.findOne({ studentID: req.userId, paperID: id }).lean();
             if (testResponse) {
                 if (testResponse.examStartTime) {
