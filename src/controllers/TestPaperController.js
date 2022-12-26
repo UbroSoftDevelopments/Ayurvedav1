@@ -203,6 +203,42 @@ class TestPaperController {
         }
 
     }
+
+    async getAssignStudentByPaper(req, res) {
+        // paperList: req.params.paperID, testSeriesID: req.params.testSeriesID 
+
+        try {
+            var output = [];
+            const studentData = await db.studentPlan.find({ testSeriesID: req.params.testSeriesID }).populate('studentID').lean();
+
+            studentData.map((val, ind) => {
+                if (val.paperList.length > 0) {
+                    //check is present or not
+
+                    val.paperList.map((item) => {
+                        if (item + '' == req.params.paperID) {
+                            output.push(val.studentID)
+                        }
+
+                    });
+
+
+                }
+                else {
+                    output.push(val.studentID)
+                }
+            });
+            return res
+                .status(200)
+                .json({ status: true, message: `Student list`, data: output });
+        } catch (err) {
+            return res.json({
+                status: false,
+                message: "something went wrong 🤚",
+                data: `${err}`,
+            });
+        }
+    }
 }
 
 module.exports = TestPaperController;
