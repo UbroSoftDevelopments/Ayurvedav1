@@ -161,7 +161,7 @@ class TestPaperController {
                 if (testResponse.examStartTime) {
 
                     var startTime = new Date(testResponse.examStartTime).getTime();
-                    var currentTime = (date.addMinutes(new Date(), 330)).getTime();
+                    var currentTime = new Date().getTime();
                     var remaningTime = testPaper.duration - (Math.round((currentTime - startTime) / 60000));
                     if (remaningTime < 0) { remaningTime = 0 }
                     testPaper.remaningTime = remaningTime;
