@@ -99,8 +99,6 @@ class TestPaperController {
 
             if (req.file != undefined) {
                 testPaper.img = `${config.uploadFolder}/${req.fileName}`;
-            } else {
-                testPaper.img = ''
             }
             testPaper.save((err) => {
                 if (!err)
