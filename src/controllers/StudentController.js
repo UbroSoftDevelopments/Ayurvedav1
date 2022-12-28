@@ -205,6 +205,21 @@ class StudentController {
         .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
     }
   }
+  async getStudent(req, res) {
+    try {
+      var _id = req.params.id;
+      const student = await db.Student.findOne({ _id });
+
+      return res
+        .status(200)
+        .json({ status: true, message: `Student  🧑‍🎓`, data: student });
+    } catch (err) {
+      return res
+        .status(403)
+        .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+    }
+  }
+
 
   async getStudentPlan(req, res) {
     try {

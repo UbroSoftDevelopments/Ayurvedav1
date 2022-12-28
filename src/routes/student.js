@@ -11,6 +11,7 @@ router.get("/checkStudent", checkStudentAuth, StudentController.checkStudent);
 
 
 router.get("/", StudentController.getAllStudent);
+router.get("/:id", StudentController.getStudent);
 
 router.get("/plan/:id", ProductController.getStudentPlan);
 router.delete("/plan/:id", checkAdminAuth, ProductController.deleteStudentPlan);
