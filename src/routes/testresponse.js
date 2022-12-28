@@ -9,6 +9,7 @@ router.get("/student/", TestResponseController.getQuestionByStudent);
 router.get("/student/response/:testSeriesID/:paperID", checkStudentAuth, TestResponseController.getResponseOfStudent);
 router.get("/:testSeriesID/:paperID", checkAdminAuth, TestResponseController.getResultOfStudent);
 router.put("/student/startend", checkStudentAuth, TestResponseController.setTestStartEndTime);
+router.delete("/:id", checkAdminAuth, TestResponseController.deleteTestResponse);
 
 
 

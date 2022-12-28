@@ -93,61 +93,55 @@ class ProductController {
         }
 
         try {
+            if (paperList.length != 0) {
+                const studentData = await db.studentPlan.find({ studentID: studentID, testSeriesID: testSeriesID });
 
-            const studentData = await db.studentPlan.find({ studentID: studentID, testSeriesID: testSeriesID });
+                if (studentData) {
+                    var already = false;
 
-            if (studentData) {
-                var already = false;
+                    //remove student Response:
+                    var testResponse = await db.TestResponse.findOne({ 'studentID': studentID, 'testSeriesID': testSeriesID, 'paperID': { '$in': paperList } });
+                    if (testResponse) {
+                        testResponse.remove((err) => {
+                            if (err) return res.json({ status: false, message: `${err}`, data: err });
 
-                //remove student Response:
-                var testResponse = await db.TestResponse.findOne({ 'studentID': studentID, 'testSeriesID': testSeriesID, 'paperID': { '$in': paperList } });
-                if (testResponse) {
-                    testResponse.remove((err) => {
-                        if (err) return res.json({ status: false, message: `${err}`, data: err });
-
-                    });
-                }
-
-
-
-                studentData.map((_v, _ind) => {
-                    if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
-                        already = true;
-                        paperList.push(..._v.paperList);
-                        let newPaper = []
-                        paperList.map((val, ind) => {
-                            newPaper.push(val + '')
-                        })
-
-
-                        // console.log(...new Set(newPaper));
-                        _v.paperList = [...new Set(newPaper)];
-                        _v.save();
+                        });
                     }
-                })
 
-                if (already) {
-                    // studentData.save((err) => {
-                    //     if (!err)
-                    //         return res.json({
-                    //             status: true,
-                    //             message: "plan Updated 💸",
-                    //             data: studentData,
-                    //         });
-                    //     else return res.json({ status: false, message: `${err}`, data: err });
-                    // });
-                    return res.json({
-                        status: true,
-                        message: " Plan is updated to student.💸 ",
-                        data: null,
-                    });
+
+
+                    studentData.map((_v, _ind) => {
+                        if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
+                            already = true;
+                            paperList.push(..._v.paperList);
+                            let newPaper = []
+                            paperList.map((val, ind) => {
+                                newPaper.push(val + '')
+                            })
+
+
+                            // console.log(...new Set(newPaper));
+                            _v.paperList = [...new Set(newPaper)];
+                            _v.save();
+                        }
+                    })
+
+                    if (already) {
+                        return res.json({
+                            status: true,
+                            message: " Plan is updated to student.💸 ",
+                            data: null,
+                        });
+                    }
+
                 }
-
             }
+
+
 
             const stdPlan = await db.studentPlan();
             stdPlan.studentID = studentID;
-            stdPlan.paperList = [...new Set(paperList)];;
+            stdPlan.paperList = [...new Set(paperList)];
             stdPlan.testSeriesID = testSeriesID;
             stdPlan.plan = plan;
 
@@ -193,13 +187,12 @@ class ProductController {
 
     //todo isAvtive validation is left
     async getMyCourse(req, res) {
-
         try {
             //  const mycourse = await db.studentPlan.find({ studentID: req.userId }, { "courseID": 1, _id: 0 }).populate('courseID');
-            const mycourse = await db.studentPlan
+            await db.studentPlan
                 .find({ studentID: req.userId })
                 .distinct('courseID', function (error, ids) {
-                    db.Course.find({ 'isActive': 1, '_id': { $in: ids } }, function (err, result) {
+                    db.Course.find({ 'isActive': '1', '_id': { $in: ids } }, function (err, result) {
                         return res
                             .status(200)
                             .json({ status: true, message: `My Course list`, data: result });
@@ -208,7 +201,7 @@ class ProductController {
         } catch (err) {
             return res.json({
                 status: false,
-                message: "something went wrong 🤚",
+                message: "something went wrong 🙃",
                 data: `${err}`,
             });
         }

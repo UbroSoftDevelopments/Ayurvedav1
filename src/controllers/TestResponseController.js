@@ -220,6 +220,7 @@ class TestResponseController {
                     let paper = val.paperID;
                     let responseList = val.questionList;
                     let _innerOut = {}
+                    _innerOut._id = val._id
                     _innerOut.studentID = val.studentID;
                     _innerOut.correct = responseList.filter(value => value.isCorrect == '1').length;
                     let marks = ((_innerOut.correct) * paper.perQMarks) - ((responseList.filter(value => value.isCorrect != '1').length) * paper.perQNegMarks);
@@ -254,6 +255,27 @@ class TestResponseController {
         }
 
     }
+
+    // delete response
+    async deleteTestResponse(req, res) {
+        var _id = req.params.id;
+        try {
+            var response = await db.TestResponse.findOne({ _id });
+
+            response.remove((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "TestResponse deleted",
+                        data: response,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
+
 }
 
 

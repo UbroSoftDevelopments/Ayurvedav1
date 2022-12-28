@@ -194,7 +194,7 @@ class StudentController {
 
   async getAllStudent(req, res) {
     try {
-      const student = await db.Student.find();
+      const student = await db.Student.find().sort({ "createdAt": -1 });;
 
       return res
         .status(200)

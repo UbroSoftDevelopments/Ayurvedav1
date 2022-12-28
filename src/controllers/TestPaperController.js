@@ -208,17 +208,12 @@ class TestPaperController {
             const studentData = await db.studentPlan.find({ testSeriesID: req.params.testSeriesID }).populate('studentID').lean();
 
             studentData.map((val, ind) => {
+                // console.log(val.paperList, val.studentID);
                 if (val.paperList.length > 0) {
                     //check is present or not
-
                     val.paperList.map((item) => {
-                        if (item + '' == req.params.paperID) {
-                            output.push(val.studentID)
-                        }
-
+                        if (item + '' == req.params.paperID) output.push(val.studentID)
                     });
-
-
                 }
                 else {
                     output.push(val.studentID)
