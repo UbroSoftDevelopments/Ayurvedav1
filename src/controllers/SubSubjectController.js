@@ -199,7 +199,8 @@ class SubjectController {
     }
 
     async removeChapterID(req, res) {
-        var { _id, chapterId } = req.body;
+        var _id = req.params.subID;
+        var chapterId = req.params.chapID;
 
         if (!chapterId || !_id)
             return res.json({

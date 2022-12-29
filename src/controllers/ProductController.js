@@ -9,7 +9,7 @@ class ProductController {
 
     async getStudentPlan(req, res) {
         try {
-            const subPlan = await db.studentPlan.find({ studentID: req.params.id }).populate('courseID').populate('subjectID').populate('testSeriesID');
+            const subPlan = await db.studentPlan.find({ studentID: req.params.id }).populate('courseID').populate('subjectID').populate('testSeriesID').populate('paperList');
 
             return res
                 .status(200)
