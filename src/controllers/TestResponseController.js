@@ -213,9 +213,10 @@ class TestResponseController {
         }
         try {
             // calculate rank.
-            let output = []
+            let calculateRankList = []
             const testResponse = await db.TestResponse.find({ paperID: paperID, testSeriesID: testSeriesID }).populate("studentID").populate("paperID");
             if (testResponse) {
+
                 testResponse.map((val, ind) => {
                     let paper = val.paperID;
                     let responseList = val.questionList;
@@ -223,7 +224,9 @@ class TestResponseController {
                     _innerOut._id = val._id
                     _innerOut.studentID = val.studentID;
                     _innerOut.correct = responseList.filter(value => value.isCorrect == '1').length;
-                    let marks = ((_innerOut.correct) * paper.perQMarks) - ((responseList.filter(value => value.isCorrect != '1').length) * paper.perQNegMarks);
+                    let inCorrect = responseList.filter(value => value.isCorrect != '1').length;
+                    _innerOut.inCorrect = inCorrect;
+                    let marks = ((_innerOut.correct) * paper.perQMarks) - (inCorrect * paper.perQNegMarks);
                     _innerOut.attemptQ = responseList.length;
                     _innerOut.unAttempt = paper.questionList.length - responseList.length;
                     _innerOut.marks = marks;
@@ -236,18 +239,26 @@ class TestResponseController {
                     timeTaken = timeTaken.toMinutes().toFixed(2);
                     if (timeTaken > paper.duration) timeTaken = paper.duration;
                     _innerOut.timeTaken = timeTaken + " mins";
+                    _innerOut.timeTakenMin = parseFloat(timeTaken);
                     _innerOut.aggregate = "";
                     _innerOut.rank = "";
-                    output.push(_innerOut)
+                    calculateRankList.push(_innerOut)
                 })
 
+                //need to add 
+                // 3 condiation [marks,negitive marks,time]
+                calculateRankList.sort((a, b) => b.marks - a.marks);
 
+                calculateRankList.map(function (e, i) {
+                    e.rank = (i + 1);
+                    return e;
+                });
             }
 
 
             return res
                 .status(200)
-                .json({ status: true, message: `Student Rank list`, data: output });
+                .json({ status: true, message: `Student Rank list`, data: calculateRankList });
         } catch (err) {
             return res
                 .status(200)

@@ -93,49 +93,53 @@ class ProductController {
         }
 
         try {
-            if (paperList.length != 0) {
-                const studentData = await db.studentPlan.find({ studentID: studentID, testSeriesID: testSeriesID });
-
-                if (studentData) {
-                    var already = false;
-
-                    //remove student Response:
-                    var testResponse = await db.TestResponse.findOne({ 'studentID': studentID, 'testSeriesID': testSeriesID, 'paperID': { '$in': paperList } });
-                    if (testResponse) {
-                        testResponse.remove((err) => {
-                            if (err) return res.json({ status: false, message: `${err}`, data: err });
-
-                        });
-                    }
+            const studentData = await db.studentPlan.find({ studentID: studentID, testSeriesID: testSeriesID });
+            //   if (paperList.length != 0) {
 
 
+            if (studentData) {
+                var already = false;
 
-                    studentData.map((_v, _ind) => {
-                        if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
-                            already = true;
+                //remove student Response:
+                var testResponse = await db.TestResponse.findOne({ 'studentID': studentID, 'testSeriesID': testSeriesID, 'paperID': { '$in': paperList } });
+                if (testResponse) {
+                    testResponse.remove((err) => {
+                        if (err) return res.json({ status: false, message: `${err}`, data: err });
+
+                    });
+                }
+
+                //remove
+
+                studentData.map((_v, _ind) => {
+                    if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
+                        already = true;
+                        let newPaper = []
+                        if (paperList.length != 0) {
                             paperList.push(..._v.paperList);
-                            let newPaper = []
                             paperList.map((val, ind) => {
                                 newPaper.push(val + '')
                             })
-
-
-                            // console.log(...new Set(newPaper));
-                            _v.paperList = [...new Set(newPaper)];
-                            _v.save();
                         }
-                    })
 
-                    if (already) {
-                        return res.json({
-                            status: true,
-                            message: " Plan is updated to student.💸 ",
-                            data: null,
-                        });
+
+
+                        // console.log(...new Set(newPaper));
+                        _v.paperList = [...new Set(newPaper)];
+                        _v.save();
                     }
+                })
 
+                if (already) {
+                    return res.json({
+                        status: true,
+                        message: " Plan is updated to student.💸 ",
+                        data: null,
+                    });
                 }
+
             }
+            //  }
 
 
 
@@ -179,6 +183,55 @@ class ProductController {
                     });
                 else return res.json({ status: false, message: `${err}`, data: err });
             });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
+
+    async removePaperFromTest(req, res) {
+        let { studentID, testSeriesID, paperID, plan } = req.body;
+        if (!studentID || !testSeriesID || !paperID || !plan) {
+            return res.json({
+                status: false,
+                message: "Must provide all input 🙄",
+                data: null,
+            });
+        }
+
+        try {
+            const studentData = await db.studentPlan.find({ studentID: studentID, testSeriesID: testSeriesID });
+            //   if (paperList.length != 0) {
+            if (studentData) {
+                //remove
+                studentData.map((_v, _ind) => {
+                    if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
+
+                        let newPaper = [];
+
+                        newPaper = _v.paperList.filter(function (ele) {
+                            return ele != paperID;
+                        });
+
+
+                        // console.log(...new Set(newPaper));
+                        _v.paperList = [...new Set(newPaper)];
+                        _v.save();
+                    }
+                })
+                return res.json({
+                    status: true,
+                    message: " Test is updated to student.💸 ",
+                    data: null,
+                });
+            }
+            return res.json({
+                status: true,
+                message: " No Data Found.🤪 ",
+                data: null,
+            });
+            //  }
+
+
         } catch (err) {
             return res.json({ status: false, message: `${err}`, data: err });
         }

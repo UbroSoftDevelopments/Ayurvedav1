@@ -17,6 +17,7 @@ router.get("/plan/:id", ProductController.getStudentPlan);
 router.delete("/plan/:id", checkAdminAuth, ProductController.deleteStudentPlan);
 router.post("/plan", ProductController.addStudentPlan);
 router.post("/test-plan", ProductController.addStudentTestSeries);
+router.put("/test-plan", ProductController.removePaperFromTest);
 
 //Get data from its Plan
 router.get("/myCourses", checkStudentAuth, ProductController.getMyCourse)
