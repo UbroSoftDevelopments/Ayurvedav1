@@ -6,6 +6,7 @@ const schema = new Schema({
     studentID: { type: 'ObjectId', ref: 'student', require: true },
     examStartTime: { type: Date, default: Date.now },
     examEndTime: { type: Date },
+    examDone: { type: Number, default: 0 },
     questionList: [
         {
             qID: { type: 'ObjectId', ref: 'question' },

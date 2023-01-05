@@ -478,7 +478,10 @@ class ProductController {
                         testResponse.forEach(el => {
 
                             if (el.paperID + '' == val._id + '') {
-                                val.examDone = true;
+                                if (el.examDone == 1) {
+                                    val.examDone = true;
+                                }
+
                                 // console.log(val)
                             }
                         });

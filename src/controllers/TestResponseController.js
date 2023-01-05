@@ -154,6 +154,7 @@ class TestResponseController {
                 if (examEndTime) {
                     // testResponse.examEndTime = date.addMinutes(new Date(), 330);
                     testResponse.examEndTime = new Date();
+                    testResponse.examDone = 1;//submit
                 }
                 testResponse.save((err) => {
                     if (!err) {
