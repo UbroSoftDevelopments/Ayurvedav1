@@ -450,23 +450,31 @@ class ProductController {
                 }
                 const testResponse = await db.TestResponse.find({ "studentID": req.userId, "testSeriesID": req.params.id });
 
-
-
-                if (testResponse) {
-
-                    result.map((val, ind) => {
-                        var currentTime = date.addMinutes(new Date(), 330);
-                        var toD = new Date(val.endDate);
-                        var fromD = new Date(val.startDate);
-                        // if (!(currentTime.getTime() <= toD.getTime() && currentTime.getTime() >= fromD.getTime())) {
-                        //     val.examDone = true;
-                        // }
-                        val.examDateLeft = false;
-                        val.examDone = false;
-
-                        if ((currentTime.getTime() <= fromD.getTime())) {
-                            val.examDateLeft = true;
+                result.map((val, ind) => {
+                    var currentTime = date.addMinutes(new Date(), 330);
+                    var toD = new Date(val.endDate);
+                    var fromD = new Date(val.startDate);
+                    // if (!(currentTime.getTime() <= toD.getTime() && currentTime.getTime() >= fromD.getTime())) {
+                    //     val.examDone = true;
+                    // }
+                    /* ***************************************************** */
+                    //check rankDate
+                    val.showRank = false;
+                    if (val.rankStartDate) {
+                        var rankDate = new Date(val.rankStartDate);
+                        if (currentTime.getTime() >= rankDate.getTime()) {
+                            val.showRank = true;
                         }
+                    }
+
+                    val.examDateLeft = false;
+                    val.examDone = false;
+
+                    if ((currentTime.getTime() <= fromD.getTime())) {
+                        val.examDateLeft = true;
+                    }
+
+                    if (testResponse) {
                         testResponse.forEach(el => {
 
                             if (el.paperID + '' == val._id + '') {
@@ -474,8 +482,10 @@ class ProductController {
                                 // console.log(val)
                             }
                         });
-                    })
-                }
+                    }
+
+                })
+
 
 
 

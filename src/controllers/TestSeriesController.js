@@ -75,9 +75,6 @@ class TestSeriesController {
         }
     }
 
-
-
-
     async getTestSeriesByCourse(req, res) {
         try {
             var testSeries = await db.TestSeries.find({ courseID: req.params.id, isActive: '1' });
