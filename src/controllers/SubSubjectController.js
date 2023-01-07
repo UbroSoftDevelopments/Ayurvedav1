@@ -80,7 +80,7 @@ class SubjectController {
     }
 
     async updateSubSubject(req, res) {
-        var { _id, name, chapterId, subjectID, detail, isActive, isDemo } = req.body;
+        var { _id, name, chapterId, subjectID, detail, isActive, isDemo, chapterID } = req.body;
 
         if (!_id)
             return res.json({
@@ -98,6 +98,7 @@ class SubjectController {
             if (isDemo) subsubject.isDemo = isDemo;
             if (subjectID) subsubject.subjectID = subjectID;
             if (isActive) subsubject.isActive = isActive;
+            if (chapterID) subsubject.chapterID = JSON.parse(chapterID);
             if (req.file != undefined) {
                 subsubject.img = `${config.uploadFolder}/${req.fileName}`;
             }

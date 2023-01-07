@@ -230,7 +230,7 @@ class TestResponseController {
                     let marks = ((_innerOut.correct) * paper.perQMarks) - (inCorrect * paper.perQNegMarks);
                     _innerOut.attemptQ = responseList.length;
                     _innerOut.unAttempt = paper.questionList.length - responseList.length;
-                    _innerOut.marks = marks;
+                    _innerOut.marks = marks + '/' + (paper.questionList.length * paper.perQMarks);
                     _innerOut.tltQ = paper.questionList.length;
                     let startTime = new Date(val.examStartTime);
                     let endTime = new Date(val.examEndTime);
