@@ -18,6 +18,7 @@ router.use('/subject', require("./subject"));
 router.use('/question', require("./question"));
 router.use('/video', multer().none(), require("./video"));
 router.use('/taskQ', multer().none(), require("./taskQuestion"));
+router.use('/freeSession', multer().none(), require("./freeSession"));
 router.use('/notes', require("./notes"));
 router.use('/test-series', require("./testseries"));
 router.use('/test-paper', require("./testpaper"));

@@ -10,7 +10,9 @@ const schema = new Schema({
     plan: [{
         lable: { type: String },
         days: { type: Number },
-        amount: { type: Number }
+        amount: { type: Number },
+        gstRate: { type: Number },
+        sacCode: { type: String }
     }]
 }, { timestamps: true });
 

@@ -10,7 +10,9 @@ const schema = new Schema({
             lable: { type: String },
             days: { type: Number },
             amount: { type: Number },
-            paymentMode: { type: String }
+            paymentMode: { type: String },
+            gstRate: { type: Number },
+            sacCode: { type: String }
         }
     }
 }, { timestamps: true });
