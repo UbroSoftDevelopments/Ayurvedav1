@@ -217,9 +217,9 @@ class TestResponseController {
             let calculateRankList = []
             const testResponse = await db.TestResponse.find({ paperID: paperID, testSeriesID: testSeriesID }).populate("studentID").populate("paperID");
             if (testResponse) {
-
+                let paper;
                 testResponse.map((val, ind) => {
-                    let paper = val.paperID;
+                    paper = val.paperID;
                     let responseList = val.questionList;
                     let _innerOut = {}
                     _innerOut._id = val._id
@@ -230,7 +230,7 @@ class TestResponseController {
                     let marks = ((_innerOut.correct) * paper.perQMarks) - (inCorrect * paper.perQNegMarks);
                     _innerOut.attemptQ = responseList.length;
                     _innerOut.unAttempt = paper.questionList.length - responseList.length;
-                    _innerOut.marks = marks + '/' + (paper.questionList.length * paper.perQMarks);
+                    _innerOut.marks = marks;
                     _innerOut.tltQ = paper.questionList.length;
                     let startTime = new Date(val.examStartTime);
                     let endTime = new Date(val.examEndTime);
@@ -252,6 +252,7 @@ class TestResponseController {
 
                 calculateRankList.map(function (e, i) {
                     e.rank = (i + 1);
+                    e.marks = e.marks + '/' + (paper.questionList.length * paper.perQMarks)
                     return e;
                 });
             }
