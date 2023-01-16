@@ -458,15 +458,9 @@ class ProductController {
                     //     val.examDone = true;
                     // }
                     /* ***************************************************** */
-                    //check rankDate
-                    val.showRank = false;
-                    if (val.rankStartDate) {
-                        var rankDate = new Date(val.rankStartDate);
-                        if (currentTime.getTime() >= rankDate.getTime()) {
-                            val.showRank = true;
-                        }
-                    }
 
+
+                    val.showRank = false;
                     val.examDateLeft = false;
                     val.examDone = false;
 
@@ -480,6 +474,15 @@ class ProductController {
                             if (el.paperID + '' == val._id + '') {
                                 if (el.examDone == 1) {
                                     val.examDone = true;
+
+                                    //check rankDate
+
+                                    if (val.rankStartDate) {
+                                        var rankDate = new Date(val.rankStartDate);
+                                        if (currentTime.getTime() >= rankDate.getTime()) {
+                                            val.showRank = true;
+                                        }
+                                    }
                                 }
 
                                 // console.log(val)
