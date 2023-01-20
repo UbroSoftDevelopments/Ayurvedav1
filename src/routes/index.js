@@ -24,5 +24,7 @@ router.use('/test-series', require("./testseries"));
 router.use('/test-paper', require("./testpaper"));
 router.use('/test-response', require("./testresponse"));
 router.use('/config', require("./config"));
+router.use('/discount', require("./discount"));
+router.use('/report', require("./report"));
 // Export the router
 module.exports = router;
