@@ -267,6 +267,11 @@ class ProductController {
             let result = []
             if (mysubject) {
                 mysubject.map((val, ind) => {
+                    //check plan is valid or not.
+
+
+
+
                     result.push(val.subjectID)
                 })
             }

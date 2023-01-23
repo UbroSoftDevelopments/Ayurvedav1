@@ -5,6 +5,7 @@ const schema = new Schema({
     subjectID: { type: 'ObjectId', ref: 'subject' },
     testSeriesID: { type: 'ObjectId', ref: 'testSeries' },
     paperList: [{ type: 'ObjectId', ref: 'testPaper' }],
+
     plan: {
         type: {
             lable: { type: String },

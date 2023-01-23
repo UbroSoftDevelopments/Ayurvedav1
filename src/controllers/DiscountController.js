@@ -6,10 +6,11 @@ class DiscountController {
     async addDiscount(req, res) {
 
         var { courseID, oneSub, moreSub, allSub } = req.body;
+
         if (!courseID)
             return res.json({
                 status: false,
-                message: "key name required for Discount",
+                message: "key courseID required for Discount",
                 data: null,
             });
 
@@ -35,10 +36,10 @@ class DiscountController {
         }
     }
 
-    // get discount
+    // get discount 
     async getDiscount(req, res) {
         try {
-            const discount = await db.Discount.find();
+            const discount = await db.Discount.find().populate('courseID', 'name');
 
             return res
                 .status(200)
@@ -66,7 +67,7 @@ class DiscountController {
             discount.oneSub = oneSub;
             discount.moreSub = moreSub;
             discount.allSub = allSub;
-            appConfig.save((err) => {
+            discount.save((err) => {
                 if (!err)
                     return res.json({
                         status: true,
@@ -79,6 +80,26 @@ class DiscountController {
             return res.json({ status: false, message: ``, data: err });
         }
 
+    }
+
+    async deleteDiscount(req, res) {
+        var _id = req.params.id;
+
+        try {
+            var discount = await db.Discount.findOne({ _id });
+
+            discount.remove((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "Discount deleteed",
+                        data: discount,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
     }
 }
 

@@ -56,6 +56,8 @@ class ReportController {
                 .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
         }
     }
+
+
 }
 
 module.exports = ReportController;
