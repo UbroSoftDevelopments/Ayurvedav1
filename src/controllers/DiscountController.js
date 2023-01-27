@@ -101,6 +101,21 @@ class DiscountController {
             return res.json({ status: false, message: `${err}`, data: err });
         }
     }
+
+    async getDiscountByCourse(req, res) {
+        try {
+            const discount = await db.Discount.findOne({ courseID: req.params.id });
+
+            return res
+                .status(200)
+                .json({ status: true, message: `discount`, data: discount });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
+
 }
 
 
