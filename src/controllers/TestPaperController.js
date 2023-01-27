@@ -7,11 +7,20 @@ class TestPaperController {
 
         var { rankStartDate, rankEndDate, qType, isActive, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate, questionList } = req.body;
 
+        questionList = [...new Set(JSON.parse(questionList))]
+
 
         if (!qType || !title || !totalQuestions) {
             return res.json({
                 status: false,
                 message: "Feilds are required for test paper",
+                data: null,
+            });
+        }
+        else if (totalQuestions < questionList.length) {
+            return res.json({
+                status: false,
+                message: `Questions (${questionList.length}) can't be greater then Total Question Count:${totalQuestions}`,
                 data: null,
             });
         }
@@ -34,7 +43,7 @@ class TestPaperController {
             testPaper.duration = duration;
             testPaper.startDate = startDate;
             testPaper.endDate = endDate;
-            testPaper.questionList = [...new Set(JSON.parse(questionList))];
+            testPaper.questionList = questionList;
             if (req.file != undefined) {
                 testPaper.img = `${config.uploadFolder}/${req.fileName}`;
             }
@@ -68,12 +77,26 @@ class TestPaperController {
 
     async updateTestPaper(req, res) {
         var { _id, questionList, rankStartDate, rankEndDate, qType, isActive, chapterID, title, img, desc, totalQuestions, totalMarks, perQMarks, perQNegMarks, cutoff, duration, startDate, endDate } = req.body;
-        if (!_id || !qType || !totalQuestions || !title)
+
+
+        questionList = [...new Set(JSON.parse(questionList))]
+        console.log(totalQuestions, questionList.length);
+
+        if (!_id || !qType || !totalQuestions || !title) {
             return res.json({
                 status: false,
                 message: "Feilds are required for Test",
                 data: null,
             });
+        }
+
+        else if (totalQuestions < questionList.length) {
+            return res.json({
+                status: false,
+                message: `Questions (${questionList.length}) can't be greater then Total Question Count:${totalQuestions}`,
+                data: null,
+            });
+        }
         try {
             var testPaper = await db.TestPaper.findOne({ _id });
 
@@ -92,7 +115,7 @@ class TestPaperController {
             if (duration) testPaper.duration = duration;
             if (startDate) testPaper.startDate = startDate;
             if (endDate) testPaper.endDate = endDate;
-            if (questionList) testPaper.questionList = [...new Set(JSON.parse(questionList))];
+            if (questionList) testPaper.questionList = questionList;
 
             if (req.file != undefined) {
                 testPaper.img = `${config.uploadFolder}/${req.fileName}`;
