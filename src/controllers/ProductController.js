@@ -25,7 +25,8 @@ class ProductController {
 
 
     async addStudentPlan(req, res) {
-        let { studentID, courseID, subjectID, testSeriesID, plan } = req.body;
+        let { studentID, courseID, subjectID, plan, description } = req.body;
+
         if (!studentID || !courseID || !plan) {
             return res.json({
                 status: false,
@@ -67,6 +68,9 @@ class ProductController {
             if (subjectID) stdPlan.subjectID = subjectID;
             // if (testSeriesID) stdPlan.testSeriesID = testSeriesID;
             stdPlan.plan = plan;
+            if (description) stdPlan.description = description;
+            //added Expire Date
+            stdPlan.expireDate = date.addDays(new Date(), plan.days);
 
             stdPlan.save((err) => {
                 if (!err)
@@ -83,7 +87,7 @@ class ProductController {
     }
 
     async addStudentTestSeries(req, res) {
-        let { studentID, paperList, testSeriesID, plan } = req.body;
+        let { studentID, paperList, testSeriesID, plan, description } = req.body;
         if (!studentID || !testSeriesID || !plan) {
             return res.json({
                 status: false,
@@ -148,7 +152,9 @@ class ProductController {
             stdPlan.paperList = [...new Set(paperList)];
             stdPlan.testSeriesID = testSeriesID;
             stdPlan.plan = plan;
-
+            if (description) stdPlan.description = description;
+            //added Expire Date
+            stdPlan.expireDate = date.addDays(new Date(), plan.days);
             stdPlan.save((err) => {
                 if (!err)
                     return res.json({
@@ -199,7 +205,7 @@ class ProductController {
         }
 
         try {
-            const studentData = await db.studentPlan.find({ studentID: studentID, testSeriesID: testSeriesID });
+            const studentData = await db.studentPlan.find({ studentID: studentID, testSeriesID: testSeriesID, expireDate: { $gte: new Date() } });
             //   if (paperList.length != 0) {
             if (studentData) {
                 //remove
@@ -238,12 +244,15 @@ class ProductController {
     }
 
 
+
+
+
     //todo isAvtive validation is left
     async getMyCourse(req, res) {
         try {
             //  const mycourse = await db.studentPlan.find({ studentID: req.userId }, { "courseID": 1, _id: 0 }).populate('courseID');
             await db.studentPlan
-                .find({ studentID: req.userId })
+                .find({ studentID: req.userId, expireDate: { $gte: new Date() } })
                 .distinct('courseID', function (error, ids) {
                     db.Course.find({ 'isActive': '1', '_id': { $in: ids } }, function (err, result) {
                         return res
@@ -263,7 +272,7 @@ class ProductController {
     //todo isAvtive validation is left
     async getMySubjectByCourse(req, res) {
         try {
-            const mysubject = await db.studentPlan.find({ studentID: req.userId, courseID: req.params.id }, { "subjectID": 1, _id: 0 }).populate('subjectID');
+            const mysubject = await db.studentPlan.find({ studentID: req.userId, courseID: req.params.id, expireDate: { $gte: new Date() } }, { "subjectID": 1, _id: 0 }).populate('subjectID');
             let result = []
             if (mysubject) {
                 mysubject.map((val, ind) => {
@@ -291,7 +300,7 @@ class ProductController {
     //is avitve is validated
     async getMyChapterBySubject(req, res) {
         try {
-            const mysubject = await db.studentPlan.findOne({ studentID: req.userId, subjectID: req.params.id });
+            const mysubject = await db.studentPlan.findOne({ studentID: req.userId, subjectID: req.params.id, expireDate: { $gte: new Date() } });
             // if (!mysubject) {
             //     return res.json({
             //         status: false,
@@ -353,7 +362,7 @@ class ProductController {
                 });
             }
             if (sub_subject.isDemo != 1) {
-                const student = await db.studentPlan.findOne({ studentID: req.userId, subjectID: sub_subject.subjectID });
+                const student = await db.studentPlan.findOne({ studentID: req.userId, subjectID: sub_subject.subjectID, expireDate: { $gte: new Date() } });
                 if (!student) {
                     return res.json({
                         status: false,
@@ -391,7 +400,7 @@ class ProductController {
                 });
             }
             if (sub_subject.isDemo != 1) {
-                const student = await db.studentPlan.findOne({ studentID: req.userId, subjectID: sub_subject.subjectID });
+                const student = await db.studentPlan.findOne({ studentID: req.userId, subjectID: sub_subject.subjectID, expireDate: { $gte: new Date() } });
                 if (!student) {
                     return res.json({
                         status: false,
@@ -418,7 +427,7 @@ class ProductController {
 
     async getMyTestSeries(req, res) {
         try {
-            const mytest = await db.studentPlan.find({ studentID: req.userId }, { "testSeriesID": 1, _id: 0 }).populate('testSeriesID');
+            const mytest = await db.studentPlan.find({ studentID: req.userId, expireDate: { $gte: new Date() } }, { "testSeriesID": 1, _id: 0 }).populate('testSeriesID');
             let result = []
             if (mytest) {
                 mytest.map((val, ind) => {
@@ -440,7 +449,7 @@ class ProductController {
 
     async getMyPaperBySeries(req, res) {
         try {
-            const mytest = await db.studentPlan.findOne({ studentID: req.userId, testSeriesID: req.params.id }).populate('testSeriesID').populate('paperList').lean();
+            const mytest = await db.studentPlan.findOne({ studentID: req.userId, testSeriesID: req.params.id, expireDate: { $gte: new Date() } }).populate('testSeriesID').populate('paperList').lean();
 
             let result = [];
             if (mytest) {
@@ -514,6 +523,33 @@ class ProductController {
         }
     }
 
+
+    async makePlanExipre() {
+
+        try {
+            //{ Expiration: { $lte: new Date() } }
+            // await db.studentPlan.updateMany({}, { $set: { "isExipre": 0 } })
+            const studentPlan = await db.studentPlan.find({ expireDate: { $gte: new Date() } });
+            //const studentPlan = await db.studentPlan.find();
+            console.log("studentPlan");
+            if (studentPlan) {
+
+                // studentPlan.forEach(element => {
+                // let tempDate = date.addDays(element.createdAt, element.plan.days);
+                // element.expireDate = tempDate;
+                // element.save();
+
+                // console.log(element)
+                //});
+                console.log("Count", studentPlan.length)
+            }
+        }
+
+        catch (err) {
+            console.log("Error:", new Date(), err)
+        }
+
+    }
 
 
 }

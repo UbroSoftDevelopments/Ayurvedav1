@@ -5,7 +5,8 @@ const schema = new Schema({
     subjectID: { type: 'ObjectId', ref: 'subject' },
     testSeriesID: { type: 'ObjectId', ref: 'testSeries' },
     paperList: [{ type: 'ObjectId', ref: 'testPaper' }],
-    isExipre: { type: Number, default: 0 },
+    description: { type: String },
+    expireDate: { type: Date },
     plan: {
         type: {
             lable: { type: String },
