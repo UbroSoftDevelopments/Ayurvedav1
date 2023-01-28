@@ -31,12 +31,19 @@ class TestResponseController {
         }
         try {
             //remove isCorrect from response
-            const testResponse = await db.TestResponse.findOne({ studentID: req.userId, paperID: paperID, testSeriesID: testSeriesID }).lean();
+            const testResponse = await db.TestResponse.findOne({ studentID: req.userId, paperID: paperID, testSeriesID: testSeriesID }).populate("questionList.qID").lean();
 
             //todo do it later
-            // await testResponse.questionList.map((val, ind) => {
-            //     val.isCorrect = 0;
-            // })
+            await testResponse.questionList.map((val, ind) => {
+                //  console.log(val.qID.correctOpt, val.response);
+                val.qID = val.qID._id;
+                if (val.qID.correctOpt == val.response) {
+                    val.isCorrect = 1;
+                } else {
+                    val.isCorrect = 0;
+                }
+
+            })
             return res
                 .status(200)
                 .json({ status: true, message: `Student Response list`, data: testResponse });
@@ -59,12 +66,12 @@ class TestResponseController {
             });
         }
         //setcorrect Ans
-        const questiontbl = await db.Question.findOne({ '_id': response.qID });
-        if (questiontbl.correctOpt == response.response) {
-            response.isCorrect = 1;
-        } else {
-            response.isCorrect = 0;
-        }
+        /* const questiontbl = await db.Question.findOne({ '_id': response.qID });
+         if (questiontbl.correctOpt == response.response) {
+             response.isCorrect = 1;
+         } else {
+             response.isCorrect = 0;
+         }*/
         //correct Ans
         try {
             let findObj = {
@@ -215,15 +222,38 @@ class TestResponseController {
         try {
             // calculate rank.
             let calculateRankList = []
-            const testResponse = await db.TestResponse.find({ paperID: paperID, testSeriesID: testSeriesID }).populate("studentID").populate("paperID");
+            const testResponse = await db.TestResponse.find({ paperID: paperID, testSeriesID: testSeriesID }).populate("studentID").populate("paperID").populate("questionList.qID");
             if (testResponse) {
                 let paper;
                 testResponse.map((val, ind) => {
                     paper = val.paperID;
-                    let responseList = val.questionList;
+                    //  console.log(paper)
                     let _innerOut = {}
                     _innerOut._id = val._id
                     _innerOut.studentID = val.studentID;
+
+                    //check isCorrect 
+                    let responseList = [];
+
+                    val.questionList.map((element, ind) => {
+                        // console.log(element.qID.correctOpt, element.response)
+                        // console.log(paper.questionList.includes(element.qID._id));
+                        if (paper.questionList.includes(element.qID._id)) {
+                            // remove Question
+                            if (element.qID.correctOpt == element.response) {
+                                element.isCorrect = 1;
+                            } else {
+                                element.isCorrect = 0;
+                            }
+                            responseList.push(element)
+
+                        }
+                    });
+
+
+
+
+
                     _innerOut.correct = responseList.filter(value => value.isCorrect == '1').length;
                     let inCorrect = responseList.filter(value => value.isCorrect != '1').length;
                     _innerOut.inCorrect = inCorrect;
