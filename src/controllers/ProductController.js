@@ -481,6 +481,11 @@ class ProductController {
                     if ((currentTime.getTime() <= fromD.getTime())) {
                         val.examDateLeft = true;
                     }
+                    if (toD) {
+                        if ((currentTime.getTime() >= toD.getTime())) {
+                            val.examDateLeft = true;
+                        }
+                    }
 
                     if (testResponse) {
                         testResponse.forEach(el => {
