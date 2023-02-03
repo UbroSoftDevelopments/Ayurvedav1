@@ -12,7 +12,8 @@ const schema = new Schema({
         days: { type: Number },
         amount: { type: Number },
         gstRate: { type: Number },
-        sacCode: { type: String }
+        sacCode: { type: String },
+        paymentMode: { type: String }
     }]
 }, { timestamps: true });
 

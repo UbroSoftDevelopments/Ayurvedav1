@@ -42,25 +42,25 @@ class ProductController {
             if (subjectID) findValue.subjectID = subjectID;
             // if (testSeriesID) findValue.testSeriesID = testSeriesID;
 
-            const studentData = await db.studentPlan.find(findValue);
-
-            if (studentData) {
-                var already = false;
-                studentData.map((_v, _ind) => {
-                    if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
-                        already = true;
-                    }
-                })
-
-                if (already) {
-                    return res.json({
-                        status: true,
-                        message: " Plan is already assign to student.💸 ",
-                        data: findValue,
-                    });
-                }
-
-            }
+            /* const studentData = await db.studentPlan.find(findValue);
+ 
+             if (studentData) {
+                 var already = false;
+                 studentData.map((_v, _ind) => {
+                     if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
+                         already = true;
+                     }
+                 })
+ 
+                 if (already) {
+                     return res.json({
+                         status: true,
+                         message: " Plan is already assign to student.💸 ",
+                         data: findValue,
+                     });
+                 }
+ 
+             }  */
 
             const stdPlan = await db.studentPlan();
             stdPlan.studentID = studentID;
@@ -481,11 +481,6 @@ class ProductController {
                     if ((currentTime.getTime() <= fromD.getTime())) {
                         val.examDateLeft = true;
                     }
-                    if (toD) {
-                        if ((currentTime.getTime() >= toD.getTime())) {
-                            val.examDateLeft = true;
-                        }
-                    }
 
                     if (testResponse) {
                         testResponse.forEach(el => {
@@ -507,6 +502,12 @@ class ProductController {
                                 // console.log(val)
                             }
                         });
+                    }
+
+                    if (toD && !val.examDone) {
+                        if ((currentTime.getTime() >= toD.getTime())) {
+                            val.examDateLeft = true;
+                        }
                     }
 
                 })

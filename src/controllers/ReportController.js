@@ -46,7 +46,7 @@ class ReportController {
     // get Category
     async getReport(req, res) {
         try {
-            const reportQuestion = await db.ReportQuestion.find().populate("testSeriesID", "name").populate("paperID", "title").populate("studentID").populate("qID");
+            const reportQuestion = await db.ReportQuestion.find().populate("testSeriesID", "name").populate("paperID").populate("studentID").populate("qID");
             return res
                 .status(200)
                 .json({ status: true, message: `reportQuestion list`, data: reportQuestion });
@@ -56,7 +56,32 @@ class ReportController {
                 .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
         }
     }
+    async updateReport(req, res) {
+        var { _id, status } = req.body;
+        if (!_id, !status)
+            return res.json({
+                status: false,
+                message: "key _id status required for update Reported",
+                data: req.body,
+            });
 
+        try {
+            var reportQuestion = await db.ReportQuestion.findOne({ _id });
+            reportQuestion.status = status;
+
+            reportQuestion.save((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "Reported Question updated to: " + status,
+                        data: reportQuestion,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
 
 }
 

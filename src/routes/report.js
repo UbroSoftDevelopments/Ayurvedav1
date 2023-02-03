@@ -7,6 +7,7 @@ var pics = uploader.single('photo');
 
 router.post("/", pics, checkStudentAuth, ReportController.addReport);
 router.get("/", checkAdminAuth, ReportController.getReport);
+router.put("/", checkAdminAuth, ReportController.updateReport);
 
 
 module.exports = router;

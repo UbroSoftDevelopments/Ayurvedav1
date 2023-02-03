@@ -194,7 +194,7 @@ class StudentController {
 
   async getAllStudent(req, res) {
     try {
-      const student = await db.Student.find().sort({ "createdAt": -1 });;
+      const student = await db.Student.find().sort({ "createdAt": -1 });
 
       return res
         .status(200)
@@ -220,10 +220,29 @@ class StudentController {
     }
   }
 
+  async deleteStudent(req, res) {
+    var _id = req.params.id;
+
+    try {
+      var student = await db.Student.findOne({ _id });
+
+      student.remove((err) => {
+        if (!err)
+          return res.json({
+            status: true,
+            message: "student Deleted 😮‍💨",
+            data: student,
+          });
+        else return res.json({ status: false, message: `${err}`, data: err });
+      });
+    } catch (err) {
+      return res.json({ status: false, message: `${err}`, data: err });
+    }
+  }
 
   async getStudentPlan(req, res) {
     try {
-      const subPlan = await db.studentPlan.find({ studentID: req.params.id }).populate('courseID').populate('subjectID');
+      const subPlan = await db.studentPlan.find({ studentID: req.params.id }).populate('courseID').populate('subjectID').sort({ "createdAt": -1 });
 
       return res
         .status(200)
@@ -239,6 +258,8 @@ class StudentController {
 
 
   async addStudentPlan(req, res) {
+
+    //NOT IN USE
     let { studentID, courseID, subjectID, testSeriesID, plan } = req.body;
     if (!studentID || !courseID || !plan) {
       return res.json({
@@ -252,16 +273,18 @@ class StudentController {
       if (subjectID) findValue.subjectID = subjectID;
       if (testSeriesID) findValue.testSeriesID = testSeriesID;
 
-      const studentData = await db.studentPlan.findOne(findValue);
-      if (studentData) {
-        findValue.plan = plan;
-        findValue.studentData = studentData;
-        return res.json({
-          status: true,
-          message: " Plan is already assign to student.💸 ",
-          data: findValue,
-        });
-      }
+      /* const studentData = await db.studentPlan.findOne(findValue);
+       if (studentData) {
+         findValue.plan = plan;
+         findValue.studentData = studentData;
+         return res.json({
+           status: true,
+           message: " Plan is already assign to student.💸 ",
+           data: findValue,
+         });
+       }
+ 
+       */
       console.log(findValue);
       const stdPlan = await db.studentPlan();
       stdPlan.studentID = studentID;

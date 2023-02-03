@@ -7,6 +7,8 @@ const { checkAdminAuth } = require("../middleware");
 
 router.post("/", FreeSessionController.addSession);
 router.get("/", checkAdminAuth, FreeSessionController.getSession);
+router.put("/", checkAdminAuth, FreeSessionController.updateSession);
+router.delete("/:id", checkAdminAuth, FreeSessionController.deleteSession);
 
 
 module.exports = router;

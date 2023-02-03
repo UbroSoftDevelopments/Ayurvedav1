@@ -49,9 +49,53 @@ class FreeSessionController {
         }
     }
 
+    async updateSession(req, res) {
+        var { _id, status } = req.body;
+        if (!_id, !status)
+            return res.json({
+                status: false,
+                message: "key _id status required for update Session",
+                data: req.body,
+            });
+
+        try {
+            var freeSession = await db.FreeSession.findOne({ _id });
+            freeSession.status = status;
+
+            freeSession.save((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "Enquiry updated to: " + status,
+                        data: freeSession,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
 
 
-    /* Video */
+    async deleteSession(req, res) {
+        var _id = req.params.id;
+
+        try {
+            var freeSession = await db.FreeSession.findOne({ _id });
+
+            freeSession.remove((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "Enquiry deleteed",
+                        data: freeSession,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
 }
 
 module.exports = FreeSessionController;
