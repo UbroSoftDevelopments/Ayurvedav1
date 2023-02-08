@@ -114,7 +114,7 @@ class ProductController {
                 }
 
                 //remove
-
+                /*
                 studentData.map((_v, _ind) => {
                     if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
                         already = true;
@@ -141,6 +141,8 @@ class ProductController {
                         data: null,
                     });
                 }
+
+                */
 
             }
             //  }

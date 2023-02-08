@@ -9,7 +9,7 @@ const StudentSchema = new Schema({
     favSubject: { type: String, default: "" },
     referralCode: { type: String, default: "" },
     purposeOfAyurveda: { type: String, default: "" },
-
+    isVerifed: { type: Number, default: 0 },
 
 
     profile: { type: String, default: '' },

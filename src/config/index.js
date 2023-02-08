@@ -1,6 +1,7 @@
 var dotenv = require('dotenv')
 const multer = require('multer');
 const moment = require('moment-timezone');
+const request = require('request');
 
 dotenv.config()
 const config = {
@@ -11,7 +12,8 @@ const config = {
   uploadURL: process.env.UPLOAD_URL,
   uploadFolder: 'upload',
   userApp: 'admin-user',
-  webApp: 'cms-app'
+  webApp: 'cms-app',
+  baseUrl: process.env.BASE_URL
 };
 
 config.url = (endpoints) => {
@@ -88,6 +90,20 @@ config.token = (store, expiresIn = null) => {
 
   return token;
 }
+
+
+config.sendWhatsapp = (mobile, msg, callBack) => {
+  var options = {
+    'method': 'POST',
+    'url': `https://web.cloudwhatsapp.com/wapp/api/send?apikey=${process.env.WHATSAPPKEY}&mobile=${mobile}&msg=${msg}`,
+    'headers': {
+    }
+  };
+  request(options, function (error, response) {
+    callBack({ error: error, res: JSON.parse(response.body) });
+  });
+}
+
 
 config.checkToken = (req, res, run) => {
   const jwt = require('jsonwebtoken');

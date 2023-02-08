@@ -33,16 +33,34 @@ class StudentController {
         var data = user.toObject();
         data.token = app.token({ email: user.email, _id: user._id, role: roles_list.Student });
         // data.imageBaseUrl = app.uploadURL;
-        return res.json({
-          status: true,
-          message: "Register successs",
-          data,
-          password,
-        });
+        let url = `${app.baseUrl}/save_student/${data.token}`;
+        console.log(url)
+        /* app.sendWhatsapp(mobile, "Click here to verify your Mobile Number: " + " http://ok/#/", (resWhatsapp) => {
+           if (!resWhatsapp.error) {
+             console.log(resWhatsapp.res)
+             if (resWhatsapp.res.statuscode == 200) {
+               return res.json({
+                 status: true,
+                 message: "Please check whatsapp on this number: " + mobile + " Verfication link is send"
+               });
+             }
+             return res.json({
+               status: true,
+               message: resWhatsapp.res.errormsg
+             });
+           }
+ 
+         });
+ 
+         */
+
+
+
+
       } else
         return res.json({
           status: false,
-          message: `User already found!`,
+          message: `User already found! Email/Phone already registered.`,
           data: err,
         });
     });
@@ -77,9 +95,6 @@ class StudentController {
         //await app.checkPassword(password,doc.password);
         if (st) {
           doc.token = app.token({ email: doc.email, _id: doc._id, role: roles_list.Student });
-          // doc.imageBaseUrl = app.uploadURL;
-          // if (doc.profile != "")
-          //   doc.profile = app.setImageURL(`user/${doc.profile}`);
 
           return res.json({
             status: true,
@@ -105,10 +120,15 @@ class StudentController {
   async checkStudent(req, res) {
     try {
       const student = await db.Student.findOne({ _id: req.userId });
-
+      if (student) {
+        return res
+          .status(200)
+          .json({ status: true, message: `Authorized Student 🧑‍🎓`, data: student });
+      }
       return res
         .status(200)
-        .json({ status: true, message: `'Authorized Student 🧑‍🎓'`, data: student });
+        .json({ status: false, message: ` Student Not Found.. 🧑‍🎓'`, data: student });
+
     } catch (err) {
       return res
         .status(403)

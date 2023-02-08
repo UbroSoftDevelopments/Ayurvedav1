@@ -3,6 +3,7 @@ const multer = require('multer');
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
+
   res.json({ status: true, message: 'Api is running. 🏃‍♀️' });
 });
 
