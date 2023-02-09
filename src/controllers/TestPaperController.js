@@ -235,11 +235,19 @@ class TestPaperController {
                 if (val.paperList.length > 0) {
                     //check is present or not
                     val.paperList.map((item) => {
-                        if (item + '' == req.params.paperID) output.push(val.studentID)
+                        if (item + '' == req.params.paperID) {
+                            if (val.studentID) {
+                                output.push(val.studentID)
+                            }
+                        }
                     });
                 }
                 else {
-                    output.push(val.studentID)
+
+                    if (val.studentID) {
+                        output.push(val.studentID)
+                    }
+
                 }
             });
             return res
