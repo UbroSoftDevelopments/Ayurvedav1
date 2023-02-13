@@ -11,9 +11,10 @@ router.get("/checkStudent", checkStudentAuth, StudentController.checkStudent);
 router.get("/verifyStudent", checkStudentAuth, StudentController.verfiyStudent);
 
 
-router.get("/", StudentController.getAllStudent);
-router.delete("/:id", StudentController.deleteStudent);
-router.get("/detail/:id", StudentController.getStudent);
+router.get("/", checkAdminAuth, StudentController.getAllStudent);
+router.delete("/:id", checkAdminAuth, StudentController.deleteStudent);
+router.get("/detail/:id", checkAdminAuth, StudentController.getStudent);
+router.put("/description", checkAdminAuth, StudentController.editStudentDiscription);
 
 router.get("/plan/:id", ProductController.getStudentPlan);
 router.delete("/plan/:id", checkAdminAuth, ProductController.deleteStudentPlan);

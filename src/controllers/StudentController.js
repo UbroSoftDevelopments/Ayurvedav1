@@ -316,6 +316,34 @@ class StudentController {
     }
   }
 
+
+  async editStudentDiscription(req, res) {
+    var { studentID, description } = req.body;
+    try {
+
+      if (!studentID || !description)
+        return res.json({
+          status: false,
+          message: "key _id required for editStudentDiscription",
+          data: req.body,
+        });
+      var student = await db.Student.findOne({ _id: studentID });
+      student.dist = description;
+      student.save((err) => {
+        if (!err)
+          return res.json({
+            status: true,
+            message: "Student's description updated 😋",
+            data: student,
+          });
+        else return res.json({ status: false, message: `${err}`, data: err });
+      });
+
+    } catch (err) {
+      return res.json({ status: false, message: `${err}`, data: err });
+    }
+  }
+
   async getStudentPlan(req, res) {
     try {
       const subPlan = await db.studentPlan.find({ studentID: req.params.id }).populate('courseID').populate('subjectID').sort({ "createdAt": -1 });
