@@ -1,5 +1,6 @@
 const db = require("../models");
 const roles_list = require('../config/roles_list');
+const { urlencoded } = require("express");
 class StudentController {
   constructor() {
     //
@@ -33,26 +34,25 @@ class StudentController {
         var data = user.toObject();
         data.token = app.token({ email: user.email, _id: user._id, role: roles_list.Student });
         // data.imageBaseUrl = app.uploadURL;
-        let url = `${app.baseUrl}/save_student/${data.token}`;
-        console.log(url)
-        /* app.sendWhatsapp(mobile, "Click here to verify your Mobile Number: " + " http://ok/#/", (resWhatsapp) => {
-           if (!resWhatsapp.error) {
-             console.log(resWhatsapp.res)
-             if (resWhatsapp.res.statuscode == 200) {
-               return res.json({
-                 status: true,
-                 message: "Please check whatsapp on this number: " + mobile + " Verfication link is send"
-               });
-             }
-             return res.json({
-               status: true,
-               message: resWhatsapp.res.errormsg
-             });
-           }
- 
-         });
- 
-         */
+        let url = `${app.baseUrl}/%23/save_student/${data.token}`;
+
+        app.sendWhatsapp(mobile, "Click here to verify your Mobile Number: " + url, (resWhatsapp) => {
+          if (!resWhatsapp.error) {
+            if (resWhatsapp.res.statuscode == 200) {
+              return res.json({
+                status: true,
+                message: "Please check whatsapp on this number: " + mobile + " Verfication link is send"
+              });
+            }
+            return res.json({
+              status: false,
+              message: resWhatsapp.res.errormsg
+            });
+          }
+
+        });
+
+
 
 
 
@@ -95,12 +95,39 @@ class StudentController {
         //await app.checkPassword(password,doc.password);
         if (st) {
           doc.token = app.token({ email: doc.email, _id: doc._id, role: roles_list.Student });
+          if (doc.isVerifed != 1) {
+            //Not Verfiy
 
-          return res.json({
-            status: true,
-            message: "login successs",
-            data: doc,
-          });
+            // data.imageBaseUrl = app.uploadURL;
+            let url = `${app.baseUrl}/%23/save_student/${doc.token}`;
+
+            app.sendWhatsapp(doc.mobile, "Click here to verify your Mobile Number: " + url, (resWhatsapp) => {
+              if (!resWhatsapp.error) {
+                if (resWhatsapp.res.statuscode == 200) {
+                  return res.json({
+                    status: false,
+                    message: "Please check whatsapp on this number: " + doc.mobile + " Verfication link is send"
+                  });
+                }
+                return res.json({
+                  status: false,
+                  message: resWhatsapp.res.errormsg
+                });
+              }
+
+            });
+
+
+
+
+          } else {
+
+            return res.json({
+              status: true,
+              message: "login successs",
+              data: doc,
+            });
+          }
         } else
           return res.json({
             status: false,
@@ -127,7 +154,7 @@ class StudentController {
       }
       return res
         .status(200)
-        .json({ status: false, message: ` Student Not Found.. 🧑‍🎓'`, data: student });
+        .json({ status: false, message: ` Student Not Found.. 🧑‍🎓'`, data: null });
 
     } catch (err) {
       return res
@@ -135,6 +162,35 @@ class StudentController {
         .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
     }
 
+  }
+
+
+  async verfiyStudent(req, res) {
+    try {
+      const student = await db.Student.findOne({ _id: req.userId });
+      if (student) {
+
+        student.isVerifed = 1;
+        student.save((err) => {
+          if (!err) {
+            return res
+              .status(200)
+              .json({ status: true, message: `Student  Verfied🧑‍🎓`, data: student });
+          } else { return res.json({ status: false, message: `${err}`, data: err }); }
+        });
+
+      } else {
+        return res
+          .status(200)
+          .json({ status: false, message: ` Student Not Found. 🧑‍🎓' ${req.userId}`, data: student });
+      }
+
+
+    } catch (err) {
+      return res
+        .status(403)
+        .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+    }
   }
 
   userSendOtp(req, res) {
@@ -305,7 +361,6 @@ class StudentController {
        }
  
        */
-      console.log(findValue);
       const stdPlan = await db.studentPlan();
       stdPlan.studentID = studentID;
       stdPlan.courseID = courseID;
