@@ -32,16 +32,40 @@ class StudentController {
     user.save((err) => {
       if (!err) {
         var data = user.toObject();
-        data.token = app.token({ email: user.email, _id: user._id, role: roles_list.Student });
+        // data.token = app.token({ email: user.email, _id: user._id, role: roles_list.Student });
         // data.imageBaseUrl = app.uploadURL;
-        let url = `${app.baseUrl}/%23/save_student/${data.token}`;
+        //  let url = `${app.baseUrl}/%23/save_student/${data.token}`;
 
-        app.sendWhatsapp(mobile, "Click here to verify your Mobile Number: " + url, (resWhatsapp) => {
+        let _otp = app.otp(4);
+        // console.log(_otp, mobile)
+        var otpTbl = new db.Otp();
+        otpTbl.mobile = mobile;
+        otpTbl.otp = _otp;
+        otpTbl.save((err) => {
+          if (err) {
+            return res.json({
+              status: false,
+              message: "Something went worng while sending the OTP",
+              data: err
+            });
+          }
+        });
+
+        let msg =
+          `Your OTP is *${_otp}*. 
+(valid for *05* minutes)
+Verify your email id by entering this OTP and get registered.
+
+Pratyaksh AyurvedaYour`
+
+
+
+        app.sendWhatsapp(mobile, msg, (resWhatsapp) => {
           if (!resWhatsapp.error) {
             if (resWhatsapp.res.statuscode == 200) {
               return res.json({
                 status: true,
-                message: "Please check whatsapp on this number: " + mobile + " Verfication link is send"
+                message: "Please check whatsapp on this number: " + mobile + " OTP is send. and its valid till 5 min"
               });
             }
             return res.json({
@@ -60,7 +84,7 @@ class StudentController {
       } else
         return res.json({
           status: false,
-          message: `User already found! Email/Phone already registered.`,
+          message: `User already found! Email/Phone already registered. Please Login.`,
           data: err,
         });
     });
@@ -79,8 +103,6 @@ class StudentController {
 
     if (isNaN(_mobile)) { _mobile = null }
 
-
-
     db.Student.findOne({ $or: [{ email: user }, { mobile: _mobile }] })
       .lean()
       .then(async (doc) => {
@@ -94,19 +116,40 @@ class StudentController {
         var st = password === doc.password;
         //await app.checkPassword(password,doc.password);
         if (st) {
-          doc.token = app.token({ email: doc.email, _id: doc._id, role: roles_list.Student });
+
           if (doc.isVerifed != 1) {
             //Not Verfiy
 
-            // data.imageBaseUrl = app.uploadURL;
-            let url = `${app.baseUrl}/%23/save_student/${doc.token}`;
+            let _otp = app.otp(4);
 
-            app.sendWhatsapp(doc.mobile, "Click here to verify your Mobile Number: " + url, (resWhatsapp) => {
+            var otpTbl = new db.Otp();
+            otpTbl.mobile = doc.mobile;
+            otpTbl.otp = _otp;
+            otpTbl.save((err) => {
+              if (err) {
+                return res.json({
+                  status: false,
+                  message: "Something went worng while sending the OTP",
+                  data: err
+                });
+              }
+            });
+
+            let msg =
+              `Your OTP is *${_otp}*. 
+(valid for *05* minutes)
+Verify your email id by entering this OTP and get registered.
+
+Pratyaksh AyurvedaYour`
+
+
+            app.sendWhatsapp(doc.mobile, msg, (resWhatsapp) => {
               if (!resWhatsapp.error) {
                 if (resWhatsapp.res.statuscode == 200) {
                   return res.json({
                     status: false,
-                    message: "Please check whatsapp on this number: " + doc.mobile + " Verfication link is send"
+                    message: "Please check whatsapp on this number: " + doc.mobile + " OTP is send. and its valid till 5 min",
+                    data: doc
                   });
                 }
                 return res.json({
@@ -139,7 +182,7 @@ class StudentController {
         return res.json({
           status: false,
           message: `User already found!`,
-          data: err,
+          data: null,
         });
       });
   }
@@ -167,23 +210,49 @@ class StudentController {
 
   async verfiyStudent(req, res) {
     try {
-      const student = await db.Student.findOne({ _id: req.userId });
-      if (student) {
 
-        student.isVerifed = 1;
-        student.save((err) => {
-          if (!err) {
+      var { mobile, otp } = req.body;
+      const otpTbl = await db.Otp.find({ mobile });
+      if (otpTbl) {
+        let otpMatch = false;
+        await otpTbl.forEach(element => {
+          // console.log(mobile, otp, element)
+          if (element.otp == otp) {
+            otpMatch = true;
+          }
+        });
+        if (otpMatch) {
+          const student = await db.Student.findOne({ mobile });
+          if (student) {
+            //make it verfied
+            student.isVerifed = 1;
+            student.save((err) => {
+              if (!err) {
+                let token = app.token({ email: student.email, _id: student._id, role: roles_list.Student });
+                return res.status(200).json({ status: true, message: `Successfully  verified 🧑‍🎓`, data: token });
+              }
+              else {
+                return res.json({ status: false, message: `${err}`, data: err });
+              }
+            });
+          } else {
             return res
               .status(200)
-              .json({ status: true, message: `Student  Verfied🧑‍🎓`, data: student });
-          } else { return res.json({ status: false, message: `${err}`, data: err }); }
-        });
-
+              .json({ status: false, message: `Not able to validate OTP Register again`, data: "" });
+          }
+        }
+        else {
+          return res
+            .status(200)
+            .json({ status: false, message: `Invalid OTP`, data: "" });
+        }
       } else {
         return res
           .status(200)
-          .json({ status: false, message: ` Student Not Found. 🧑‍🎓' ${req.userId}`, data: student });
+          .json({ status: false, message: `OTP expire`, data: "" });
       }
+
+
 
 
     } catch (err) {

@@ -8,7 +8,7 @@ router.post("/registration", StudentController.studentRegister);
 router.post("/login", StudentController.studentLogin);
 
 router.get("/checkStudent", checkStudentAuth, StudentController.checkStudent);
-router.get("/verifyStudent", checkStudentAuth, StudentController.verfiyStudent);
+router.post("/verifyStudent", StudentController.verfiyStudent);
 
 
 router.get("/", checkAdminAuth, StudentController.getAllStudent);
