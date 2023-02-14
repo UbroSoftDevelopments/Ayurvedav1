@@ -165,6 +165,8 @@ Pratyaksh AyurvedaYour`
 
           } else {
 
+
+            doc.token = app.token({ email: doc.email, _id: doc._id, role: roles_list.Student });
             return res.json({
               status: true,
               message: "login successs",
