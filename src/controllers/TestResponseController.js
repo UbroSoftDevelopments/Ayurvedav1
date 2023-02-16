@@ -273,7 +273,10 @@ class TestResponseController {
                     _innerOut.timeTakenMin = parseFloat(timeTaken);
                     _innerOut.aggregate = "";
                     _innerOut.rank = "";
-                    calculateRankList.push(_innerOut)
+                    if (_innerOut.studentID) {
+                        calculateRankList.push(_innerOut)
+                    }
+
                 })
 
                 //need to add 

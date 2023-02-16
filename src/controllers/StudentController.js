@@ -138,9 +138,9 @@ Pratyaksh AyurvedaYour`
             let msg =
               `Your OTP is *${_otp}*. 
 (valid for *05* minutes)
-Verify your email id by entering this OTP and get registered.
+Verify your WhatsApp number by entering this OTP and get registered..
 
-Pratyaksh AyurvedaYour`
+Pratyaksh Ayurveda`
 
 
             app.sendWhatsapp(doc.mobile, msg, (resWhatsapp) => {
