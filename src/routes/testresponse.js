@@ -5,6 +5,7 @@ const router = express.Router();
 
 
 router.post("/student/", checkStudentAuth, TestResponseController.setStudentResponse);
+router.put("/student/remove/", checkStudentAuth, TestResponseController.removeStudentResponse);
 router.get("/student/", TestResponseController.getQuestionByStudent);
 router.get("/student/response/:testSeriesID/:paperID", checkStudentAuth, TestResponseController.getResponseOfStudent);
 router.get("/:testSeriesID/:paperID", TestResponseController.getResultOfStudent);
@@ -15,4 +16,4 @@ router.delete("/:id", checkAdminAuth, TestResponseController.deleteTestResponse)
 
 
 
-module.exports = router;
+module.exports = router; 

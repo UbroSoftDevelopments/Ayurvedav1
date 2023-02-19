@@ -133,6 +133,63 @@ class TestResponseController {
         }
     }
 
+
+    async removeStudentResponse(req, res) {
+        var { testSeriesID, paperID, qID } = req.body;
+        if (!paperID || !req.userId || !qID) {
+            return res.json({
+                status: false,
+                message: "Feilds are required for test paper",
+                data: null,
+            });
+        }
+        try {
+            let findObj = {
+                paperID: paperID,
+                studentID: req.userId,
+                testSeriesID: testSeriesID
+            }
+            var testResponse = await db.TestResponse.findOne(findObj);
+            //check ans
+            if (testResponse) {
+                let tempResponseList = [];
+                //update in questionList
+                if (testResponse.questionList.length > 0) {
+
+                    testResponse.questionList.map((val, ind) => {
+                        if (val.qID != qID) {
+                            tempResponseList.push(val);
+                        }
+                    })
+                }
+                testResponse.questionList = tempResponseList;
+                testResponse.save((err) => {
+                    if (!err) {
+                        return res.json({
+                            status: true,
+                            message: "Test-Response Removed 👍",
+                            data: null,
+                        });
+                    }
+                    else { return res.json({ status: false, message: `${err}`, data: err }) };
+                });
+
+
+            } else {
+                return res.json({
+                    status: true,
+                    message: "No Response Found 👍",
+                    data: null,
+                });
+            }
+
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+
+    }
+
+
     async setTestStartEndTime(req, res) {
         var { testSeriesID, paperID, examStartTime, examEndTime } = req.body;
         if (!paperID || !req.userId) {
