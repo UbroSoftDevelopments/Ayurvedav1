@@ -28,5 +28,6 @@ router.use('/config', require("./config"));
 router.use('/discount', require("./discount"));
 router.use('/report', require("./report"));
 router.use('/faculty', require("./faculty"));
+router.use('/performance', require("./performance"));
 // Export the router
 module.exports = router;

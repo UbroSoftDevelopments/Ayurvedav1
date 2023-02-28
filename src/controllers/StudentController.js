@@ -387,6 +387,39 @@ Pratyaksh Ayurveda`
     }
   }
 
+  async updateStudent(req, res) {
+    let { _id, fullName, password, presentStatus, favSubject, purposeOfAyurveda } = req.body;
+    if (!_id)
+      return res.json({
+        status: false,
+        message: "Must provide _id",
+        data: null,
+      });
+    try {
+      const student = await db.Student.findOne({ _id });
+      if (presentStatus) student.presentStatus = presentStatus;
+      if (favSubject) student.favSubject = favSubject;
+      if (purposeOfAyurveda) student.purposeOfAyurveda = purposeOfAyurveda;
+      if (fullName) student.fullName = fullName;
+      if (password) student.password = password;
+
+      student.save((err) => {
+        if (!err)
+          return res.json({
+            status: true,
+            message: "Profile updated 😎",
+            data: student,
+          });
+        else return res.json({ status: false, message: `${err}`, data: err });
+      });
+
+    } catch (err) {
+      return res.json({ status: false, message: `${err}`, data: err });
+    }
+
+
+
+  }
 
   async editStudentDiscription(req, res) {
     var { studentID, description } = req.body;
