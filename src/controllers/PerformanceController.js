@@ -66,13 +66,19 @@ class PerformanceController {
             }
 
             let percentageSum = 0;
+            let highestPercentage = 0;
             percentageList.map((pval, pind) => {
                 pval.percentage = parseFloat(((pval.marks / pval.outOf) * 100).toFixed(2));
                 percentageSum += pval.percentage;
+                if (highestPercentage < pval.percentage) {
+                    highestPercentage = pval.percentage;
+                }
                 if (studentID == pval.studentID) {
                     meanData.me = pval.percentage;
+
                 }
             })
+            meanData.highest = parseFloat(highestPercentage).toFixed(2);
             meanData.average = parseFloat((percentageSum / percentageList.length).toFixed(2));
 
 
@@ -88,8 +94,13 @@ class PerformanceController {
 
     async getPendingPaper(req, res) {
         var { studentID } = req.body;
+
         if (!studentID) {
-            studentID = req.userId;
+            return res.json({
+                status: false,
+                message: "key studentID required for Performance Report",
+                data: null,
+            });
         }
 
         /*  SAMPLE OUTPUT 
@@ -136,10 +147,12 @@ class PerformanceController {
             result.map((val, ind) => {
                 let _out = {
                     testName: val.name,
+                    desc: val.desc,
                     testId: val._id,
                     tltPaper: 0,
                     paperDone: 0,
-                    pendingPaper: 0
+                    pendingPaper: 0,
+                    percentage: 0
                 }
                 val.activePaper.forEach(element => {
                     _out.tltPaper += 1;
@@ -152,6 +165,7 @@ class PerformanceController {
                     }
 
                 });
+                _out.percentage = (_out.paperDone / _out.tltPaper) * 100;
 
                 resList.push(_out);
             })
