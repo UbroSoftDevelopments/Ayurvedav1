@@ -1,19 +1,18 @@
 const date = require('date-and-time')
 const db = require("../models");
 const config = require("../config");
+const ObjectId = require('mongodb').ObjectID;
 class PerformanceController {
 
     async getAverageInTestSeriesByX(req, res) {
         var { testSeriesID, studentID } = req.body;
-        if (!testSeriesID)
+        if (!testSeriesID || !studentID)
             return res.json({
                 status: false,
-                message: "key testSeriesID required for Performance Report",
+                message: "key testSeriesID and studentID required for Performance Report",
                 data: null,
             });
-        if (!studentID) {
-            studentID = req.userId;
-        }
+
 
         try {
             /* DATA EXAMPLE */
@@ -180,23 +179,235 @@ class PerformanceController {
     }
 
 
-    async getAllResponseOfStudentByTestSeries(req, res) {
-        var { testSeriesID, studentID } = req.body;
-        if (!testSeriesID)
+    async getAverageCustom(req, res) {
+        var { testSeriesID, studentID, paperIds } = req.body;
+        if (!testSeriesID || !studentID || !paperIds)
             return res.json({
                 status: false,
-                message: "key testSeriesID required for Performance Report",
+                message: "key testSeriesID,paperIds and studentID required for Performance Report",
                 data: null,
             });
-        if (!studentID) {
-            studentID = req.userId;
-        }
+
         try {
-            const testResponse = await db.TestResponse.find({ studentID: studentID, testSeriesID: testSeriesID }).populate("paperID").populate("questionList.qID");
+            /* DATA EXAMPLE */
+            let meanData = {
+                highest: 0,
+                average: 0,
+                me: 0
+            }
+            var obj_ids = paperIds.map(function (id) { return ObjectId(id); });
+
+            //Get Rank of All Student
+            const testResponse = await db.TestResponse.find({ testSeriesID: testSeriesID, paperID: { $in: obj_ids } }).populate("paperID").populate("questionList.qID");
+
+            let percentageList = [];
+            if (testResponse) {
+                testResponse.map((val, ind) => {
+                    let paper = val.paperID;
+                    //check isCorrect 
+                    let responseList = [];
+                    val.questionList.map((element, ind) => {
+                        if (paper.questionList.includes(element.qID._id)) {
+                            if (element.qID.correctOpt == element.response) {
+                                element.isCorrect = 1;
+                            } else {
+                                element.isCorrect = 0;
+                            }
+                            responseList.push(element)
+                        }
+                    });
+                    let correct = responseList.filter(value => value.isCorrect == '1').length;
+                    let inCorrect = responseList.filter(value => value.isCorrect != '1').length;
+                    let marks = ((correct) * paper.perQMarks) - (inCorrect * paper.perQNegMarks);
+                    let outOf = paper.questionList.length * paper.perQMarks
+
+
+                    let studentFound = false;
+                    percentageList.forEach(element1 => {
+                        if (element1.studentID + "" == val.studentID + "") {
+                            element1.marks = element1.marks + marks;
+                            element1.outOf = element1.outOf + outOf;
+                            studentFound = true;
+                        }
+                    });
+                    if (!studentFound) {
+                        percentageList.push({
+                            studentID: val.studentID, marks: marks, outOf: outOf
+                        })
+                    }
+                })
+            }
+
+            let percentageSum = 0;
+            let highestPercentage = 0;
+            percentageList.map((pval, pind) => {
+                pval.percentage = parseFloat(((pval.marks / pval.outOf) * 100).toFixed(2));
+                percentageSum += pval.percentage;
+                if (highestPercentage < pval.percentage) {
+                    highestPercentage = pval.percentage;
+                }
+                if (studentID == pval.studentID) {
+                    meanData.me = pval.percentage;
+                }
+            })
+            meanData.highest = parseFloat(highestPercentage).toFixed(2);
+            meanData.average = parseFloat((percentageSum / percentageList.length).toFixed(2));
+
+
+            return res
+                .status(200)
+                .json({ status: true, message: `Student Avaerge`, data: { percentageList: percentageList, meanData: meanData } });
+
+        } catch (err) {
+            return res
+                .status(200)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+
+    }
+
+    async getAllResponseOfStudentByTestSeries(req, res) {
+        var { testSeriesID, studentID } = req.body;
+        if (!testSeriesID || !studentID)
+            return res.json({
+                status: false,
+                message: "key testSeriesID, studentID required for Performance Report",
+                data: null,
+            });
+
+        try {
+            const testResponse = await db.TestResponse.find({ studentID: studentID, testSeriesID: testSeriesID }).populate("paperID").populate("questionList.qID").lean();
+
+
+            if (testResponse) {
+                testResponse.map((val, ind) => {
+                    let paper = val.paperID;
+                    let questionListStr = paper.questionList.map(String);
+                    //check isCorrect 
+                    let responseList = [];
+                    val.questionList.map((element, ind) => {
+
+
+                        if (questionListStr.includes(element.qID._id + '')) {
+                            if (element.qID.correctOpt == element.response) {
+                                element.isCorrect = 1;
+                            } else {
+                                element.isCorrect = 0;
+                            }
+                            responseList.push(element)
+                        }
+                    });
+
+                    let correct = responseList.filter(value => value.isCorrect == '1').length;
+                    let inCorrect = responseList.filter(value => value.isCorrect != '1').length;
+                    let marks = ((correct) * paper.perQMarks) - (inCorrect * paper.perQNegMarks);
+                    let outOf = questionListStr.length * paper.perQMarks
+
+                    let percentage = parseFloat(((marks / outOf) * 100).toFixed(2));
+
+                    val.marksData = {
+                        correct: correct,
+                        inCorrect: inCorrect,
+                        marks: marks,
+                        outOf: outOf,
+                        percentage: percentage > 0 ? percentage : 0
+                    }
+                })
+            }
+
+
+
+
             return res
                 .status(200)
                 .json({ status: true, message: `My Test series Response`, data: testResponse });
 
+
+        } catch (err) {
+            return res
+                .status(200)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
+
+    async getTestPaperBySeriesX(req, res) {
+        try {
+            var { testSeriesID, studentID } = req.body;
+            if (!testSeriesID || !studentID)
+                return res.json({
+                    status: false,
+                    message: "key testSeriesID and studentID required for Performance Report",
+                    data: null,
+                });
+
+
+            let examDoneLessThenX = []
+
+            const responseCount = await db.TestResponse.aggregate([{
+                $match:
+                    { 'testSeriesID': ObjectId(testSeriesID) }
+            },
+            { $group: { _id: "$paperID", paperResponseCount: { $sum: 1 } } },
+
+            ]);
+            // console.log("responseCount", responseCount);
+
+            const testResponse = await db.TestResponse.find({ "studentID": studentID, "testSeriesID": testSeriesID }).populate('paperID', 'title');
+
+            // await Promise.all([responseCount, testResponse]);
+
+            //  console.log("testResponse", testResponse);
+
+
+            if (testResponse) {
+                testResponse.forEach(el => {
+                    //Check X Count
+                    let val = responseCount.find(item => {
+
+                        return item._id + '' == el.paperID._id + ''
+                    })
+                    if (val) {
+                        //change with admin
+                        if (val.paperResponseCount > 10) {
+
+                            examDoneLessThenX.push(el.paperID);
+                        }
+                    }
+
+                });
+            }
+
+
+
+
+            return res
+                .status(200)
+                .json({ status: true, message: `My Test Paper List`, data: examDoneLessThenX });
+
+        } catch (err) {
+            return res.json({
+                status: false,
+                message: "something went wrong 🤚",
+                data: `${err}`,
+            });
+        }
+    }
+
+
+    async getGivenPaper(req, res) {
+        var { testSeriesID, studentID } = req.body;
+        if (!testSeriesID || !studentID)
+            return res.json({
+                status: false,
+                message: "key testSeriesID and studentID required for Performance Report",
+                data: null,
+            });
+        try {
+            const testResponsePaper = await db.TestResponse.find({ studentID: studentID, testSeriesID: testSeriesID })
+                .populate("paperID");
+            return res
+                .status(200)
+                .json({ status: true, message: `My Test series Response`, data: testResponsePaper });
 
         } catch (err) {
             return res
