@@ -240,9 +240,16 @@ class PerformanceController {
 
             let percentageSum = 0;
             let highestPercentage = 0;
+            let ypercentageCount = 0
             percentageList.map((pval, pind) => {
                 pval.percentage = parseFloat(((pval.marks / pval.outOf) * 100).toFixed(2));
-                percentageSum += pval.percentage;
+
+                //let Y if percentage is grater then 30 for now
+                if (pval.percentage >= 30) {
+                    percentageSum += pval.percentage;
+                    ++ypercentageCount;
+                }
+
                 if (highestPercentage < pval.percentage) {
                     highestPercentage = pval.percentage;
                 }
@@ -251,7 +258,7 @@ class PerformanceController {
                 }
             })
             meanData.highest = parseFloat(highestPercentage).toFixed(2);
-            meanData.average = parseFloat((percentageSum / percentageList.length).toFixed(2));
+            meanData.average = parseFloat((percentageSum / ypercentageCount).toFixed(2));
 
 
             return res
@@ -276,14 +283,23 @@ class PerformanceController {
             });
 
         try {
-            const testResponse = await db.TestResponse.find({ studentID: studentID, testSeriesID: testSeriesID }).populate("paperID").populate("questionList.qID").lean();
+            const testResponse = await db.TestResponse.find({ studentID: studentID, testSeriesID: testSeriesID }).populate("paperID").populate("questionList.qID")
+                .populate({
+                    path: 'paperID',
+                    populate: {
+                        path: 'questionList',
+                        model: 'question'
+                    }
+                })
+                .lean();
 
 
             if (testResponse) {
                 testResponse.map((val, ind) => {
                     let paper = val.paperID;
-                    let questionListStr = paper.questionList.map(String);
+                    let questionListStr = paper.questionList.map(val => { return val._id + '' });
                     //check isCorrect 
+
                     let responseList = [];
                     val.questionList.map((element, ind) => {
 
