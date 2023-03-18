@@ -326,6 +326,8 @@ class PerformanceController {
                         inCorrect: inCorrect,
                         marks: marks,
                         outOf: outOf,
+                        unattempted: outOf - (correct + inCorrect),
+                        attempted: correct + inCorrect,
                         percentage: percentage > 0 ? percentage : 0
                     }
                 })
