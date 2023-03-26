@@ -261,6 +261,75 @@ class TestPaperController {
             });
         }
     }
+
+
+    async getPracticePaper(req, res) {
+
+        try {
+
+
+            const testPaper = await db.TestPaper.find({ qType: "practiceTest" });
+            return res
+                .status(200)
+                .json({ status: true, message: `testPaper practiceTest list`, data: testPaper });
+        } catch (err) {
+            return res.json({
+                status: false,
+                message: "something went wrong 🤚",
+                data: `${err}`,
+            });
+        }
+
+    }
+
+    async setPraticePaperToChapter(req, res) {
+        try {
+            var { _id, chapterID } = req.body;
+
+            if (!_id || !chapterID) {
+                return res.json({
+                    status: false,
+                    message: "Feilds are required for setPraticePaperToChapter",
+                    data: null,
+                });
+            }
+
+            var testPaper = await db.TestPaper.findOne({ _id });
+
+            if (chapterID) testPaper.practiseChapIDList.push(chapterID);
+            testPaper.save((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "Practice Test Paper updated 👍",
+                        data: testPaper,
+                    });
+                else return res.json({ status: false, message: "something went wrong 🤚", data: err });
+            });
+
+        } catch (err) {
+            return res.json({
+                status: false,
+                message: "something went wrong 🤚",
+                data: `${err}`,
+            });
+        }
+    }
+
+    async getPracticePaperByChap(req, res) {
+        const id = req.params.id;
+        try {
+            const testPaper = await db.TestPaper.find({ 'practiseChapIDList': id });
+            return res
+                .status(200)
+                .json({ status: true, message: `testPaper list`, data: testPaper });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+
+    }
 }
 
 module.exports = TestPaperController;

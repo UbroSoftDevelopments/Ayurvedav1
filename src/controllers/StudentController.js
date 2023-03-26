@@ -65,7 +65,7 @@ Pratyaksh AyurvedaYour`
             if (resWhatsapp.res.statuscode == 200) {
               return res.json({
                 status: true,
-                message: "Please check whatsapp on this number: " + mobile + " OTP is send. and its valid till 5 min"
+                message: "Please check whatsapp on this number: " + mobile + " OTP is sent. and its valid till 5 min"
               });
             }
             return res.json({
@@ -148,7 +148,7 @@ Pratyaksh Ayurveda`
                 if (resWhatsapp.res.statuscode == 200) {
                   return res.json({
                     status: false,
-                    message: "Please check whatsapp on this number: " + doc.mobile + " OTP is send. and its valid till 5 min",
+                    message: "Please check whatsapp on this number: " + doc.mobile + " OTP is sent. and its valid till 5 min",
                     data: doc
                   });
                 }
@@ -183,7 +183,7 @@ Pratyaksh Ayurveda`
       .catch((err) => {
         return res.json({
           status: false,
-          message: `User already found!`,
+          message: `User already found! \n Please Login with same Mobile/Email`,
           data: null,
         });
       });

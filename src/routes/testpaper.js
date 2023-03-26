@@ -15,7 +15,8 @@ router.get("/:id", checkAdminAuth, TestPaperController.getTestPaperById);
 router.get("/student/:id", checkStudentAuth, TestPaperController.getTestPaperById);
 router.get("/:testSeriesID/:paperID", checkAdminAuth, TestPaperController.getAssignStudentByPaper);
 
-
+router.get("/practiceTest", TestPaperController.getPracticePaper);
+router.post("/practiceTest", TestPaperController.setPraticePaperToChapter);
 
 
 module.exports = router;
