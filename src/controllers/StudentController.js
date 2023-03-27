@@ -52,11 +52,11 @@ class StudentController {
         });
 
         let msg =
-          `Your OTP is *${_otp}*. 
-(valid for *05* minutes)
-Verify your WhatsApp number by entering this OTP and get registered.
-
-Pratyaksh AyurvedaYour`
+          `Congratulations!
+You have successfully registered with Pratyaksh Ayurveda. 
+Your OTP is *${_otp}*. 
+(valid for XX minutes)
+Verify your WhatsApp number and login by entering this OTP`;
 
 
 
@@ -136,11 +136,11 @@ Pratyaksh AyurvedaYour`
             });
 
             let msg =
-              `Your OTP is *${_otp}*. 
-(valid for *05* minutes)
-Verify your WhatsApp number by entering this OTP and get registered..
-
-Pratyaksh Ayurveda`
+              `Congratulations!
+You have successfully registered with Pratyaksh Ayurveda. 
+Your OTP is *${_otp}*. 
+(valid for XX minutes)
+Verify your WhatsApp number and login by entering this OTP`;
 
 
             app.sendWhatsapp(doc.mobile, msg, (resWhatsapp) => {
