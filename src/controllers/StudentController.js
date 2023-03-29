@@ -55,7 +55,7 @@ class StudentController {
           `Congratulations!
 You have successfully registered with Pratyaksh Ayurveda. 
 Your OTP is *${_otp}*. 
-(valid for XX minutes)
+(valid for 05 minutes)
 Verify your WhatsApp number and login by entering this OTP`;
 
 
@@ -139,7 +139,7 @@ Verify your WhatsApp number and login by entering this OTP`;
               `Congratulations!
 You have successfully registered with Pratyaksh Ayurveda. 
 Your OTP is *${_otp}*. 
-(valid for XX minutes)
+(valid for 05 minutes)
 Verify your WhatsApp number and login by entering this OTP`;
 
 
