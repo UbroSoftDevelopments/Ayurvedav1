@@ -334,6 +334,19 @@ class PerformanceController {
             }
 
 
+            //sort by Paper Name..
+
+            testResponse.sort(function (a, b) {
+
+                // Assuming you want case-insensitive comparison
+                a = a.toLowerCase();
+                b = b.toLowerCase();
+                let a1 = a.paperID.title
+                let b1 = b.paperID.title
+
+                return (a1 < b1) ? -1 : (a1 > b1) ? 1 : 0;
+
+            })
 
 
             return res
