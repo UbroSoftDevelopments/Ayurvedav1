@@ -23,7 +23,7 @@ router.use('/freeSession', multer().none(), require("./freeSession"));
 router.use('/notes', require("./notes"));
 router.use('/test-series', require("./testseries"));
 router.use('/test-paper', require("./testpaper"));
-router.use('/practise-paper', require("./practisePaper"));
+router.use('/practice-paper', require("./practicePaper"));
 router.use('/test-response', require("./testresponse"));
 router.use('/config', require("./config"));
 router.use('/discount', require("./discount"));
