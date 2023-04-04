@@ -16,6 +16,8 @@ router.use('/chapter', require("./chapter"));
 router.use('/course', require("./course"));
 router.use('/sub-subject', require("./subSubject"));
 router.use('/subject', require("./subject"));
+router.use('/liveClass', require("./liveClass"));
+router.use('/topic', require("./topic"));
 router.use('/question', require("./question"));
 router.use('/video', multer().none(), require("./video"));
 router.use('/taskQ', multer().none(), require("./taskQuestion"));

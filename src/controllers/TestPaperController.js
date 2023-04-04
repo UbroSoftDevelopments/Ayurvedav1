@@ -284,25 +284,24 @@ class TestPaperController {
 
     async setPraticePaperToChapter(req, res) {
         try {
-            var { _id, chapterID } = req.body;
+            var { paperList, chapterID } = req.body;
 
-            if (!_id || !chapterID) {
+            if (!paperList || !chapterID) {
                 return res.json({
                     status: false,
                     message: "Feilds are required for setPraticePaperToChapter",
                     data: null,
                 });
             }
-
-            var testPaper = await db.TestPaper.findOne({ _id });
-
-            if (chapterID) testPaper.practiseChapIDList.push(chapterID);
-            testPaper.save((err) => {
+            console.log(paperList, chapterID)
+            var chapter = await db.Chapter.findOne({ _id: chapterID });
+            chapter.practiceTestList = paperList;
+            chapter.save((err) => {
                 if (!err)
                     return res.json({
                         status: true,
                         message: "Practice Test Paper updated 👍",
-                        data: testPaper,
+                        data: chapter,
                     });
                 else return res.json({ status: false, message: "something went wrong 🤚", data: err });
             });

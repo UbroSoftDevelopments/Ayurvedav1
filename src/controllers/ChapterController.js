@@ -60,7 +60,7 @@ class ChapterController {
     async getChapterById(req, res) {
         try {
 
-            const chapter = await db.Chapter.findOne({ _id: req.params.id });
+            const chapter = await db.Chapter.findOne({ _id: req.params.id }).populate('practiceTestList');
             return res
                 .status(200)
                 .json({ status: true, message: `Chapter `, data: chapter });

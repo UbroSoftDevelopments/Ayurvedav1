@@ -9,8 +9,8 @@ const schema = new Schema({
     noteDoc: { type: String },
     faculty: { type: String },
     isActive: { type: Number, default: 0 },
-    img: { type: String }
-
+    img: { type: String },
+    practiceTestList: [{ type: 'ObjectId', ref: 'testPaper' }],
 }, { timestamps: true });
 
 module.exports = model('chapter', schema);

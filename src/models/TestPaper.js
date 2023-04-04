@@ -5,7 +5,6 @@ const userSchema = new Schema({
     // subjectID: { type: 'ObjectId', ref: 'subject' },
     // subSubjectID: { type: 'ObjectId', ref: 'subsubject' },
     chapterID: { type: 'ObjectId', ref: 'chapter' },
-    practiseChapIDList: [{ type: 'ObjectId', ref: 'chapter' }],
     title: { type: String, required: true },
     img: { type: String, default: '' },
     desc: { type: String },
