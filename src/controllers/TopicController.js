@@ -181,7 +181,11 @@ class TopicController {
             res.json({
                 status: true,
                 message: "Live Class Signature",
-                data: signature
+                data: {
+                    key: config.zoomSdk,
+                    signature: signature
+                }
+
             })
         } catch (err) {
             return res.json({
