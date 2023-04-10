@@ -1,11 +1,11 @@
 const db = require("../models");
 const config = require("../config");
-
+const KJUR = require('jsrsasign')
 
 class TopicController {
     async addTopic(req, res) {
 
-        var { name, liveClass, detail, time, faculty, isActive } = req.body;
+        var { name, liveClass, detail, time, faculty, isActive, meetingID, meetingPasscode } = req.body;
 
         if (!name)
             return res.json({
@@ -22,6 +22,8 @@ class TopicController {
             topic.time = time;
             topic.faculty = faculty;
             topic.isActive = isActive;
+            topic.meetingID = meetingID;
+            topic.meetingPasscode = meetingPasscode;
 
 
 
@@ -68,7 +70,7 @@ class TopicController {
     }
 
     async updateTopic(req, res) {
-        var { _id, name, liveClass, detail, time, faculty, isActive } = req.body;
+        var { _id, name, liveClass, detail, time, faculty, isActive, meetingID, meetingPasscode } = req.body;
         if (!name || !_id)
             return res.json({
                 status: false,
@@ -85,7 +87,8 @@ class TopicController {
             if (liveClass) topic.liveClass = liveClass;
             if (time) topic.time = time;
             if (faculty) topic.faculty = faculty;
-
+            if (meetingID) topic.meetingID = meetingID;
+            if (meetingPasscode) topic.meetingPasscode = meetingPasscode;
 
 
             topic.save((err) => {
@@ -147,6 +150,39 @@ class TopicController {
             return res
                 .status(200)
                 .json({ status: true, message: `topic list`, data: topic });
+        } catch (err) {
+            return res.json({
+                status: false,
+                message: "something went wrong 🤚",
+                data: `${err}`,
+            });
+        }
+    }
+
+    async joinLiveClassOfTopic(req, res) {
+        try {
+
+            const iat = Math.round(new Date().getTime() / 1000) - 30;
+            const exp = iat + 60 * 60 * 2
+            const oHeader = { alg: 'HS256', typ: 'JWT' }
+
+            const oPayload = {
+                sdkKey: config.zoomSdk,
+                mn: req.body.meetingNumber,
+                role: req.body.role,
+                iat: iat,
+                exp: exp,
+                appKey: config.zoomSecret,
+                tokenExp: iat + 60 * 60 * 2
+            }
+            const sHeader = JSON.stringify(oHeader)
+            const sPayload = JSON.stringify(oPayload)
+            const signature = KJUR.jws.JWS.sign('HS256', sHeader, sPayload, config.zoomSecret)
+            res.json({
+                status: true,
+                message: "Live Class Signature",
+                data: signature
+            })
         } catch (err) {
             return res.json({
                 status: false,

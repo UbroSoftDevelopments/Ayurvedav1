@@ -6,6 +6,8 @@ const schema = new Schema({
     img: { type: String, default: '' },
     time: { type: String },
     faculty: { type: String },
+    meetingID: { type: String },
+    meetingPasscode: { type: String },
     isActive: { type: Number, default: 1 }
 }, { timestamps: true });
 
