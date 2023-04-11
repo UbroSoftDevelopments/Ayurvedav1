@@ -9,7 +9,8 @@ class ProductController {
 
     async getStudentPlan(req, res) {
         try {
-            const subPlan = await db.studentPlan.find({ studentID: req.params.id }).populate('courseID').populate('subjectID').populate('testSeriesID').populate('paperList');
+            const subPlan = await db.studentPlan.find({ studentID: req.params.id }).populate('courseID').populate('subjectID')
+                .populate('testSeriesID').populate('paperList').populate('liveClassID');
 
             return res
                 .status(200)
@@ -25,7 +26,7 @@ class ProductController {
 
 
     async addStudentPlan(req, res) {
-        let { studentID, courseID, subjectID, plan, description } = req.body;
+        let { studentID, courseID, subjectID, liveClassID, plan, description } = req.body;
 
         if (!studentID || !courseID || !plan) {
             return res.json({
@@ -40,7 +41,7 @@ class ProductController {
 
             let findValue = { studentID: studentID };
             if (subjectID) findValue.subjectID = subjectID;
-            // if (testSeriesID) findValue.testSeriesID = testSeriesID;
+            if (liveClassID) findValue.liveClassID = liveClassID;
 
             /* const studentData = await db.studentPlan.find(findValue);
  
@@ -66,7 +67,7 @@ class ProductController {
             stdPlan.studentID = studentID;
             stdPlan.courseID = courseID;
             if (subjectID) stdPlan.subjectID = subjectID;
-            // if (testSeriesID) stdPlan.testSeriesID = testSeriesID;
+            if (liveClassID) stdPlan.liveClassID = liveClassID;
             stdPlan.plan = plan;
             if (description) stdPlan.description = description;
             //added Expire Date
@@ -77,6 +78,46 @@ class ProductController {
                     return res.json({
                         status: true,
                         message: "New plan added 💸",
+                        data: stdPlan,
+                    });
+                else return res.json({ status: false, message: `${err}`, data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
+
+    async addStudentLiveclass(req, res) {
+        let { studentID, courseID, liveClassID, plan, description } = req.body;
+
+        if (!studentID || !courseID || !plan || !liveClassID) {
+            return res.json({
+                status: false,
+                message: "Must provide all input 🙄",
+                data: null,
+            });
+        }
+
+
+        try {
+
+            let findValue = { studentID: studentID };
+            findValue.liveClassID = liveClassID;
+
+            const stdPlan = await db.studentPlan();
+            stdPlan.studentID = studentID;
+            stdPlan.courseID = courseID;
+            stdPlan.liveClassID = liveClassID;
+            stdPlan.plan = plan;
+            if (description) stdPlan.description = description;
+            //added Expire Date
+            stdPlan.expireDate = date.addDays(new Date(), plan.days);
+
+            stdPlan.save((err) => {
+                if (!err)
+                    return res.json({
+                        status: true,
+                        message: "New Live CLass plan added 💸",
                         data: stdPlan,
                     });
                 else return res.json({ status: false, message: `${err}`, data: err });
@@ -557,6 +598,41 @@ class ProductController {
             console.log("Error:", new Date(), err)
         }
 
+    }
+
+
+    async getMyLiveClassTopic(req, res) {
+        //  liveClassID
+        try {
+
+            const lClass = await db.studentPlan.find({ studentID: req.userId, expireDate: { $gte: new Date() } }, { "liveClassID": 1, _id: 0 }).populate('liveClassID').lean();
+
+            let result = []
+            if (lClass) {
+                await Promise.all(lClass.map(async (val, ind) => {
+                    if (val.liveClassID) {
+                        //get Topic
+
+                        const topic = await db.Topic.find({ 'liveClass': val.liveClassID, isActive: 1 });
+                        val.liveClassID['topics'] = topic;
+
+                        result.push(val.liveClassID)
+                        return topic;
+                    }
+                }))
+
+            }
+
+            return res
+                .status(200)
+                .json({ status: true, message: `My Live Class List`, data: result });
+        } catch (err) {
+            return res.json({
+                status: false,
+                message: "something went wrong 🤚",
+                data: `${err}`,
+            });
+        }
     }
 
 

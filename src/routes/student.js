@@ -25,6 +25,10 @@ router.post("/plan", ProductController.addStudentPlan);
 router.post("/test-plan", ProductController.addStudentTestSeries);
 router.put("/test-plan", ProductController.removePaperFromTest);
 
+//Live class
+router.post("/liveClass-plan", ProductController.addStudentLiveclass);
+router.get("/myLiveClass", checkStudentAuth, ProductController.getMyLiveClassTopic)
+
 //Get data from its Plan
 router.get("/myCourses", checkStudentAuth, ProductController.getMyCourse)
 router.get("/myTestSeries", checkStudentAuth, ProductController.getMyTestSeries)

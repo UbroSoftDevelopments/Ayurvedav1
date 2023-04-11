@@ -3,6 +3,7 @@ const schema = new Schema({
     studentID: { type: 'ObjectId', ref: 'student' },
     courseID: { type: 'ObjectId', ref: 'course' },
     subjectID: { type: 'ObjectId', ref: 'subject' },
+    liveClassID: { type: 'ObjectId', ref: 'liveClass' },
     testSeriesID: { type: 'ObjectId', ref: 'testSeries' },
     paperList: [{ type: 'ObjectId', ref: 'testPaper' }],
     description: { type: String },

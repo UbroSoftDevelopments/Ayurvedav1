@@ -152,6 +152,12 @@ class LiveClassController {
         try {
             const lclass = await db.LiveClass.find({ isActive: 1, courseID: req.params.id }).lean();
 
+            //get Catogery Name
+            for (let elem of lclass) {
+                const count = await db.Topic.countDocuments({ liveClass: elem._id });
+                elem['topic'] = count;
+            }
+
             return res
                 .status(200)
                 .json({ status: true, message: `lclass list`, data: lclass });
