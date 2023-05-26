@@ -9,7 +9,7 @@ const schema = new Schema({
     examDone: { type: Number, default: 0 },
     questionList: [
         {
-            qID: { type: 'ObjectId', ref: 'question' },
+            qID: { type: 'ObjectId', ref: 'question' , unique: true },
             isCorrect: { type: Number },
             response: { type: String },
             qstatus: { type: String },
