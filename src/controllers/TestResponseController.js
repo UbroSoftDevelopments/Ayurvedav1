@@ -134,6 +134,53 @@ class TestResponseController {
     }
 
 
+    async getStudentTestSummary(req,res){
+        var { testSeriesID, paperID } = req.body;
+        if (!paperID || !req.userId || !testSeriesID) {
+            return res.json({
+                status: false,
+                message: "Feilds are required for test paper",
+                data: null,
+            });
+        }
+        try {
+
+            let summary = {
+                answer:0,
+                attempt: 0,
+                ansReview:0
+            }
+          
+
+            let findObj = {
+                paperID: paperID,
+                studentID: req.userId,
+                testSeriesID: testSeriesID
+            }
+            var testResponse = await db.TestResponse.findOne(findObj);
+            //check ans
+            if (testResponse) {
+                summary.attempt = testResponse.questionList.length ;
+
+                if (testResponse.questionList.length > 0) {
+                   
+                    testResponse.questionList.map((val, ind) => {
+                        if(val.qstatus == "Answered"){
+                            summary.answer+=1
+                        }else{
+                            summary.ansReview+=1
+                        }
+
+                    })}
+            }
+
+            return res.json({ status: true, message: `Summary`, data: summary });
+            
+        } catch (error) {
+            return res.json({ status: false, message: `${err}`, data: err });
+        }
+    }
+
     async removeStudentResponse(req, res) {
         var { testSeriesID, paperID, qID } = req.body;
         if (!paperID || !req.userId || !qID) {

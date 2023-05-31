@@ -5,6 +5,7 @@ const router = express.Router();
 
 
 router.post("/student/", checkStudentAuth, TestResponseController.setStudentResponse);
+router.post("/student/summary", checkStudentAuth, TestResponseController.getStudentTestSummary);
 router.put("/student/remove/", checkStudentAuth, TestResponseController.removeStudentResponse);
 router.get("/student/", TestResponseController.getQuestionByStudent);
 router.get("/student/response/:testSeriesID/:paperID", checkStudentAuth, TestResponseController.getResponseOfStudent);
