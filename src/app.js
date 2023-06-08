@@ -8,8 +8,8 @@ const fs = require('fs')
 const db = require('./models')
 
 
-// app.use(express.urlencoded({ extended: false }));
-// app.use(cors());
+app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 app.use(express.json());
 
 const config = require("./config");
