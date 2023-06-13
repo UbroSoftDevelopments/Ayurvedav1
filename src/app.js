@@ -6,6 +6,23 @@ const { port } = require('./config')
 const os = require('os')
 const fs = require('fs')
 const db = require('./models')
+    
+var ccavReqHandler = require('./ccavRequestHandler.js');
+var ccavResHandler = require('./ccavResponseHandler.js');
+
+
+
+
+app.post('/ccavRequestHandler', function (request, response){
+	ccavReqHandler.postReq(request, response);
+});
+
+
+app.post('/ccavResponseHandler', function (request, response){
+        ccavResHandler.postRes(request, response);
+});
+
+
 
 
 app.use(express.urlencoded({ extended: false }));

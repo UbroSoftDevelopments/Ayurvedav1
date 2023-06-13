@@ -75,6 +75,28 @@ class CourseController {
         }
     }
 
+// get course with All test , subject, liveclass
+
+async getCourseAllDataById(req, res) {
+    try {
+        const course = await db.Course.findOne({ _id: req.params.id }).lean();
+        course.subject = await db.Subject.find({ courseID: req.params.id , isActive: '1'});
+        course.testSeries = await db.TestSeries.find({ courseID: req.params.id, isActive: '1' });
+        course.lclass = await db.LiveClass.find({ isActive: 1, courseID: req.params.id });
+
+        
+        return res
+            .status(200)
+            .json({ status: true, message: `course All Data`, data: course });
+    } catch (err) {
+        return res.json({
+            status: false,
+            message: "something went wrong 🤚",
+            data: `${err}`,
+        });
+    }
+}
+
 
     // update course
     async updateCourse(req, res) {
