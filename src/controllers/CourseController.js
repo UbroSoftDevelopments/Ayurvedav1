@@ -83,6 +83,7 @@ async getCourseAllDataById(req, res) {
         course.subject = await db.Subject.find({ courseID: req.params.id , isActive: '1'});
         course.testSeries = await db.TestSeries.find({ courseID: req.params.id, isActive: '1' });
         course.lclass = await db.LiveClass.find({ isActive: 1, courseID: req.params.id });
+        course.discount = await db.Discount.findOne({ courseID: req.params.id });
 
         
         return res
