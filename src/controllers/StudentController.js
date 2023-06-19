@@ -1,6 +1,7 @@
 const db = require("../models");
 const roles_list = require('../config/roles_list');
 const { urlencoded } = require("express");
+const ObjectId = require('mongodb').ObjectID;
 class StudentController {
   constructor() {
     //
@@ -169,9 +170,8 @@ Verify your WhatsApp number and login by entering this OTP`;
             //todo destroy token
             tokenDelTbl.map(val=>{
               app.removeToken(val.token);
+              val.remove();
             })
-            
-            db.Token.deleteMany({'studentID': doc._id});
 
 
             doc.token = app.token({ email: doc.email, _id: doc._id, role: roles_list.Student });
@@ -200,7 +200,7 @@ Verify your WhatsApp number and login by entering this OTP`;
       .catch((err) => {
         return res.json({
           status: false,
-          message: `User already found! \n Please Login with same Mobile/Email`,
+          message: `Server Error `+err,
           data: null,
         });
       });

@@ -2,7 +2,7 @@ var dotenv = require('dotenv')
 const multer = require('multer');
 const moment = require('moment-timezone');
 const request = require('request');
-
+const jwt = require('jsonwebtoken');
 dotenv.config()
 const config = {
   port: process.env.PORT,
@@ -81,7 +81,7 @@ config.otp = (length = 4) => {
 
 
 config.token = (store, expiresIn = null) => {
-  const jwt = require('jsonwebtoken');
+ 
   // expires after half and hour (1800 seconds = 30 minutes)
   //let token = jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '10s' });
   let token = null;
@@ -107,14 +107,12 @@ config.sendWhatsapp = (mobile, msg, callBack) => {
 }
 
 config.removeToken = (token)=>{
-  const jwt = require('jsonwebtoken');
-  jwt.destroy(token);
-
+  let ok = jwt.decode(token);
+  return jwt.sign(ok, process.env.TOKEN_SECRET, {expiresIn: '1s'});
 }
 
 
 config.checkToken = (req, res, run) => {
-  const jwt = require('jsonwebtoken');
   var token = req.headers['token'] || req.body.token;
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
 
