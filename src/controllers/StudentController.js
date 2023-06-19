@@ -164,9 +164,26 @@ Verify your WhatsApp number and login by entering this OTP`;
 
 
           } else {
+            // TODO Delete previose token
+            var tokenDelTbl = await db.Token.find({ studentID: doc._id });
+            //todo destroy token
+            tokenDelTbl.map(val=>{
+              app.removeToken(val.token);
+            })
+            
+            db.Token.deleteMany({'studentID': doc._id});
 
 
             doc.token = app.token({ email: doc.email, _id: doc._id, role: roles_list.Student });
+            var tokenTbl = new db.Token();
+            tokenTbl.token = doc.token;
+            tokenTbl.studentID = doc._id;
+            tokenTbl.save();
+
+
+
+
+
             return res.json({
               status: true,
               message: "login successs",
@@ -231,6 +248,12 @@ Verify your WhatsApp number and login by entering this OTP`;
             student.save((err) => {
               if (!err) {
                 let token = app.token({ email: student.email, _id: student._id, role: roles_list.Student });
+
+                var tokenTbl = new db.Token();
+                tokenTbl.token = token;
+                tokenTbl.studentID = student._id;
+                tokenTbl.save();
+
                 return res.status(200).json({ status: true, message: `Successfully  verified 🧑‍🎓`, data: token });
               }
               else {

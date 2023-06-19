@@ -106,6 +106,12 @@ config.sendWhatsapp = (mobile, msg, callBack) => {
   });
 }
 
+config.removeToken = (token)=>{
+  const jwt = require('jsonwebtoken');
+  jwt.destroy(token);
+
+}
+
 
 config.checkToken = (req, res, run) => {
   const jwt = require('jsonwebtoken');
