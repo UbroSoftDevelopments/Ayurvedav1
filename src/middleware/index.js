@@ -31,6 +31,7 @@ const checkStudentAuth = (req, res, next) => {
 
       var { _id } = decoded;
       req.userId = _id;
+      req._token = token;
       next();
     }
   });

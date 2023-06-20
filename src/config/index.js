@@ -106,10 +106,10 @@ config.sendWhatsapp = (mobile, msg, callBack) => {
   });
 }
 
-config.removeToken = (token)=>{
-  let ok = jwt.decode(token);
-  return jwt.sign(ok, process.env.TOKEN_SECRET, {expiresIn: '1s'});
-}
+// config.removeToken = (token)=>{
+//   let ok = jwt.decode(token);
+//   return jwt.sign(ok, process.env.TOKEN_SECRET, {expiresIn: '1s'});
+// }
 
 
 config.checkToken = (req, res, run) => {

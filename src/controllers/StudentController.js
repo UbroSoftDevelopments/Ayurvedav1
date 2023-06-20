@@ -161,28 +161,25 @@ Verify your WhatsApp number and login by entering this OTP`;
 
             });
 
-
-
-
           } else {
-            // TODO Delete previose token
-            var tokenDelTbl = await db.Token.find({ studentID: doc._id });
-            //todo destroy token
-            tokenDelTbl.map(val=>{
-              app.removeToken(val.token);
-              val.remove();
-            })
-
-
+            console.log("else");
             doc.token = app.token({ email: doc.email, _id: doc._id, role: roles_list.Student });
-            var tokenTbl = new db.Token();
-            tokenTbl.token = doc.token;
-            tokenTbl.studentID = doc._id;
-            tokenTbl.save();
+
+            var tokenDelTbl = await db.Token.findOne({ studentID: doc._id });
 
 
-
-
+            if (tokenDelTbl) {
+              tokenDelTbl.token = doc.token;
+              tokenDelTbl.save();
+            }
+            else {
+              var tokenTbl = new db.Token();
+              tokenTbl.token = doc.token;
+              tokenTbl.studentID = doc._id;
+              tokenTbl.save((err) => {
+                console.log("err", err)
+              });
+            }
 
             return res.json({
               status: true,
@@ -200,7 +197,7 @@ Verify your WhatsApp number and login by entering this OTP`;
       .catch((err) => {
         return res.json({
           status: false,
-          message: `Server Error `+err,
+          message: `Server Error ` + err,
           data: null,
         });
       });
@@ -208,6 +205,17 @@ Verify your WhatsApp number and login by entering this OTP`;
 
   async checkStudent(req, res) {
     try {
+
+      var token = req._token;
+      var tokenDelTbl = await db.Token.findOne({ studentID: req.userId });
+      if (tokenDelTbl && token) {
+  
+        if (tokenDelTbl.token != token) {
+          return res
+            .status(200)
+            .json({ status: false, message: `UnAuthorized Student. Anothor Device Loggedin🧑‍🎓'`, data: null });
+        }
+      }
       const student = await db.Student.findOne({ _id: req.userId });
       if (student) {
         return res
@@ -249,10 +257,18 @@ Verify your WhatsApp number and login by entering this OTP`;
               if (!err) {
                 let token = app.token({ email: student.email, _id: student._id, role: roles_list.Student });
 
-                var tokenTbl = new db.Token();
-                tokenTbl.token = token;
-                tokenTbl.studentID = student._id;
-                tokenTbl.save();
+                var tokenDelTbl = db.Token.findOne({ studentID: doc._id });
+                //todo destroy token
+                if (tokenDelTbl) {
+                  tokenDelTbl.token = token;
+                  tokenDelTbl.save();
+                }
+                else {
+                  var tokenTbl = new db.Token();
+                  tokenTbl.token = token;
+                  tokenTbl.studentID = student._id;
+                  tokenTbl.save();
+                }
 
                 return res.status(200).json({ status: true, message: `Successfully  verified 🧑‍🎓`, data: token });
               }
