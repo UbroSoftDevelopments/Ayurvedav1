@@ -326,12 +326,12 @@ Verify your WhatsApp number and login by entering this OTP`;
         var otp = 1234; //app.otp(6);
         var token = app.token({ mobile, otp }, { expiresIn: "2h" });
         //var token = app.token({mobile,otp});
-        res.json({
+        return res.json({
           status: true,
           message: "OTP has been sent on your mobile!",
           data: { otp, token },
         });
-        return;
+       
       })
       .catch((err) => {
         return res.json({ status: false, message: `${err}`, data: null });
