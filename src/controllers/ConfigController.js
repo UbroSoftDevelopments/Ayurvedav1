@@ -23,10 +23,10 @@ class ConfigController {
                         message: "appConfig added",
                         data: appConfig,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -63,10 +63,10 @@ class ConfigController {
                         message: "appConfig Updated",
                         data: appConfig,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
 
     }

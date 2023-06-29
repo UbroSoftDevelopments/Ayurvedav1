@@ -20,7 +20,9 @@ const userSchema = new Schema({
     rankEndDate: { type: Date },
     qType: { type: String, required: true },
     isActive: { type: Number, default: 0 },
-    questionList: [{ type: 'ObjectId', ref: 'question' }]
+    questionList: [{ type: 'ObjectId', ref: 'question' }],
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 }, { timestamps: true });
 
 module.exports = model('testPaper', userSchema);

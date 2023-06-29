@@ -85,7 +85,7 @@ class PaymentController {
 
 
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

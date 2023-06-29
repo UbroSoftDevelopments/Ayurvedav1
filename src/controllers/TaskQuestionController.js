@@ -23,7 +23,7 @@ class TaskQuestionController {
             task.paperID = paperID;
             task.qID = qID;
             task.studentID = studentID;
-
+            task.createdBy = req.username;
 
             task.save((err) => {
                 if (!err)
@@ -32,10 +32,10 @@ class TaskQuestionController {
                         message: "Added to my task. 📝",
                         data: task,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -69,10 +69,10 @@ class TaskQuestionController {
                         message: "Task Removed",
                         data: task,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

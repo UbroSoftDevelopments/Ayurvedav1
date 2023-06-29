@@ -36,10 +36,10 @@ class ReportController {
                         message: "Your report added",
                         data: reportQuestion,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -76,10 +76,10 @@ class ReportController {
                         message: "Reported Question updated to: " + status,
                         data: reportQuestion,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

@@ -105,7 +105,7 @@ class TestResponseController {
                             data: null,
                         });
                     }
-                    else { return res.json({ status: false, message: `${err}`, data: err }) };
+                    else { return res.json({ status: false,  message: "Something went wrong 🤚", data: err }) };
                 });
 
 
@@ -124,12 +124,12 @@ class TestResponseController {
                             data: testResponseAdd,
                         });
                     }
-                    else { return res.json({ status: false, message: `${err}`, data: err }) };
+                    else { return res.json({ status: false,  message: "Something went wrong 🤚", data: err }) };
                 });
             }
 
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -177,7 +177,7 @@ class TestResponseController {
             return res.json({ status: true, message: `Summary`, data: summary });
             
         } catch (error) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -218,7 +218,7 @@ class TestResponseController {
                             data: null,
                         });
                     }
-                    else { return res.json({ status: false, message: `${err}`, data: err }) };
+                    else { return res.json({ status: false,  message: "Something went wrong 🤚", data: err }) };
                 });
 
 
@@ -231,7 +231,7 @@ class TestResponseController {
             }
 
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
 
     }
@@ -275,7 +275,7 @@ class TestResponseController {
                             data: null,
                         });
                     }
-                    else { return res.json({ status: false, message: `${err}`, data: err }) };
+                    else { return res.json({ status: false,  message: "Something went wrong 🤚", data: err }) };
                 });
 
 
@@ -304,12 +304,12 @@ class TestResponseController {
                             data: testResponseAdd,
                         });
                     }
-                    else { return res.json({ status: false, message: `${err}`, data: err }) };
+                    else { return res.json({ status: false,  message: "Something went wrong 🤚", data: err }) };
                 });
             }
 
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -419,10 +419,10 @@ class TestResponseController {
                         message: "TestResponse deleted",
                         data: response,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

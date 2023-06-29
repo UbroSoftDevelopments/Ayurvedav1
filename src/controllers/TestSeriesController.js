@@ -22,7 +22,7 @@ class TestSeriesController {
             testSeries.activeDate = activeDate;
             testSeries.deactiveDate = deactiveDate;
             testSeries.courseID = JSON.parse(courseID);
-
+            testSeries.createdBy = req.username;
 
             if (plan) testSeries.plan = JSON.parse(plan);
 
@@ -43,10 +43,10 @@ class TestSeriesController {
                         message: "new testSeries added 👍",
                         data: testSeries,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -114,6 +114,7 @@ class TestSeriesController {
         try {
             var testSeries = await db.TestSeries.findOne({ _id: testSeries });
             if (testPaper) testSeries.paperID = testPaper;
+            testSeries.updatedBy = req.username;
             testSeries.save((err) => {
                 if (!err)
                     return res.json({
@@ -121,10 +122,10 @@ class TestSeriesController {
                         message: "Test Series updated 👍",
                         data: testSeries,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -162,6 +163,7 @@ class TestSeriesController {
             if (paperID) testSeries.paperID = JSON.parse(paperID);
             if (courseID) testSeries.courseID = JSON.parse(courseID);
             if (isActive) testSeries.isActive = isActive;
+            testSeries.updatedBy = req.username;
             if (req.file != undefined) {
                 testSeries.img = `${config.uploadFolder}/${req.fileName}`;
             }
@@ -174,10 +176,10 @@ class TestSeriesController {
                         message: "subject updated 👍",
                         data: testSeries,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -194,10 +196,10 @@ class TestSeriesController {
                         message: "testSeries deleted",
                         data: testSeries,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

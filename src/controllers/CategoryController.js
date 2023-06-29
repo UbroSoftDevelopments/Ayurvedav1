@@ -19,6 +19,7 @@ class CategoryController {
             category.tab = tab;
             category.detail = detail;
             category.isActive = isActive;
+            category.createdBy = req.username;
 
             if (req.file != undefined) {
                 category.img = `${config.uploadFolder}/${req.fileName}`;
@@ -33,10 +34,10 @@ class CategoryController {
                         message: "new category added",
                         data: category,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -70,6 +71,7 @@ class CategoryController {
             if (tab) category.tab = tab;
             if (detail) category.detail = detail;
             if (isActive) category.isActive = isActive;
+            category.updatedBy = req.username;
 
             if (req.file != undefined) {
                 category.img = `${config.uploadFolder}/${req.fileName}`;
@@ -82,10 +84,10 @@ class CategoryController {
                         message: "Category updated",
                         data: category,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -103,10 +105,10 @@ class CategoryController {
                         message: "Category deleteed",
                         data: category,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

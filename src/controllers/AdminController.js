@@ -43,7 +43,7 @@ class AdminController {
         }
       })
       .catch((err) => {
-        return res.json({ status: false, message: `${err}`, data: err });
+        return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
       });
   }
 
@@ -72,7 +72,7 @@ class AdminController {
         });
       });
     } catch (err) {
-      return res.json({ status: false, message: `${err}`, data: err });
+      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
     }
   }
 
@@ -123,7 +123,7 @@ class AdminController {
           message: "Profile updated",
           data: admin,
         });
-      else return res.json({ status: false, message: `${err}`, data: err });
+      else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
     });
   }
 
@@ -149,10 +149,10 @@ class AdminController {
             message: "new status added",
             data: status,
           });
-        else return res.json({ status: false, message: `${err}`, data: err });
+        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
       });
     } catch (err) {
-      return res.json({ status: false, message: `${err}`, data: err });
+      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
     }
   }
 

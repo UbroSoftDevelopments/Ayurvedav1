@@ -17,7 +17,9 @@ const schema = new Schema({
             gstRate: { type: Number },
             sacCode: { type: String }
         }
-    }
+    },
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 }, { timestamps: true });
 
 module.exports = model('studentPlan', schema);

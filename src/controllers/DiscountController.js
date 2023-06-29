@@ -21,7 +21,8 @@ class DiscountController {
             discount.oneSub = oneSub;
             discount.moreSub = moreSub;
             discount.allSub = allSub;
-
+            discount.createdBy = req.username;
+            
             discount.save((err) => {
                 if (!err)
                     return res.json({
@@ -29,10 +30,10 @@ class DiscountController {
                         message: "discount added",
                         data: discount,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -67,6 +68,8 @@ class DiscountController {
             discount.oneSub = oneSub;
             discount.moreSub = moreSub;
             discount.allSub = allSub;
+            discount.updatedBy = req.username;
+
             discount.save((err) => {
                 if (!err)
                     return res.json({
@@ -95,10 +98,10 @@ class DiscountController {
                         message: "Discount deleteed",
                         data: discount,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

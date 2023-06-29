@@ -44,6 +44,7 @@ class TestPaperController {
             testPaper.startDate = startDate;
             testPaper.endDate = endDate;
             testPaper.questionList = questionList;
+            testPaper.createdBy = req.username;
             if (req.file != undefined) {
                 testPaper.img = `${config.uploadFolder}/${req.fileName}`;
             }
@@ -55,10 +56,10 @@ class TestPaperController {
                         message: "new Test Paper Added added",
                         data: testPaper,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -116,7 +117,7 @@ class TestPaperController {
             if (startDate) testPaper.startDate = startDate;
             if (endDate) testPaper.endDate = endDate;
             if (questionList) testPaper.questionList = questionList;
-
+            testPaper.updatedBy = req.username;
             if (req.file != undefined) {
                 testPaper.img = `${config.uploadFolder}/${req.fileName}`;
             }
@@ -127,10 +128,10 @@ class TestPaperController {
                         message: "testPaper updated 👍",
                         data: testPaper,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -148,10 +149,10 @@ class TestPaperController {
                         message: "testPaper deleted",
                         data: testPaper,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

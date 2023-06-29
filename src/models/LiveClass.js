@@ -13,7 +13,9 @@ const schema = new Schema({
         gstRate: { type: Number },
         sacCode: { type: String },
         paymentMode: { type: String }
-    }]
+    }],
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 }, { timestamps: true });
 
 module.exports = model('liveClass', schema);

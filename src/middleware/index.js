@@ -29,9 +29,10 @@ const checkStudentAuth = (req, res, next) => {
         return res.status(200).send({ status: false, message: 'Access denied!', err, token });
       }
 
-      var { _id } = decoded;
+      var { _id , email } = decoded;
       req.userId = _id;
       req._token = token;
+      req.username = email;
       next();
     }
   });
@@ -64,8 +65,9 @@ const checkAdminAuth = (req, res, next) => {
       if (decoded.role != roles_list.Admin) {
         return res.status(200).send({ status: false, message: 'Access denied!', err, token });
       }
-      var { _id } = decoded;
+      var { _id,username } = decoded;
       req.userId = _id;
+      req.username = username;
       next();
     }
   });

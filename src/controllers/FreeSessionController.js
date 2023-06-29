@@ -20,6 +20,7 @@ class FreeSessionController {
             session.name = name;
             session.mail = mail;
             session.phone = phone;
+            session.createdBy = req.username;
 
 
             session.save((err) => {
@@ -29,10 +30,10 @@ class FreeSessionController {
                         message: "Session Created",
                         data: session,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -61,7 +62,7 @@ class FreeSessionController {
         try {
             var freeSession = await db.FreeSession.findOne({ _id });
             freeSession.status = status;
-
+            session.updatedBy = req.username;
             freeSession.save((err) => {
                 if (!err)
                     return res.json({
@@ -69,10 +70,10 @@ class FreeSessionController {
                         message: "Enquiry updated to: " + status,
                         data: freeSession,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -90,10 +91,10 @@ class FreeSessionController {
                         message: "Enquiry deleteed",
                         data: freeSession,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 }

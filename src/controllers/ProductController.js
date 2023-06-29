@@ -72,6 +72,7 @@ class ProductController {
             if (description) stdPlan.description = description;
             //added Expire Date
             stdPlan.expireDate = date.addDays(new Date(), plan.days);
+            stdPlan.createdBy = req.username;
 
             stdPlan.save((err) => {
                 if (!err)
@@ -80,10 +81,10 @@ class ProductController {
                         message: "New plan added 💸",
                         data: stdPlan,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -112,7 +113,7 @@ class ProductController {
             if (description) stdPlan.description = description;
             //added Expire Date
             stdPlan.expireDate = date.addDays(new Date(), plan.days);
-
+            stdPlan.createdBy = req.username;
             stdPlan.save((err) => {
                 if (!err)
                     return res.json({
@@ -120,10 +121,10 @@ class ProductController {
                         message: "New Live CLass plan added 💸",
                         data: stdPlan,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -149,45 +150,12 @@ class ProductController {
                 var testResponse = await db.TestResponse.findOne({ 'studentID': studentID, 'testSeriesID': testSeriesID, 'paperID': { '$in': paperList } });
                 if (testResponse) {
                     testResponse.remove((err) => {
-                        if (err) return res.json({ status: false, message: `${err}`, data: err });
+                        if (err) return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
 
                     });
                 }
-
-                //remove
-                /*
-                studentData.map((_v, _ind) => {
-                    if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
-                        already = true;
-                        let newPaper = []
-                        if (paperList.length != 0) {
-                            paperList.push(..._v.paperList);
-                            paperList.map((val, ind) => {
-                                newPaper.push(val + '')
-                            })
-                        }
-
-
-
-                        // console.log(...new Set(newPaper));
-                        _v.paperList = [...new Set(newPaper)];
-                        _v.save();
-                    }
-                })
-
-                if (already) {
-                    return res.json({
-                        status: true,
-                        message: " Plan is updated to student.💸 ",
-                        data: null,
-                    });
-                }
-
-                */
 
             }
-            //  }
-
 
 
             const stdPlan = await db.studentPlan();
@@ -198,6 +166,7 @@ class ProductController {
             if (description) stdPlan.description = description;
             //added Expire Date
             stdPlan.expireDate = date.addDays(new Date(), plan.days);
+            stdPlan.createdBy = req.username;
             stdPlan.save((err) => {
                 if (!err)
                     return res.json({
@@ -205,10 +174,10 @@ class ProductController {
                         message: "New plan added 💸",
                         data: stdPlan,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
 
     }
@@ -230,10 +199,10 @@ class ProductController {
                         message: "Product Deleted 😮‍💨",
                         data: stdPlan,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -282,10 +251,79 @@ class ProductController {
 
 
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
+
+    //! add 3 day demo
+
+    async addThreeDayDemo(req, res){
+        let {  courseID, subjectID } = req.body;
+        let studentID = req.userId;
+        let plan = {
+            lable:"Demo",
+            days:3,
+            amount:0,
+            gstRate:18,
+            sacCode:"999241"
+        }
+
+        if (!subjectID || !courseID || !plan) {
+            return res.json({
+                status: false,
+                message: "Must provide all input 🙄",
+                data: null,
+            });
+        }
+        try {    
+
+            let findValue = { studentID: studentID,subjectID:subjectID };
+             const studentData = await db.studentPlan.find(findValue);
+ 
+             if (studentData) {
+                 var already = false;
+                 studentData.map((_v, _ind) => {
+                     if (plan.lable == _v.plan.lable && plan.days == _v.plan.days) {
+                         already = true;
+                     }
+                 })
+ 
+                 if (already) {
+                     return res.json({
+                         status: false,
+                         message: " Plan is already assign to you.💸 ",
+                         data: findValue,
+                     });
+                 }
+ 
+             }  
+             const stdPlan = await db.studentPlan();
+             stdPlan.studentID = studentID;
+             stdPlan.courseID = courseID;
+             stdPlan.subjectID = subjectID;
+
+             stdPlan.plan = plan;
+             //added Expire Date
+             stdPlan.expireDate = date.addDays(new Date(), plan.days);
+             stdPlan.createdBy = "Student: "+req.username;
+ 
+             stdPlan.save((err) => {
+                 if (!err)
+                     return res.json({
+                         status: true,
+                         message: "Your 3 day demo is activated 💸",
+                         data: stdPlan,
+                     });
+                 else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+             });
+
+        
+            
+        } catch (error) {
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+        }
+    }
 
 
 
@@ -315,17 +353,23 @@ class ProductController {
     //todo isAvtive validation is left
     async getMySubjectByCourse(req, res) {
         try {
-            const mysubject = await db.studentPlan.find({ studentID: req.userId, courseID: req.params.id, expireDate: { $gte: new Date() } }, { "subjectID": 1, _id: 0 }).populate('subjectID');
+            const mysubject = await db.studentPlan.find({ studentID: req.userId, courseID: req.params.id, expireDate: { $gte: new Date() } }, { "subjectID": 1, _id: 0 }).populate('subjectID').lean();
             let result = []
             if (mysubject) {
-                mysubject.map((val, ind) => {
+                for (let elem of mysubject) {
                     //check plan is valid or not.
-
-
-
-
-                    result.push(val.subjectID)
-                })
+                    if(elem.subjectID){
+                    let chapCount = 0;
+                    const subSubject = await db.SubSubject.find({ subjectID: elem.subjectID._id }).lean();
+                    for (let _el of subSubject) {
+                        chapCount += _el.chapterID.length;
+                    }
+                    elem.subjectID.chapCount = chapCount;
+                  
+                    result.push(elem.subjectID)
+                    
+                }
+                }
             }
 
             return res
@@ -385,7 +429,7 @@ class ProductController {
         } catch (err) {
             return res.json({
                 status: false,
-                message: "something went wrong 🤚",
+                message: "Something went wrong 🤚",
                 data: `${err}`,
             });
         }

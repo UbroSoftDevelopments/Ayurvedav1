@@ -22,6 +22,7 @@ class ChapterController {
             chapter.desc = desc;
             chapter.faculty = faculty;
             chapter.isActive = isActive;
+            chapter.createdBy = req.username;
 
             if (req.file != undefined) {
                 chapter.img = `${config.uploadFolder}/${req.fileName}`;
@@ -36,10 +37,10 @@ class ChapterController {
                         message: "new Chapter added",
                         data: chapter,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -91,7 +92,7 @@ class ChapterController {
             if (subject) chapter.subject = subject;
             if (subSubject) chapter.subSubject = subSubject;
             if (isActive) chapter.isActive = isActive;
-
+            chapter.updatedBy = req.username;
             if (req.file != undefined) {
                 chapter.img = `${config.uploadFolder}/${req.fileName}`;
             }
@@ -102,10 +103,10 @@ class ChapterController {
                         message: "chapter updated 👍",
                         data: chapter,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -127,6 +128,7 @@ class ChapterController {
 
             if (req.file != undefined) {
                 chapter.noteDoc = `${config.uploadFolder}/${req.fileName}`;
+                chapter.updatedBy = req.username;
             }
             chapter.save((err) => {
                 if (!err)
@@ -135,10 +137,10 @@ class ChapterController {
                         message: "chapter updated 👍",
                         data: chapter,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -157,10 +159,10 @@ class ChapterController {
                         message: "chapter deleted",
                         data: chapter,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

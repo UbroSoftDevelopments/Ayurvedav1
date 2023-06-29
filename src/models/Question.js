@@ -19,7 +19,9 @@ const userSchema = new Schema({
     courseID: { type: 'ObjectId', ref: 'course' },
     subjectID: { type: 'ObjectId', ref: 'subject' },
     subSubjectID: { type: 'ObjectId', ref: 'subsubject' },
-    qType: { type: String, required: true }
+    qType: { type: String, required: true },
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 }, { timestamps: true });
 
 module.exports = model('question', userSchema);

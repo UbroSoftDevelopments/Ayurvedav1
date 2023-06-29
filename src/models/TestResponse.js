@@ -15,6 +15,8 @@ const schema = new Schema({
             qstatus: { type: String },
             createdAt: { type: Date, default: Date.now }
         }],
+        createdBy:{type: String, default:''},
+        updatedBy:{type: String, default:''}
 }, { timestamps: true });
 
 module.exports = model('testResponse', schema);

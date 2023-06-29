@@ -20,7 +20,7 @@ class FacultyController {
             faculty.specializtion = specializtion;
             faculty.designation = designation;
             faculty.detail = detail;
-
+            faculty.createdBy = req.username;
             if (req.file != undefined) {
                 faculty.img = `${config.uploadFolder}/${req.fileName}`;
             } else {
@@ -34,10 +34,10 @@ class FacultyController {
                         message: "new faculty added",
                         data: faculty,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -72,7 +72,7 @@ class FacultyController {
             if (specializtion) faculty.specializtion = specializtion;
             if (designation) faculty.designation = designation;
             if (detail) faculty.detail = detail;
-
+            faculty.updatedBy = req.username;
             if (req.file != undefined) {
                 faculty.img = `${config.uploadFolder}/${req.fileName}`;
             }
@@ -84,10 +84,10 @@ class FacultyController {
                         message: "faculty updated",
                         data: faculty,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -106,10 +106,10 @@ class FacultyController {
                         message: "faculty deleteed",
                         data: faculty,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 }

@@ -4,7 +4,9 @@ const schema = new Schema({
     tab: { type: String, default:''},
     detail: { type: String, default:''},
     img:{type: String, default:''},
-    isActive:{ type: Number,default:1}
+    isActive:{ type: Number,default:1},
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 },{ timestamps: true });
 
 module.exports = model('category', schema);

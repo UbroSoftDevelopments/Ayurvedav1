@@ -4,6 +4,8 @@ const schema = new Schema({
     paperID: { type: 'ObjectId', ref: 'testPaper' },
     studentID: { type: 'ObjectId', ref: 'student', index: true },
     qID: { type: 'ObjectId', ref: 'question' },
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 }, { timestamps: true });
 
 //schema.index({ 'studentID': 1, 'qID': 1 }, { unique: true });

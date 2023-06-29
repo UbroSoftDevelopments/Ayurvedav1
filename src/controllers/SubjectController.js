@@ -32,8 +32,7 @@ class SubjectController {
             }
 
             if (isActive) subject.isActive = isActive;
-
-
+            subject.createdBy = req.username;
 
             subject.save((err) => {
                 if (!err)
@@ -42,10 +41,10 @@ class SubjectController {
                         message: "new subject added 👍",
                         data: subject,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -97,6 +96,7 @@ class SubjectController {
             if (req.file != undefined) {
                 subject.img = `${config.uploadFolder}/${req.fileName}`;
             }
+            subject.updatedBy = req.username;
 
 
             subject.save((err) => {
@@ -106,10 +106,10 @@ class SubjectController {
                         message: "subject updated 👍",
                         data: subject,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -126,10 +126,10 @@ class SubjectController {
                         message: "subject deleted",
                         data: subject,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

@@ -21,6 +21,7 @@ class SubjectController {
             subSubject.subjectID = subjectID;
             subSubject.detail = detail;
             subSubject.isDemo = isDemo;
+            subSubject.createdBy = req.username;
             if (isActive) subSubject.isActive = isActive;
             if (req.file != undefined) {
                 subSubject.img = `${config.uploadFolder}/${req.fileName}`;
@@ -35,10 +36,10 @@ class SubjectController {
                         message: "new sub Subject added",
                         data: subSubject,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -102,7 +103,7 @@ class SubjectController {
             if (req.file != undefined) {
                 subsubject.img = `${config.uploadFolder}/${req.fileName}`;
             }
-
+            subSubject.updatedBy = req.username;
             subsubject.save((err) => {
                 if (!err)
                     return res.json({
@@ -110,10 +111,10 @@ class SubjectController {
                         message: "sub-subject updated 👍",
                         data: subsubject,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -130,10 +131,10 @@ class SubjectController {
                         message: "sub-subject deleted",
                         data: subSubject,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -191,11 +192,11 @@ class SubjectController {
                             message: "chapter add to sub-subject sucessfully 👍",
                             data: chapterId,
                         });
-                    else return res.json({ status: false, message: `${err}`, data: err });
+                    else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
                 }
             )
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -222,11 +223,11 @@ class SubjectController {
                             message: "chapter Removed to sub-subject sucessfully 👍",
                             data: chapterId,
                         });
-                    else return res.json({ status: false, message: `${err}`, data: err });
+                    else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
                 }
             )
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

@@ -7,7 +7,9 @@ const schema = new Schema({
     sequence: { type: Number },
     isDemo: { type: Number, default: 0 },
     chapterID: [{ type: 'ObjectId', ref: 'chapter' }],
-    isActive: { type: Number, default: 1 }
+    isActive: { type: Number, default: 1 },
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 }, { timestamps: true });
 
 module.exports = model('subsubject', schema);

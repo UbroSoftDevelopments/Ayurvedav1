@@ -18,7 +18,7 @@ class LiveClassController {
             lclass.name = name;
             lclass.courseID = JSON.parse(courseID);
             lclass.detail = detail;
-
+            lclass.createdBy = req.username;
 
             if (plan) lclass.plan = JSON.parse(plan);
 
@@ -39,10 +39,10 @@ class LiveClassController {
                         message: "New Live Class Added 👍",
                         data: lclass,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -94,7 +94,7 @@ class LiveClassController {
             if (req.file != undefined) {
                 lclass.img = `${config.uploadFolder}/${req.fileName}`;
             }
-
+            lclass.updatedBy = req.username;
 
             lclass.save((err) => {
                 if (!err)
@@ -103,10 +103,10 @@ class LiveClassController {
                         message: "lclass updated 👍",
                         data: lclass,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -123,10 +123,10 @@ class LiveClassController {
                         message: "lclass deleted",
                         data: lclass,
                     });
-                else return res.json({ status: false, message: `${err}`, data: err });
+                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false, message: `${err}`, data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
         }
     }
 

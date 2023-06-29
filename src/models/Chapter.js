@@ -11,6 +11,8 @@ const schema = new Schema({
     isActive: { type: Number, default: 0 },
     img: { type: String },
     practiceTestList: [{ type: 'ObjectId', ref: 'testPaper' }],
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 }, { timestamps: true });
 
 module.exports = model('chapter', schema);

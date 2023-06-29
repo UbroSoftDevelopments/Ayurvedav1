@@ -8,7 +8,9 @@ const schema = new Schema({
     faculty: { type: String },
     meetingID: { type: String },
     meetingPasscode: { type: String },
-    isActive: { type: Number, default: 1 }
+    isActive: { type: Number, default: 1 },
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 }, { timestamps: true });
 
 module.exports = model('topic', schema);

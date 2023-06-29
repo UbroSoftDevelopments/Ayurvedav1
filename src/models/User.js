@@ -10,6 +10,8 @@ const userSchema = new Schema({
     type: { type: Number,default:1},
     date: { type: String,default:app.date()},
     isActive:{ type: Number,default:1},
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 },{ timestamps: true });
 
 module.exports = model('user', userSchema);

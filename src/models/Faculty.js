@@ -6,6 +6,8 @@ const schema = new Schema({
     designation: { type: String },
     img: { type: String },
     detail: { type: String },
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 
 }, { timestamps: true });
 

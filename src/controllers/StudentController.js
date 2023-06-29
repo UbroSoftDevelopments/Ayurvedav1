@@ -273,7 +273,7 @@ Verify your WhatsApp number and login by entering this OTP`;
                 return res.status(200).json({ status: true, message: `Successfully  verified 🧑‍🎓`, data: token });
               }
               else {
-                return res.json({ status: false, message: `${err}`, data: err });
+                return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
               }
             });
           } else {
@@ -334,7 +334,7 @@ Verify your WhatsApp number and login by entering this OTP`;
        
       })
       .catch((err) => {
-        return res.json({ status: false, message: `${err}`, data: null });
+        return res.json({ status: false,  message: "Something went wrong 🤚", data: null });
       });
   }
 
@@ -373,7 +373,7 @@ Verify your WhatsApp number and login by entering this OTP`;
         });
       })
       .catch((err) => {
-        return res.json({ status: false, message: `${err}`, data: null });
+        return res.json({ status: false,  message: "Something went wrong 🤚", data: null });
       });
     //});
   }
@@ -419,10 +419,10 @@ Verify your WhatsApp number and login by entering this OTP`;
             message: "student Deleted 😮‍💨",
             data: student,
           });
-        else return res.json({ status: false, message: `${err}`, data: err });
+        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
       });
     } catch (err) {
-      return res.json({ status: false, message: `${err}`, data: err });
+      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
     }
   }
 
@@ -449,11 +449,11 @@ Verify your WhatsApp number and login by entering this OTP`;
             message: "Profile updated 😎",
             data: student,
           });
-        else return res.json({ status: false, message: `${err}`, data: err });
+        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
       });
 
     } catch (err) {
-      return res.json({ status: false, message: `${err}`, data: err });
+      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
     }
 
 
@@ -479,11 +479,11 @@ Verify your WhatsApp number and login by entering this OTP`;
             message: "Student's description updated 😋",
             data: student,
           });
-        else return res.json({ status: false, message: `${err}`, data: err });
+        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
       });
 
     } catch (err) {
-      return res.json({ status: false, message: `${err}`, data: err });
+      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
     }
   }
 
@@ -546,10 +546,10 @@ Verify your WhatsApp number and login by entering this OTP`;
             message: "New plan added. 💸",
             data: stdPlan,
           });
-        else return res.json({ status: false, message: `${err}`, data: err });
+        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
       });
     } catch (err) {
-      return res.json({ status: false, message: `${err}`, data: err });
+      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
     }
   }
 
@@ -567,10 +567,10 @@ Verify your WhatsApp number and login by entering this OTP`;
             message: "Product Deleted 😮‍💨",
             data: stdPlan,
           });
-        else return res.json({ status: false, message: `${err}`, data: err });
+        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
       });
     } catch (err) {
-      return res.json({ status: false, message: `${err}`, data: err });
+      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
     }
   }
 }

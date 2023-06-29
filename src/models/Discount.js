@@ -4,7 +4,9 @@ const schema = new Schema({
     courseID: { type: 'ObjectId', ref: 'course' },
     oneSub: { type: Number, default: 0 },
     moreSub: { type: Number, default: 0 },
-    allSub: { type: Number, default: 0 }
+    allSub: { type: Number, default: 0 },
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 
 
 }, { timestamps: true });

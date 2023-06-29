@@ -4,6 +4,8 @@ const schema = new Schema({
     desc: { type: String },
     docPath: { type: String },
     chapterID: { type: 'ObjectId', ref: 'chapter' },
+    createdBy:{type: String, default:''},
+    updatedBy:{type: String, default:''}
 }, { timestamps: true });
 
 module.exports = model('notes', schema);

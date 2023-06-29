@@ -21,12 +21,15 @@ router.put("/description", checkAdminAuth, StudentController.editStudentDiscript
 
 router.get("/plan/:id", ProductController.getStudentPlan);
 router.delete("/plan/:id", checkAdminAuth, ProductController.deleteStudentPlan);
-router.post("/plan", ProductController.addStudentPlan);
-router.post("/test-plan", ProductController.addStudentTestSeries);
-router.put("/test-plan", ProductController.removePaperFromTest);
+router.post("/plan",checkAdminAuth, ProductController.addStudentPlan);
+
+router.post("/3dayDemo",checkStudentAuth,ProductController.addThreeDayDemo)
+
+router.post("/test-plan",checkAdminAuth, ProductController.addStudentTestSeries);
+router.put("/test-plan",checkAdminAuth, ProductController.removePaperFromTest);
 
 //Live class
-router.post("/liveClass-plan", ProductController.addStudentLiveclass);
+router.post("/liveClass-plan",checkAdminAuth, ProductController.addStudentLiveclass);
 router.get("/myLiveClass", checkStudentAuth, ProductController.getMyLiveClassTopic)
 
 //Get data from its Plan
