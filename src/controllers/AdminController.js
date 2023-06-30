@@ -196,14 +196,14 @@ class AdminController {
               break;
             }
           }
-          if(!hasMatch){
+          if (!hasMatch) {
             testSeriesList.push({
-              _id:element.testSeriesID._id,
-              name:element.testSeriesID.name,
-              count:1
+              _id: element.testSeriesID._id,
+              name: element.testSeriesID.name,
+              count: 1
             })
           }
-          
+
         }
         else if ('courseID' in element && element.courseID != null) {
           var hasMatch = false;
@@ -217,11 +217,11 @@ class AdminController {
               break;
             }
           }
-          if(!hasMatch){
+          if (!hasMatch) {
             courseList.push({
-              _id:element.courseID._id,
-              name:element.courseID.name,
-              count:1
+              _id: element.courseID._id,
+              name: element.courseID.name,
+              count: 1
             })
           }
         }
@@ -233,7 +233,7 @@ class AdminController {
       }
       return res
         .status(200)
-        .json({ status: true, message: `My Purchase list`, data:{courseList:courseList,testSeriesList:testSeriesList} });
+        .json({ status: true, message: `My Purchase list`, data: { courseList: courseList, testSeriesList: testSeriesList } });
 
     } catch (err) {
       return res.json({
@@ -244,6 +244,55 @@ class AdminController {
     }
 
   }
+
+  async getStuduentByPlan(req, res) {
+
+    let { search, searchId } = req.body;
+    if (!search || !searchId) {
+      return res.json({
+        status: false,
+        message: "Must provide all input 🙄",
+        data: null,
+      });
+    }
+
+    try {
+      let searchQuery = { }
+      switch (search) {
+        case 'testSeriesID':
+          searchQuery = { expireDate: { $gte: new Date() }, testSeriesID: searchId }
+          break;
+        case 'courseID':
+          searchQuery = { expireDate: { $gte: new Date() }, courseID: searchId }
+          break;
+        case 'subjectID':
+          searchQuery = { expireDate: { $gte: new Date() }, subjectID: searchId }
+          break;
+        case 'liveClassID':
+          searchQuery = { expireDate: { $gte: new Date() }, liveClassID: searchId }
+          break;
+      }
+
+
+      const studentPlan = await db.studentPlan
+        .find(searchQuery, { studentID: 1 })
+        .populate('studentID');
+
+      return res
+        .status(200)
+        .json({ status: true, message: `My Purchase list`, data: studentPlan });
+
+    } catch (err) {
+      return res.json({
+        status: false,
+        message: "something went wrong 🙃",
+        data: `${err}`,
+      });
+    }
+
+  }
+
+
 }
 
 module.exports = AdminController;

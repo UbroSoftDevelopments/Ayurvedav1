@@ -353,8 +353,13 @@ class ProductController {
     //todo isAvtive validation is left
     async getMySubjectByCourse(req, res) {
         try {
-            const mysubject = await db.studentPlan.find({ studentID: req.userId, courseID: req.params.id, expireDate: { $gte: new Date() } }, { "subjectID": 1, _id: 0 }).populate('subjectID').lean();
+            const mysubject = await db.studentPlan.find({ studentID: req.userId, courseID: req.params.id, expireDate: { $gte: new Date() } }, { "subjectID": 1, _id: 0 ,expireDate:1}).populate('subjectID').lean();
             let result = []
+
+            let currentDate = new Date();
+          
+
+
             if (mysubject) {
                 for (let elem of mysubject) {
                     //check plan is valid or not.
@@ -365,6 +370,14 @@ class ProductController {
                         chapCount += _el.chapterID.length;
                     }
                     elem.subjectID.chapCount = chapCount;
+                   
+                    let purchaseDate = new Date(elem.expireDate);
+                    var Difference_In_Time = purchaseDate.getTime() - currentDate.getTime();
+                    // To calculate the no. of days between two dates
+                    var dayLeft = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+
+                    elem.subjectID.dayLeft = dayLeft;
+                    elem.subjectID.expireDate = elem.expireDate;
                   
                     result.push(elem.subjectID)
                     
@@ -514,11 +527,24 @@ class ProductController {
 
     async getMyTestSeries(req, res) {
         try {
-            const mytest = await db.studentPlan.find({ studentID: req.userId, expireDate: { $gte: new Date() } }, { "testSeriesID": 1, _id: 0 }).populate('testSeriesID');
+            const mytest = await db.studentPlan.find({ studentID: req.userId, expireDate: { $gte: new Date() } }, { "testSeriesID": 1, _id: 0 ,expireDate:1}).populate('testSeriesID').lean();
             let result = []
+            let currentDate = new Date();
+          
             if (mytest) {
                 mytest.map((val, ind) => {
-                    if (val.testSeriesID) result.push(val.testSeriesID)
+                    if (val.testSeriesID) {
+
+                        let purchaseDate = new Date(val.expireDate);
+                        var Difference_In_Time = purchaseDate.getTime() - currentDate.getTime();
+                        // To calculate the no. of days between two dates
+                        var dayLeft = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+    
+                        val.testSeriesID.dayLeft = dayLeft;
+                        val.testSeriesID.expireDate = val.expireDate;
+
+                        result.push(val.testSeriesID)
+                    }
                 })
             }
 
