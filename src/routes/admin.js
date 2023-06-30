@@ -14,5 +14,7 @@ router.put("/password", checkAdminAuth, AdminController.updatePassword);
 
 router.get("/checkAdmin", checkAdminAuth, AdminController.checkAdmin)
 
+router.get('/purchaseCount',AdminController.getPerchaceCount)
+
 
 module.exports = router;

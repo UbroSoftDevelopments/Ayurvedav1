@@ -43,7 +43,7 @@ class AdminController {
         }
       })
       .catch((err) => {
-        return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+        return res.json({ status: false, message: "Something went wrong 🤚", data: err });
       });
   }
 
@@ -72,7 +72,7 @@ class AdminController {
         });
       });
     } catch (err) {
-      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+      return res.json({ status: false, message: "Something went wrong 🤚", data: err });
     }
   }
 
@@ -123,7 +123,7 @@ class AdminController {
           message: "Profile updated",
           data: admin,
         });
-      else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+      else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
     });
   }
 
@@ -149,15 +149,100 @@ class AdminController {
             message: "new status added",
             data: status,
           });
-        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+        else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
       });
     } catch (err) {
-      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+      return res.json({ status: false, message: "Something went wrong 🤚", data: err });
     }
   }
 
   async checkAdmin(req, res) {
     return res.json({ status: true, message: 'Authorized Admin 😎', data: [] });
+  }
+
+
+
+  async getPerchaceCount(req, res) {
+
+    try {
+      const studentPlan = await db.studentPlan
+        .find({ expireDate: { $gte: new Date() } }, { testSeriesID: 1, subjectID: 1, liveClassID: 1, courseID: 1 })
+        .populate("testSeriesID", "name")
+        .populate("courseID", "name")
+        .populate('liveClassID', "name");
+
+      const output = [];
+      // {
+      //   _id:'',
+      //   name:'',
+      //   count:0
+      // }
+      let testSeriesList = [];
+      let courseList = [];
+
+
+      for (let index = 0; index < studentPlan.length; index++) {
+        const element = studentPlan[index];
+        if ('testSeriesID' in element && element.testSeriesID != null) {
+
+          var hasMatch = false;
+
+          for (var testInd = 0; testInd < testSeriesList.length; ++testInd) {
+            var _test = testSeriesList[testInd];
+
+            if (_test._id == element.testSeriesID._id) {
+              hasMatch = true;
+              _test.count++;
+              break;
+            }
+          }
+          if(!hasMatch){
+            testSeriesList.push({
+              _id:element.testSeriesID._id,
+              name:element.testSeriesID.name,
+              count:1
+            })
+          }
+          
+        }
+        else if ('courseID' in element && element.courseID != null) {
+          var hasMatch = false;
+
+          for (var courseID = 0; courseID < courseList.length; ++courseID) {
+            var _course = courseList[courseID];
+
+            if (_course._id == element.courseID._id) {
+              hasMatch = true;
+              _course.count++;
+              break;
+            }
+          }
+          if(!hasMatch){
+            courseList.push({
+              _id:element.courseID._id,
+              name:element.courseID.name,
+              count:1
+            })
+          }
+        }
+        else if ('liveClassID' in element && element.liveClassID != null) {
+          output.push(element);
+        }
+
+
+      }
+      return res
+        .status(200)
+        .json({ status: true, message: `My Purchase list`, data:{courseList:courseList,testSeriesList:testSeriesList} });
+
+    } catch (err) {
+      return res.json({
+        status: false,
+        message: "something went wrong 🙃",
+        data: `${err}`,
+      });
+    }
+
   }
 }
 

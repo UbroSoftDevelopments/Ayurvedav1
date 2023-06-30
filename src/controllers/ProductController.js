@@ -191,12 +191,12 @@ class ProductController {
 
         try {
             var stdPlan = await db.studentPlan.findOne({ _id });
-
-            stdPlan.remove((err) => {
+            stdPlan.expireDate =new Date();
+            stdPlan.save((err) => {
                 if (!err)
                     return res.json({
                         status: true,
-                        message: "Product Deleted 😮‍💨",
+                        message: "Product Expired 😮‍💨",
                         data: stdPlan,
                     });
                 else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
@@ -678,6 +678,7 @@ class ProductController {
             });
         }
     }
+
 
 
 }
