@@ -8,7 +8,7 @@ router.post("/student/", checkStudentAuth, TestResponseController.setStudentResp
 router.post("/student/summary", checkStudentAuth, TestResponseController.getStudentTestSummary);
 router.put("/student/remove/", checkStudentAuth, TestResponseController.removeStudentResponse);
 router.get("/student/", TestResponseController.getQuestionByStudent);
-router.get("/student/response/:testSeriesID/:paperID", checkStudentAuth, TestResponseController.getResponseOfStudent);
+router.get("/student/response/:testSeriesID/:paperID/:studentID", TestResponseController.getResponseOfStudent);
 router.get("/:testSeriesID/:paperID", TestResponseController.getResultOfStudent);
 router.put("/student/startend", checkStudentAuth, TestResponseController.setTestStartEndTime);
 router.delete("/:id", checkAdminAuth, TestResponseController.deleteTestResponse);

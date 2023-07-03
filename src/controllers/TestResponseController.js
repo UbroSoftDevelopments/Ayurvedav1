@@ -22,7 +22,8 @@ class TestResponseController {
     async getResponseOfStudent(req, res) {
         var testSeriesID = req.params.testSeriesID;
         var paperID = req.params.paperID;
-        if (!testSeriesID || !req.userId || !paperID) {
+        var studentID = req.params.studentID;
+        if (!testSeriesID || !studentID || !paperID) {
             return res.json({
                 status: false,
                 message: "Feilds are required for test paper",
@@ -31,22 +32,29 @@ class TestResponseController {
         }
         try {
             //remove isCorrect from response
-            const testResponse = await db.TestResponse.findOne({ studentID: req.userId, paperID: paperID, testSeriesID: testSeriesID }).populate("questionList.qID").lean();
+            const testResponse = await db.TestResponse.findOne({ studentID: studentID, paperID: paperID, testSeriesID: testSeriesID }).populate("questionList.qID").lean();
 
             //todo do it later
-            await testResponse.questionList.map((val, ind) => {
-                //  console.log(val.qID.correctOpt, val.response);
-                val.qID = val.qID._id;
-                if (val.qID.correctOpt == val.response) {
-                    val.isCorrect = 1;
-                } else {
-                    val.isCorrect = 0;
-                }
+            if (testResponse) {
 
-            })
+                await testResponse.questionList.map((val, ind) => {
+                    //  console.log(val.qID.correctOpt, val.response);
+                    val.qID = val.qID._id;
+                    if (val.qID.correctOpt == val.response) {
+                        val.isCorrect = 1;
+                    } else {
+                        val.isCorrect = 0;
+                    }
+
+                })
+
+                return res
+                    .status(200)
+                    .json({ status: true, message: `Student Response list`, data: testResponse });
+            }
             return res
-                .status(200)
-                .json({ status: true, message: `Student Response list`, data: testResponse });
+                    .status(200)
+                    .json({ status: false, message: `Student Response Not Found 🥊`, data: [] });
         } catch (err) {
             return res
                 .status(200)
@@ -105,7 +113,7 @@ class TestResponseController {
                             data: null,
                         });
                     }
-                    else { return res.json({ status: false,  message: "Something went wrong 🤚", data: err }) };
+                    else { return res.json({ status: false, message: "Something went wrong 🤚", data: err }) };
                 });
 
 
@@ -124,17 +132,17 @@ class TestResponseController {
                             data: testResponseAdd,
                         });
                     }
-                    else { return res.json({ status: false,  message: "Something went wrong 🤚", data: err }) };
+                    else { return res.json({ status: false, message: "Something went wrong 🤚", data: err }) };
                 });
             }
 
         } catch (err) {
-            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+            return res.json({ status: false, message: "Something went wrong 🤚", data: err });
         }
     }
 
 
-    async getStudentTestSummary(req,res){
+    async getStudentTestSummary(req, res) {
         var { testSeriesID, paperID } = req.body;
         if (!paperID || !req.userId || !testSeriesID) {
             return res.json({
@@ -146,11 +154,11 @@ class TestResponseController {
         try {
 
             let summary = {
-                answer:0,
+                answer: 0,
                 attempt: 0,
-                ansReview:0
+                ansReview: 0
             }
-          
+
 
             let findObj = {
                 paperID: paperID,
@@ -160,24 +168,25 @@ class TestResponseController {
             var testResponse = await db.TestResponse.findOne(findObj);
             //check ans
             if (testResponse) {
-                summary.attempt = testResponse.questionList.length ;
+                summary.attempt = testResponse.questionList.length;
 
                 if (testResponse.questionList.length > 0) {
-                   
+
                     testResponse.questionList.map((val, ind) => {
-                        if(val.qstatus == "Answered"){
-                            summary.answer+=1
-                        }else{
-                            summary.ansReview+=1
+                        if (val.qstatus == "Answered") {
+                            summary.answer += 1
+                        } else {
+                            summary.ansReview += 1
                         }
 
-                    })}
+                    })
+                }
             }
 
             return res.json({ status: true, message: `Summary`, data: summary });
-            
+
         } catch (error) {
-            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+            return res.json({ status: false, message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -218,7 +227,7 @@ class TestResponseController {
                             data: null,
                         });
                     }
-                    else { return res.json({ status: false,  message: "Something went wrong 🤚", data: err }) };
+                    else { return res.json({ status: false, message: "Something went wrong 🤚", data: err }) };
                 });
 
 
@@ -231,7 +240,7 @@ class TestResponseController {
             }
 
         } catch (err) {
-            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+            return res.json({ status: false, message: "Something went wrong 🤚", data: err });
         }
 
     }
@@ -275,7 +284,7 @@ class TestResponseController {
                             data: null,
                         });
                     }
-                    else { return res.json({ status: false,  message: "Something went wrong 🤚", data: err }) };
+                    else { return res.json({ status: false, message: "Something went wrong 🤚", data: err }) };
                 });
 
 
@@ -304,12 +313,12 @@ class TestResponseController {
                             data: testResponseAdd,
                         });
                     }
-                    else { return res.json({ status: false,  message: "Something went wrong 🤚", data: err }) };
+                    else { return res.json({ status: false, message: "Something went wrong 🤚", data: err }) };
                 });
             }
 
         } catch (err) {
-            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+            return res.json({ status: false, message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -419,10 +428,10 @@ class TestResponseController {
                         message: "TestResponse deleted",
                         data: response,
                     });
-                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+                else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+            return res.json({ status: false, message: "Something went wrong 🤚", data: err });
         }
     }
 
