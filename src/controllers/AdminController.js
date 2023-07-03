@@ -166,7 +166,7 @@ class AdminController {
 
     try {
       const studentPlan = await db.studentPlan
-        .find({ expireDate: { $gte: new Date() } }, { testSeriesID: 1, subjectID: 1, liveClassID: 1, courseID: 1 })
+        .find({ expireDate: { $gte: new Date() } }, { testSeriesID: 1, subjectID: 1, liveClassID: 1, courseID: 1 ,plan : 1})
         .populate("testSeriesID", "name")
         .populate("courseID", "name")
         .populate('liveClassID', "name");
@@ -179,14 +179,14 @@ class AdminController {
       // }
       let testSeriesList = [];
       let courseList = [];
-
+      let income = 0;
 
       for (let index = 0; index < studentPlan.length; index++) {
         const element = studentPlan[index];
         if ('testSeriesID' in element && element.testSeriesID != null) {
 
           var hasMatch = false;
-
+          income = income + parseFloat(element.plan.amount);
           for (var testInd = 0; testInd < testSeriesList.length; ++testInd) {
             var _test = testSeriesList[testInd];
 
@@ -207,7 +207,7 @@ class AdminController {
         }
         else if ('courseID' in element && element.courseID != null) {
           var hasMatch = false;
-
+          income = income + parseFloat(element.plan.amount);
           for (var courseID = 0; courseID < courseList.length; ++courseID) {
             var _course = courseList[courseID];
 
@@ -233,7 +233,7 @@ class AdminController {
       }
       return res
         .status(200)
-        .json({ status: true, message: `My Purchase list`, data: { courseList: courseList, testSeriesList: testSeriesList } });
+        .json({ status: true, message: `My Purchase list`, data: { courseList: courseList, testSeriesList: testSeriesList,income:income } });
 
     } catch (err) {
       return res.json({
@@ -248,6 +248,7 @@ class AdminController {
   async getStuduentByPlan(req, res) {
 
     let { search, searchId } = req.body;
+    let output = []
     if (!search || !searchId) {
       return res.json({
         status: false,
@@ -275,12 +276,29 @@ class AdminController {
 
 
       const studentPlan = await db.studentPlan
-        .find(searchQuery, { studentID: 1 })
+        .find(searchQuery, { studentID: 1 , _id : 0 })
         .populate('studentID');
+
+      let tempStdId = [];
+
+      for(let j = 0; j < studentPlan.length; j++) {
+        let student = studentPlan[j].studentID;
+        if(student){
+          if(!tempStdId.includes(student._id+"")){
+            output.push(student)
+            tempStdId.push(student._id);
+          }
+        }
+      
+
+       
+      }
+
+
 
       return res
         .status(200)
-        .json({ status: true, message: `My Purchase list`, data: studentPlan });
+        .json({ status: true, message: `My Purchase list of ${search}`, data: output });
 
     } catch (err) {
       return res.json({
