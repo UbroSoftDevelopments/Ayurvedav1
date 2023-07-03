@@ -22,6 +22,50 @@ class TestResponseController {
     async getResponseOfStudent(req, res) {
         var testSeriesID = req.params.testSeriesID;
         var paperID = req.params.paperID;
+      
+        if (!testSeriesID || !req.userId || !paperID) {
+            return res.json({
+                status: false,
+                message: "Feilds are required for test paper",
+                data: null,
+            });
+        }
+        try {
+            //remove isCorrect from response
+            const testResponse = await db.TestResponse.findOne({ studentID: req.userId, paperID: paperID, testSeriesID: testSeriesID }).populate("questionList.qID").lean();
+
+            //todo do it later
+            if (testResponse) {
+
+                await testResponse.questionList.map((val, ind) => {
+                    //  console.log(val.qID.correctOpt, val.response);
+                    val.qID = val.qID._id;
+                    if (val.qID.correctOpt == val.response) {
+                        val.isCorrect = 1;
+                    } else {
+                        val.isCorrect = 0;
+                    }
+
+                })
+
+                return res
+                    .status(200)
+                    .json({ status: true, message: `Student Response list`, data: testResponse });
+            }
+            return res
+                    .status(200)
+                    .json({ status: false, message: `Student Response Not Found 🥊`, data: [] });
+        } catch (err) {
+            return res
+                .status(200)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+
+    }
+
+    async getResponseOfStudentV2(req, res) {
+        var testSeriesID = req.params.testSeriesID;
+        var paperID = req.params.paperID;
         var studentID = req.params.studentID;
         if (!testSeriesID || !studentID || !paperID) {
             return res.json({
@@ -439,3 +483,4 @@ class TestResponseController {
 
 
 module.exports = TestResponseController;
+
