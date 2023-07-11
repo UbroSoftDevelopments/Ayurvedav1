@@ -12,7 +12,7 @@ router.put("/", pics, checkAdminAuth, TestPaperController.updateTestPaper);
 router.delete("/:id", checkAdminAuth, TestPaperController.deleteTestPaper);
 router.get("/chapter", TestPaperController.getTestPaperByChapterId);
 router.get("/:id", checkAdminAuth, TestPaperController.getTestPaperById);
-router.get("/student/:id", TestPaperController.getTestPaperById);
+router.get("/student/:id",checkStudentAuth, TestPaperController.getTestPaperById);
 router.get("/:testSeriesID/:paperID", checkAdminAuth, TestPaperController.getAssignStudentByPaper);
 
 
