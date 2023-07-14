@@ -103,7 +103,7 @@ class SubjectController {
             if (req.file != undefined) {
                 subsubject.img = `${config.uploadFolder}/${req.fileName}`;
             }
-            subSubject.updatedBy = req.username;
+            subsubject.updatedBy = req.username;
             subsubject.save((err) => {
                 if (!err)
                     return res.json({
@@ -111,10 +111,12 @@ class SubjectController {
                         message: "sub-subject updated 👍",
                         data: subsubject,
                     });
-                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+                else {
+                    return res.json({ status: false,  message: "Something went wrong 🤚 in Sub Subject", data: err });
+                }
             });
         } catch (err) {
-            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+            return res.json({ status: false,  message: "Something went wrong 🤚 in Sub Subject", data: err });
         }
     }
 
