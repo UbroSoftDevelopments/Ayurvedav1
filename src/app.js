@@ -5,6 +5,7 @@ const routes = require('./routes')
 const { port } = require('./config')
 const os = require('os')
 const fs = require('fs')
+const bodyParser = require('body-parser')
 const db = require('./models')
     
 
@@ -25,11 +26,18 @@ app.post('/ccavResponseHandler', function (request, response){
 });
 
 
+// app.use(bodyParser.urlencoded({
+//   extended: true
+// }));
 
-
-app.use(express.urlencoded({ extended: false }));
 app.use(cors());
-// app.use(express.bodyParser({limit: '25mb'}));
+
+app.use(bodyParser.json({ limit: '25mb' }));
+
+// Parse URL-encoded bodies and set the size limit to 10MB
+app.use(bodyParser.urlencoded({ limit: '25mb', extended: true }));
+
+
 app.use(express.json());
 
 
