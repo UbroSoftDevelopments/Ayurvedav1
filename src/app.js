@@ -7,6 +7,8 @@ const os = require('os')
 const fs = require('fs')
 const db = require('./models')
     
+
+
 var ccavReqHandler = require('./ccavRequestHandler.js');
 var ccavResHandler = require('./ccavResponseHandler.js');
 
@@ -27,7 +29,9 @@ app.post('/ccavResponseHandler', function (request, response){
 
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+app.use(express.bodyParser({limit: '25mb'}));
 app.use(express.json());
+
 
 const config = require("./config");
 app.use('/upload', express.static(config.uploadFolder));
