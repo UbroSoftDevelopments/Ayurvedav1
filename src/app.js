@@ -29,7 +29,7 @@ app.post('/ccavResponseHandler', function (request, response){
 
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
-app.use(express.bodyParser({limit: '25mb'}));
+// app.use(express.bodyParser({limit: '25mb'}));
 app.use(express.json());
 
 
