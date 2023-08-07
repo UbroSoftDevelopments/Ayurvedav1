@@ -534,16 +534,28 @@ class ProductController {
             if (mytest) {
                 mytest.map((val, ind) => {
                     if (val.testSeriesID) {
+                        if(val.testSeriesIDisActive != 0){
 
-                        let purchaseDate = new Date(val.expireDate);
-                        var Difference_In_Time = purchaseDate.getTime() - currentDate.getTime();
-                        // To calculate the no. of days between two dates
-                        var dayLeft = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+                            let purchaseDate = new Date(val.expireDate);
+                            var Difference_In_Time = purchaseDate.getTime() - currentDate.getTime();
+                            // To calculate the no. of days between two dates
+                            var dayLeft = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+                            if(dayLeft > 0){
+                                val.testSeriesID.dayLeft = dayLeft;
+                                val.testSeriesID.expireDate = val.expireDate;
+                                
+                                let deactiveDate = new Date(val.deactiveDate);
     
-                        val.testSeriesID.dayLeft = dayLeft;
-                        val.testSeriesID.expireDate = val.expireDate;
-
-                        result.push(val.testSeriesID)
+                                var diffTimeV2 = deactiveDate.getTime() - currentDate.getTime();
+                                // To calculate the no. of days between two dates
+                                var isExpireDay = Math.round(diffTimeV2 / (1000 * 3600 * 24));
+                                if(isExpireDay > 0){
+                                    result.push(val.testSeriesID)
+                                }
+    
+                                
+                            }
+                        }
                     }
                 })
             }
