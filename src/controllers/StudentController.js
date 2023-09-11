@@ -209,7 +209,7 @@ Verify your WhatsApp number and login by entering this OTP`;
       var token = req._token;
       var tokenDelTbl = await db.Token.findOne({ studentID: req.userId });
       if (tokenDelTbl && token) {
-  
+
         if (tokenDelTbl.token != token) {
           return res
             .status(200)
@@ -253,27 +253,39 @@ Verify your WhatsApp number and login by entering this OTP`;
           if (student) {
             //make it verfied
             student.isVerifed = 1;
-            student.save((err) => {
+            student.save(async (err) => {
               if (!err) {
                 let token = app.token({ email: student.email, _id: student._id, role: roles_list.Student });
 
-                var tokenDelTbl = db.Token.findOne({ studentID: doc._id });
+                var tokenDelTbl = await db.Token.findOne({ studentID: student._id });
                 //todo destroy token
                 if (tokenDelTbl) {
                   tokenDelTbl.token = token;
-                  tokenDelTbl.save();
+                  tokenDelTbl.save((err)=>{
+                    if(err){
+                      return res
+                      .status(403)
+                      .json({ status: false, message: "NOT ABLE TO HANDEL TOKEN 🤚", data: `${err}` });
+                    }
+                  });
                 }
                 else {
                   var tokenTbl = new db.Token();
                   tokenTbl.token = token;
                   tokenTbl.studentID = student._id;
-                  tokenTbl.save();
+                  tokenTbl.save((err)=>{
+                    if(err){
+                      return res
+                      .status(403)
+                      .json({ status: false, message: "NOT ABLE TO SAVE TOKEN 🤚", data: `${err}` });
+                    }
+                  });
                 }
 
                 return res.status(200).json({ status: true, message: `Successfully  verified 🧑‍🎓`, data: token });
               }
               else {
-                return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+                return res.json({ status: false, message: "Something went wrong 🤚", data: err });
               }
             });
           } else {
@@ -292,9 +304,6 @@ Verify your WhatsApp number and login by entering this OTP`;
           .status(200)
           .json({ status: false, message: `OTP expire`, data: "" });
       }
-
-
-
 
     } catch (err) {
       return res
@@ -331,10 +340,10 @@ Verify your WhatsApp number and login by entering this OTP`;
           message: "OTP has been sent on your mobile!",
           data: { otp, token },
         });
-       
+
       })
       .catch((err) => {
-        return res.json({ status: false,  message: "Something went wrong 🤚", data: null });
+        return res.json({ status: false, message: "Something went wrong 🤚", data: null });
       });
   }
 
@@ -373,7 +382,7 @@ Verify your WhatsApp number and login by entering this OTP`;
         });
       })
       .catch((err) => {
-        return res.json({ status: false,  message: "Something went wrong 🤚", data: null });
+        return res.json({ status: false, message: "Something went wrong 🤚", data: null });
       });
     //});
   }
@@ -419,15 +428,16 @@ Verify your WhatsApp number and login by entering this OTP`;
             message: "student Deleted 😮‍💨",
             data: student,
           });
-        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+        else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
       });
     } catch (err) {
-      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+      return res.json({ status: false, message: "Something went wrong 🤚", data: err });
     }
   }
 
   async updateStudent(req, res) {
     let { _id, fullName, password, presentStatus, favSubject, purposeOfAyurveda } = req.body;
+    // console.log(req.body)
     if (!_id)
       return res.json({
         status: false,
@@ -442,18 +452,25 @@ Verify your WhatsApp number and login by entering this OTP`;
       if (fullName) student.fullName = fullName;
       if (password) student.password = password;
 
+      if (req.file != undefined) {
+        student.profile = `${config.uploadFolder}/${req.fileName}`;
+      } else {
+        student.profile = ''
+      }
+
       student.save((err) => {
-        if (!err)
+        if (!err) {
           return res.json({
             status: true,
             message: "Profile updated 😎",
             data: student,
           });
-        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+        }
+        else { return res.json({ status: false, message: "Something went wrongs 🤚", data: err }); }
       });
 
     } catch (err) {
-      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+      return res.json({ status: false, message: "Something went wrongs 🤚", data: err });
     }
 
 
@@ -479,11 +496,11 @@ Verify your WhatsApp number and login by entering this OTP`;
             message: "Student's description updated 😋",
             data: student,
           });
-        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+        else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
       });
 
     } catch (err) {
-      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+      return res.json({ status: false, message: "Something went wrong 🤚", data: err });
     }
   }
 
@@ -546,10 +563,10 @@ Verify your WhatsApp number and login by entering this OTP`;
             message: "New plan added. 💸",
             data: stdPlan,
           });
-        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+        else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
       });
     } catch (err) {
-      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+      return res.json({ status: false, message: "Something went wrong 🤚", data: err });
     }
   }
 
@@ -567,10 +584,10 @@ Verify your WhatsApp number and login by entering this OTP`;
             message: "Product Deleted 😮‍💨",
             data: stdPlan,
           });
-        else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+        else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
       });
     } catch (err) {
-      return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+      return res.json({ status: false, message: "Something went wrong 🤚", data: err });
     }
   }
 }
