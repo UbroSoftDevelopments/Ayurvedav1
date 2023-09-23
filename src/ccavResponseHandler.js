@@ -3,7 +3,7 @@ var http = require('http'),
 	ccav = require('./config/ccavutil.js'),
     crypto = require('crypto'),
     qs = require('querystring');
-
+	const db = require("./models");
 exports.postRes = function(request,response){
     var ccavEncResponse='',
 	ccavResponse='',	

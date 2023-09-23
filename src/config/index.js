@@ -15,7 +15,8 @@ const config = {
   webApp: 'cms-app',
   baseUrl: process.env.BASE_URL,
   zoomSdk: process.env.ZOOM_MEETING_SDK_KEY,
-  zoomSecret: process.env.ZOOM_MEETING_SDK_SECRET
+  zoomSecret: process.env.ZOOM_MEETING_SDK_SECRET,
+  merchantId: process.env.merchantId,
 };
 
 config.url = (endpoints) => {

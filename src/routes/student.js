@@ -3,10 +3,12 @@ const { checkStudentAuth, checkAdminAuth } = require("../middleware");
 const { StudentController, ProductController } = require("../controllers");
 const router = express.Router();
 
+const uploader = require('../middleware/uploader');
+var pics = uploader.single('photo');
 
 router.post("/registration", StudentController.studentRegister);
 router.post("/login", StudentController.studentLogin);
-router.post('/profile', checkStudentAuth, StudentController.updateStudent);
+router.put('/profile',pics,checkStudentAuth, StudentController.updateStudent);
 
 
 
