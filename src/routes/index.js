@@ -32,6 +32,6 @@ router.use('/discount', require("./discount"));
 router.use('/report', require("./report"));
 router.use('/faculty', require("./faculty"));
 router.use('/performance', require("./performance"));
-router.use('/payment', require("./payment"));
+router.use('/order', require("./order"));
 // Export the router
 module.exports = router;

@@ -16,7 +16,7 @@ const config = {
   baseUrl: process.env.BASE_URL,
   zoomSdk: process.env.ZOOM_MEETING_SDK_KEY,
   zoomSecret: process.env.ZOOM_MEETING_SDK_SECRET,
-  merchantId: process.env.merchantId,
+  merchantId: process.env.MERCHENT_ID,
 };
 
 config.url = (endpoints) => {

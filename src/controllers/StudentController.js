@@ -1,7 +1,7 @@
 const db = require("../models");
 const roles_list = require('../config/roles_list');
-const { urlencoded } = require("express");
-const ObjectId = require('mongodb').ObjectID;
+const config = require("../config");
+
 class StudentController {
   constructor() {
     //
@@ -403,6 +403,9 @@ Verify your WhatsApp number and login by entering this OTP`;
   async getStudent(req, res) {
     try {
       var _id = req.params.id;
+      if(!_id){
+        _id= req.userId;
+      }
       const student = await db.Student.findOne({ _id });
 
       return res
@@ -454,10 +457,8 @@ Verify your WhatsApp number and login by entering this OTP`;
 
       if (req.file != undefined) {
         student.profile = `${config.uploadFolder}/${req.fileName}`;
-      } else {
-        student.profile = ''
-      }
-
+      } 
+      
       student.save((err) => {
         if (!err) {
           return res.json({
@@ -466,10 +467,11 @@ Verify your WhatsApp number and login by entering this OTP`;
             data: student,
           });
         }
-        else { return res.json({ status: false, message: "Something went wrongs 🤚", data: err }); }
+        else { return res.json({ status: false, message: "Something went wrongs while saving 🤚", data: err }); }
       });
 
     } catch (err) {
+      console.log(err);
       return res.json({ status: false, message: "Something went wrongs 🤚", data: err });
     }
 

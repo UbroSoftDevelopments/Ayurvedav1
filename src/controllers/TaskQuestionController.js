@@ -42,9 +42,17 @@ class TaskQuestionController {
     async getTaskQuestion(req, res) {
         try {
             const task = await db.TaskQuestion.find({ studentID: req.userId }).populate('testSeriesID').populate('paperID').populate('qID');
+            let outputList = [];
+            if(task){
+                task.map(val=>{
+                    if(val.qID){
+                        outputList.push(val)
+                    }
+                })
+            }
             return res
                 .status(200)
-                .json({ status: true, message: `Task list`, data: task });
+                .json({ status: true, message: `Task list`, data: outputList });
         } catch (err) {
             return res
                 .status(403)

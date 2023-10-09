@@ -47,9 +47,18 @@ class ReportController {
     async getReport(req, res) {
         try {
             const reportQuestion = await db.ReportQuestion.find().populate("testSeriesID", "name").populate("paperID").populate("studentID").populate("qID");
+            let outputList = [];
+            if(reportQuestion){
+                reportQuestion.map(val=>{
+                    if(val.qID){
+                        outputList.push(val)
+                    }
+                })
+            }
+
             return res
                 .status(200)
-                .json({ status: true, message: `reportQuestion list`, data: reportQuestion });
+                .json({ status: true, message: `reportQuestion list`, data: outputList });
         } catch (err) {
             return res
                 .status(403)

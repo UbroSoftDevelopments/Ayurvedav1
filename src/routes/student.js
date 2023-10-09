@@ -9,6 +9,7 @@ var pics = uploader.single('photo');
 router.post("/registration", StudentController.studentRegister);
 router.post("/login", StudentController.studentLogin);
 router.put('/profile',pics,checkStudentAuth, StudentController.updateStudent);
+router.get('/profile',checkStudentAuth, StudentController.getStudent);
 
 
 

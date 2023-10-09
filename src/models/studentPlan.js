@@ -5,6 +5,7 @@ const schema = new Schema({
     subjectID: { type: 'ObjectId', ref: 'subject' },
     liveClassID: { type: 'ObjectId', ref: 'liveClass' },
     testSeriesID: { type: 'ObjectId', ref: 'testSeries' },
+    orderID: { type: 'ObjectId', ref: 'order' },
     paperList: [{ type: 'ObjectId', ref: 'testPaper' }],
     description: { type: String },
     expireDate: { type: Date },

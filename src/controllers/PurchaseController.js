@@ -5,9 +5,11 @@ class PurchaseController {
     // add Category
     async addOrder(req, res) {
 
-        merchantId = config.merchantId;
-        var { studentID, orderPlan, promoCode,totalAmount } = req.body;
-        if (!studentID || !orderPlan)
+        var merchantId = config.merchantId;
+        var studentID = req.userId;
+        
+        var {  promoCode,paidAmount } = req.body;
+        if (!studentID )
             return res.json({
                 status: false,
                 message: "key Student ID and orderPlan required for category",
@@ -17,9 +19,10 @@ class PurchaseController {
         try {
             var order = new db.Order();
             order.studentID = studentID;
-            order.orderPlan = orderPlan;
             order.promoCode = promoCode;
-            order.totalAmount = totalAmount;
+            order.paidAmount = paidAmount;
+            order.merchantId = merchantId;
+            order.discount = 10;
 
             order.save((err) => {
                 if (!err)
@@ -39,7 +42,7 @@ class PurchaseController {
     async getPendingOrder(req, res) {
         try {
             var studentID = req.userId;
-            const orders = await db.Category.find({ status:"PENDING",studentID:studentID});
+            const orders = await db.Order.find({ status:"PENDING",studentID:studentID});
             return res
                 .status(200)
                 .json({ status: true, message: `ORDER list`, data: orders });
@@ -50,7 +53,7 @@ class PurchaseController {
         }
     }
 
-    // update Category
+    // TODO make changes to purchase update Category 
     async updateCategory(req, res) {
         var { _id, name, tab, detail, isActive } = req.body;
         if (!_id)
@@ -86,7 +89,7 @@ class PurchaseController {
         }
     }
 
-    // delete Category
+    //TODO make changes to purchase  delete Category
     async deleteCategory(req, res) {
         var _id = req.params.id;
 
@@ -107,6 +110,42 @@ class PurchaseController {
         }
     }
 
+    //get my all purchase
+    async getUserAllTransction(req,res){
+        try {
+            
+            var studentID = req.userId;
+            const orders = await db.studentPlan.find({studentID:studentID}).sort( [['_id', -1]] ).populate("orderID");
+            return res
+                .status(200)
+                .json({ status: true, message: `ORDER list`, data: orders });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
+    async getSinglePlan(req,res){
+        try {
+            var id = req.params.id;
+            var studentID = req.userId;
+            
+            const order = await db.Order.findOne({_id:id});
+
+            const products = await db.studentPlan.find({orderID:id,studentID:studentID})
+            .populate("testSeriesID")
+            .populate("courseID")
+            .populate("subjectID");
+
+            return res
+                .status(200)
+                .json({ status: true, message: `ORDER`, data: {order: order, products:products} });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
 
 
 
