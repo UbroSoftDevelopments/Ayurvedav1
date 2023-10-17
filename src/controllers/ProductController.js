@@ -353,13 +353,11 @@ class ProductController {
     //todo isAvtive validation is left
     async getMySubjectByCourse(req, res) {
         try {
-            const mysubject = await db.studentPlan.find({ studentID: req.userId, courseID: req.params.id, expireDate: { $gte: new Date() } }, { "subjectID": 1, _id: 0 ,expireDate:1}).populate('subjectID').lean();
+            const mysubject = await db.studentPlan.find({ studentID: req.userId, courseID: req.params.id,isActive:1, expireDate: { $gte: new Date() } }, { "subjectID": 1, _id: 0 ,expireDate:1}).populate('subjectID').lean();
             let result = []
 
             let currentDate = new Date();
           
-
-
             if (mysubject) {
                 for (let elem of mysubject) {
                     //check plan is valid or not.

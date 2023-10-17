@@ -10,6 +10,7 @@ router.get('/', (req, res, next) => {
 
 router.use('/user', multer().none(), require("./user"));
 router.use('/admin', multer().none(), require("./admin"));
+router.use('/cart', multer().none(), require("./cart"));
 router.use('/student', require("./student"));
 router.use('/category', require("./category"));
 router.use('/chapter', require("./chapter"));
