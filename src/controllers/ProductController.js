@@ -377,7 +377,9 @@ class ProductController {
                     elem.subjectID.dayLeft = dayLeft;
                     elem.subjectID.expireDate = elem.expireDate;
                   
-                    result.push(elem.subjectID)
+                    if(elem.subjectID.isActive == 1){
+                        result.push(elem.subjectID);
+                    }
                     
                 }
                 }
