@@ -167,10 +167,10 @@ class PurchaseController {
     }
 
 
-    async addAllCourseOrder(req,res) {
+    async addAllCourseOrder(req, res) {
         var merchantId = config.merchantId;
 
-        var { studentID, paidAmount, totalAmount, pendingAmount, note, transactionMode, courseID, productList} = req.body;
+        var { studentID, paidAmount, totalAmount, pendingAmount, note, transactionMode, courseID, productList } = req.body;
         if (!studentID || !paidAmount || !courseID)
             return res.json({
                 status: false,
@@ -186,39 +186,56 @@ class PurchaseController {
             order.totalAmount = totalAmount;
             order.pendingAmount = pendingAmount;
             order.transactionMode = transactionMode;
-            if(note) order.note = note;
+            if (note) order.note = note;
 
             order.save((err) => {
                 if (!err) {
                     //ASSIGN SUBJECT
                     //ASSIGN TEST
                     //ASSIGN LIVECLASS
-                    const stdPlanList =[];
-                    productList.map(val => { 
+                    const stdPlanList = [];
+                    
+                    // console.log(productList);
+                    
+                    productList.map(val => {
+
                         let stdPlan = {
-                            studentID : studentID,
-                            courseID : courseID,
-                            subjectID : val._id,
-                            plan : val.selectedPlan,
-                            expireDate : date.addDays(new Date(), val.selectedPlan.days),
-                            createdBy : req.username,       
-                            orderID:order._id,
-                            paperList:[]
-                            
+                            studentID: studentID,
+                            courseID: courseID,
+                            plan: val.selectedPlan,
+                            expireDate: date.addDays(new Date(), val.selectedPlan.days),
+                            createdBy: req.username,
+                            orderID: order._id,
                         };
+                        switch (val.type) {
+                            case "SUBJECT":
+                                stdPlan.subjectID = val._id
+                                break;
+                            case "TEST":
+                                stdPlan.testSeriesID = val._id;
+                                stdPlan.paperList=[]
+                                break;
+                            case "CLASS":
+                                stdPlan.liveClassID = val._id
+                                break;
+                            default:
+                                break;
+                        }
+
+                        
                         if (note) stdPlan.description = note;
                         stdPlanList.push(stdPlan)
                     })
-
+                    // console.table(stdPlanList);
                     db.studentPlan.insertMany(stdPlanList)
-                    .then(result => {
-                        return res
-                        .status(200)
-                        .json({ status: true, message: `ORDER Successfully added 💌`, data: { order: order } });
-                      })
-                      .catch(err =>{
-                         return res.json({ status: false, message: "Something went wrong 🤚", data: err })
-                      })
+                        .then(result => {
+                            return res
+                                .status(200)
+                                .json({ status: true, message: `Order Successfully Added 💌`, data: { order: order,product:result } });
+                        })
+                        .catch(err => {
+                            return res.json({ status: false, message: "Something went wrong 🤚", data: err })
+                        })
 
                 }
                 else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
