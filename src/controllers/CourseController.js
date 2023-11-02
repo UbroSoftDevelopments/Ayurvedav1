@@ -99,6 +99,25 @@ async getCourseAllDataById(req, res) {
     }
 }
 
+async getCourseAllDataAdminById(req, res) {
+    try {
+        let course = {} ;
+        course.subject = await db.Subject.find({ courseID: req.params.id });
+        course.testSeries = await db.TestSeries.find({ courseID: req.params.id});
+        course.lclass = await db.LiveClass.find({  courseID: req.params.id });
+
+        return res
+            .status(200)
+            .json({ status: true, message: `course All Data`, data: course });
+    } catch (err) {
+        return res.json({
+            status: false,
+            message: "something went wrong 🤚",
+            data: `${err}`,
+        });
+    }
+}
+
 
     // update course
     async updateCourse(req, res) {

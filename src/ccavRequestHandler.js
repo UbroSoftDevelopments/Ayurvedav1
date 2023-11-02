@@ -5,7 +5,9 @@ var http = require('http'),
     qs = require('querystring');
     const db = require("./models");
     const config = require("./config");
-exports.postReq =  function(request,response){
+    const commonMethod = require('./config/commonMethod.js');
+
+exports.postReq = async function(request,response){
     var body = '',
 	workingKey = 'F485180258B138266DB038CB7BCF23DD',		//Put in the 32-Bit key shared by CCAvenues.
 	accessCode = 'AVJA79KF82BO58AJOB',		//Put in the access code shared by CCAvenues.
@@ -13,6 +15,13 @@ exports.postReq =  function(request,response){
 	formbody = '';
     merchantId = config.merchantId;
    
+    let studentId = request.userId
+    // let cart = await db.Cart.findOne({studentID:studentId});
+    // if(!cart){
+    //     return response.json({ status: false,  message: "No Value present in cart", data: "" });
+    // }
+    // let discountValue = await  commonMethod.getDiscount(cart); 
+    // console.log("CART:",cart,"DISCOUNT:",discountValue);
 
     //Generate Md5 hash for the key and then convert in base64 string
     var md5 = crypto.createHash('md5').update(workingKey).digest();
@@ -54,3 +63,17 @@ exports.postReq =  function(request,response){
     });
    return; 
 };
+
+/*
+merchant_id: 2305324
+order_id: 
+currency: INR
+amount: 1.00
+redirect_url: https://portal.pratyakshayurveda.in/ccavRequestHandler
+cancel_url: https://pratyakshayurveda.in/#/cart
+language: EN
+billing_name: Peter
+merchant_param1: additional Info.
+customer_identifier: 
+
+*/

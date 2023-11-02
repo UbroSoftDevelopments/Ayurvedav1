@@ -1,5 +1,8 @@
 const db = require("../models");
 const config = require("../config");
+const date = require('date-and-time')
+
+
 class PurchaseController {
 
     // add Category
@@ -7,9 +10,9 @@ class PurchaseController {
 
         var merchantId = config.merchantId;
         var studentID = req.userId;
-        
-        var {  promoCode,paidAmount } = req.body;
-        if (!studentID )
+
+        var { promoCode, paidAmount } = req.body;
+        if (!studentID)
             return res.json({
                 status: false,
                 message: "key Student ID and orderPlan required for category",
@@ -22,7 +25,6 @@ class PurchaseController {
             order.promoCode = promoCode;
             order.paidAmount = paidAmount;
             order.merchantId = merchantId;
-            order.discount = 10;
 
             order.save((err) => {
                 if (!err)
@@ -31,18 +33,18 @@ class PurchaseController {
                         message: "new Order added",
                         data: order,
                     });
-                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+                else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+            return res.json({ status: false, message: "Something went wrong 🤚", data: err });
         }
-    }   
+    }
 
     // get Category
     async getPendingOrder(req, res) {
         try {
             var studentID = req.userId;
-            const orders = await db.Order.find({ status:"PENDING",studentID:studentID});
+            const orders = await db.Order.find({ status: "PENDING", studentID: studentID });
             return res
                 .status(200)
                 .json({ status: true, message: `ORDER list`, data: orders });
@@ -82,10 +84,10 @@ class PurchaseController {
                         message: "Category updated",
                         data: category,
                     });
-                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+                else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+            return res.json({ status: false, message: "Something went wrong 🤚", data: err });
         }
     }
 
@@ -103,19 +105,19 @@ class PurchaseController {
                         message: "Category deleteed",
                         data: category,
                     });
-                else return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+                else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
             });
         } catch (err) {
-            return res.json({ status: false,  message: "Something went wrong 🤚", data: err });
+            return res.json({ status: false, message: "Something went wrong 🤚", data: err });
         }
     }
 
     //get my all purchase
-    async getUserAllTransction(req,res){
+    async getUserAllTransction(req, res) {
         try {
-            
+
             var studentID = req.userId;
-            const orders = await db.studentPlan.find({studentID:studentID}).sort( [['_id', -1]] ).populate("orderID");
+            const orders = await db.studentPlan.find({ studentID: studentID }).sort([['_id', -1]]).populate("orderID");
             return res
                 .status(200)
                 .json({ status: true, message: `ORDER list`, data: orders });
@@ -125,21 +127,38 @@ class PurchaseController {
                 .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
         }
     }
-    async getSinglePlan(req,res){
+
+
+    async getUserAllTransctionByAdmin(req, res) {
+        try {
+
+            var studentID = req.params.id;
+            const orders = await db.studentPlan.find({ studentID: studentID }).sort([['_id', -1]]).populate("courseID");
+            return res
+                .status(200)
+                .json({ status: true, message: `ORDER list`, data: orders });
+        } catch (err) {
+            return res
+                .status(403)
+                .json({ status: false, message: "something went wrong 🤚", data: `${err}` });
+        }
+    }
+
+    async getSinglePlan(req, res) {
         try {
             var id = req.params.id;
             var studentID = req.userId;
-            
-            const order = await db.Order.findOne({_id:id});
 
-            const products = await db.studentPlan.find({orderID:id,studentID:studentID})
-            .populate("testSeriesID")
-            .populate("courseID")
-            .populate("subjectID");
+            const order = await db.Order.findOne({ _id: id });
+
+            const products = await db.studentPlan.find({ orderID: id, studentID: studentID })
+                .populate("testSeriesID")
+                .populate("courseID")
+                .populate("subjectID");
 
             return res
                 .status(200)
-                .json({ status: true, message: `ORDER`, data: {order: order, products:products} });
+                .json({ status: true, message: `ORDER`, data: { order: order, products: products } });
         } catch (err) {
             return res
                 .status(403)
@@ -148,6 +167,66 @@ class PurchaseController {
     }
 
 
+    async addAllCourseOrder(req,res) {
+        var merchantId = config.merchantId;
+
+        var { studentID, paidAmount, totalAmount, pendingAmount, note, transactionMode, courseID, productList} = req.body;
+        if (!studentID || !paidAmount || !courseID)
+            return res.json({
+                status: false,
+                message: "key Student ID and orderPlan required for category",
+                data: null,
+            });
+
+        try {
+            var order = new db.Order();
+            order.studentID = studentID;
+            order.paidAmount = paidAmount;
+            order.merchantId = merchantId;
+            order.totalAmount = totalAmount;
+            order.pendingAmount = pendingAmount;
+            order.transactionMode = transactionMode;
+            if(note) order.note = note;
+
+            order.save((err) => {
+                if (!err) {
+                    //ASSIGN SUBJECT
+                    //ASSIGN TEST
+                    //ASSIGN LIVECLASS
+                    const stdPlanList =[];
+                    productList.map(val => { 
+                        let stdPlan = {
+                            studentID : studentID,
+                            courseID : courseID,
+                            subjectID : val._id,
+                            plan : val.selectedPlan,
+                            expireDate : date.addDays(new Date(), val.selectedPlan.days),
+                            createdBy : req.username,       
+                            orderID:order._id,
+                            paperList:[]
+                            
+                        };
+                        if (note) stdPlan.description = note;
+                        stdPlanList.push(stdPlan)
+                    })
+
+                    db.studentPlan.insertMany(stdPlanList)
+                    .then(result => {
+                        return res
+                        .status(200)
+                        .json({ status: true, message: `ORDER Successfully added 💌`, data: { order: order } });
+                      })
+                      .catch(err =>{
+                         return res.json({ status: false, message: "Something went wrong 🤚", data: err })
+                      })
+
+                }
+                else return res.json({ status: false, message: "Something went wrong 🤚", data: err });
+            });
+        } catch (err) {
+            return res.json({ status: false, message: "Something went wrong 🤚", data: err });
+        }
+    }
 
 }
 

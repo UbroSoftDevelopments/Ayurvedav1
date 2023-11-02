@@ -7,7 +7,7 @@ const os = require('os')
 const fs = require('fs')
 const bodyParser = require('body-parser')
 const db = require('./models')
-    
+const { checkStudentAuth } = require("./middleware");
 
 
 var ccavReqHandler = require('./ccavRequestHandler.js');
@@ -16,7 +16,7 @@ var ccavResHandler = require('./ccavResponseHandler.js');
 
 
 
-app.post('/ccavRequestHandler', function (request, response){
+app.post('/ccavRequestHandler', checkStudentAuth,function (request, response){
 	ccavReqHandler.postReq(request, response);
 });
 
@@ -42,6 +42,7 @@ app.use(express.json());
 
 
 const config = require("./config");
+
 app.use('/upload', express.static(config.uploadFolder));
 
 app.use('/api', routes);

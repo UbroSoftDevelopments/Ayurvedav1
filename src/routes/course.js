@@ -9,6 +9,7 @@ router.post("/", pics, checkAdminAuth, CourseController.addCourse);
 router.get("/", CourseController.getCourse);
 router.get("/:id", CourseController.getCourseById);
 router.get("/allData/:id", CourseController.getCourseAllDataById);
+router.get("/allDataAdmin/:id",checkAdminAuth, CourseController.getCourseAllDataAdminById);
 router.put("/", pics, checkAdminAuth, CourseController.updateCourse);
 router.delete("/:id", checkAdminAuth, CourseController.deleteCourse);
 
