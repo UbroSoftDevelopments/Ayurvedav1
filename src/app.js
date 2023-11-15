@@ -16,7 +16,7 @@ var ccavResHandler = require('./ccavResponseHandler.js');
 
 
 
-app.post('/ccavRequestHandler', checkStudentAuth,function (request, response){
+app.post('/ccavRequestHandler',function (request, response){
 	ccavReqHandler.postReq(request, response);
 });
 
