@@ -9,8 +9,8 @@ var http = require('http'),
 
 exports.postReq = async function(request,response){
     var body = '',
-	workingKey = 'F485180258B138266DB038CB7BCF23DD',		//Put in the 32-Bit key shared by CCAvenues.
-	accessCode = 'AVJA79KF82BO58AJOB',		//Put in the access code shared by CCAvenues.
+	workingKey = '32C0116955567B09439F073D701B23C7',		//Put in the 32-Bit key shared by CCAvenues.
+	accessCode = 'AVBN45LA89AH01NBHA',		//Put in the access code shared by CCAvenues.
 	encRequest = '',
 	formbody = '';
     merchantId = config.merchantId;
@@ -38,7 +38,7 @@ exports.postReq = async function(request,response){
 
    db.Order.find().then( async (order)=>{
         
-        console.log("postReq",order,merchantId);
+       // console.log("postReq",order,merchantId);
 
     });
    
